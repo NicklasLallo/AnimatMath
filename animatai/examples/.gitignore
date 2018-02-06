@@ -1,0 +1,8 @@
+.DS_Store
+venv*
+*.pyc
+*.csv
+output
+log
+config.py
+start.sh
