@@ -5,7 +5,7 @@
 # Copyright (C) 2017  Jonas Colmsjö, Claes Strannegård
 #
 
-from animatai.agents import Thing, Obstacle, Direction, NonSpatial, XYEnvironment
+from agents import Thing, Obstacle, Direction, NonSpatial, XYEnvironment
 from gzutils.gzutils import DotDict, Logging
 
 

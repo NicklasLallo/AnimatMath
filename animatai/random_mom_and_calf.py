@@ -19,7 +19,7 @@
 
 import random
 
-from animatai.agents import Agent
+from agents import Agent
 from gzutils.gzutils import Logging
 
 from sea import Sea, Song, Squid

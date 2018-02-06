@@ -17,11 +17,9 @@ SERVER_PORT = 5678
 # Import the exmaples, these are found here: https://github.com/animatai/examples
 #
 
-import grid
 import blind_dog
 import random_agents
 import random_mom_and_calf
-import random_mom_and_calf2
 
 #
 # Add a elif statement for each world like this:
@@ -39,12 +37,6 @@ def handler(wss_, world, steps, seed):
 
     elif world == 'random_mom_and_calf':
         random_mom_and_calf.run(wss_, steps, seed)
-
-    elif world == 'random_mom_and_calf2':
-        random_mom_and_calf2.run(wss_, steps, seed)
-
-    elif world == 'grid':
-        grid.run(wss_, steps, seed)
 
     #elif message == 'animat':
     #    (outputPath, outputDir) = animats.main.getOutputPath()

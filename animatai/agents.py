@@ -11,7 +11,7 @@ import random
 from collections import defaultdict
 from gzutils.gzutils import DotDict, Logging, save_csv_file
 
-from .utils import turn_heading, distance_squared
+from utils import turn_heading, distance_squared
 
 
 # Setup constants and logging
