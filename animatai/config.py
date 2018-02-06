@@ -20,6 +20,7 @@ SERVER_PORT = 5678
 import blind_dog
 import random_agents
 import random_mom_and_calf
+import test_animat
 
 #
 # Add a elif statement for each world like this:
@@ -37,6 +38,8 @@ def handler(wss_, world, steps, seed):
 
     elif world == 'random_mom_and_calf':
         random_mom_and_calf.run(wss_, steps, seed)
+    elif world == 'test_animat':
+        test_animat.run(wss_, steps, seed)
 
     #elif message == 'animat':
     #    (outputPath, outputDir) = animats.main.getOutputPath()
