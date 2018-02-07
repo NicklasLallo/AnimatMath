@@ -40,7 +40,7 @@ class TestAnimat(Agent):
         return '{} ({})'.format(self.__name__, self.__class__.__name__)
 
 def program (percept):
-    return 'Right'
+    return 'Forward'
 
 def run(wss=None, steps=None, seed=None):
     steps = int(steps) if steps else 50
@@ -51,7 +51,7 @@ def run(wss=None, steps=None, seed=None):
     world = World(options)
     test1 = TestAnimat(program, 'Test')
     
-    test1.direction = Direction(Direction.D)
+    test1.direction = Direction(Direction.R)
     
     world.add_thing(test1, (0,0))
 
