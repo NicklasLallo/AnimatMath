@@ -36,7 +36,33 @@ class World:
         if attrs.size != len(self.attributes):
             raise ValueError('There are {} attributes but you provided values for {}'.format(len(self.attributes),attrs.size))
         (neighbors, a) = self.graph[node]
-        a = attrs
+        np.copyto(a,attrs)
 
+    def getAttributes(self, node):
+        return self.graph[node][1]
+
+    def getAttribute(self, node, attribute):
+        (neighbors, attrs) = self.graph[node]
+        index = self.attributes.index(attribute)
+        return attrs[index]
+
+    def getNeighbors(self, node):
+        return self.graph[node][0]
+
+    def getSize(self):
+        return len(graph)
+
+#Takes a list of all attributes and a list of setattribute arrays and creates the tapeworld with nodes connected in a tape
+def createTapeWorld(attributes, allAttributes):
+    tapeWorld = World(attributes)
+    node = 0
+    for attrs in allAttributes:
+        tapeWorld.addNode(node)
+        if node != 0:
+            tapeWorld.addEdge(node, node-1)
+            tapeWorld.addEdge(node-1, node)
+        tapeWorld.setAttributes(node, attrs)
+        node += 1
+    return tapeWorld
 
 
