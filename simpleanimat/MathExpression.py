@@ -3,7 +3,6 @@ import random as r
 
 class MathExpression:
     intRange = 9
-    parPercentage = 0.5
     minDepth = 2
     maxDepth = 12
 
@@ -18,17 +17,20 @@ class MathExpression:
         if r.random() < 0.5:
             boolean = True
 
-        (lHand,rHand) = MathExpression.subT(r.randrange(MathExpression.minDepth,MathExpression.maxDepth))
+        mi = MathExpression.minDepth
+        ma = MathExpression.maxDepth
+        rDepth = r.randrange(mi,ma)
+        (lHand,rHand) = MathExpression.subT(rDepth)
         
         if not boolean:
             rHand = MathExpression.fakeO(rHand)
         
-        return (lHand + '=' + str(rHand), boolean)
+        return (lHand + '=' + str(rHand), boolean, rDepth)
 
 
     def subT(depth, OpL = ['*', '+', '-']): #TODO, solve integer division
         n = len(OpL) #cases
-        c = r.randrange(1,n)
+        c = r.randrange(0,n)
         
         if depth == 1:
             i = r.randrange(0,MathExpression.intRange)
