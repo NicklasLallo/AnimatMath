@@ -6,14 +6,15 @@ position = 0
 reward = [0,0]
 attributes = [np.array([1,0,0]), np.array([0,1,0]), np.array([1,0,0]), np.array([0,0,1]), np.array([0,1,0])]
 eatRewards = [[0.7,-0.05],[-0.05,0.7],[0.7,-0.05],[-0.2,-0.2],[-0.05, -0.8]]
-animat = AnimatBrain(3,2,2,  0.9,0.9,  0.9,0.8,0.1,  0.4,  0.05)
+animat = AnimatBrain(3,2,2,  0.5,0.95,  0.5,0.5,1000000000000,  0.9,  0.3)
 
-for x in range(0,100000):
+for x in range(0,100):
 
     action = animat.program(attributes[position], reward)
 
-    print(animat.needValues)
-    print(len(animat.network))
+    #print(animat.needValues)
+    #print(len(animat.network))
+    #print(animat.prevTopActive)
     #print(animat.network)
 
     if action == 0:
@@ -22,7 +23,11 @@ for x in range(0,100000):
     else:
         reward = eatRewards[position]
 
-bGraph(animat.network)
+#bGraph(animat.network)
+print(animat.historyTopActive)
+print(animat.needValues)
+
+
 #The swamp AND-node animat from the paper
 '''
 position = 0

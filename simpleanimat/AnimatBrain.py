@@ -201,6 +201,7 @@ class AnimatBrain:
 
     def updateNetwork(self):
         #Definition 15
+
         if len(self.surprisedNeeds) == 0:
             return
         need = self.surprisedNeeds[r.randint(0,len(self.surprisedNeeds)-1)]
@@ -228,18 +229,10 @@ class AnimatBrain:
             return
         nodeCandidates = []
         for node1 in self.prevTopActive:
-            if node1 == 2:
-                print("1")
             for node2 in self.historyTopActive[-2]:
-                if node2 == 2:
-                    print("2")
                 if node1 == node2:
-                    if node1 == 2:
-                        print("== caught")
                     continue
                 if (2,node1,node2) in self.newestNodes:
-                    if node1 == 2 or node2 == 2:
-                        print("newest caught")
                     continue
                 if self.simulateNode(2, node1, node2, need, action, len(self.historyTopActive)):
                     if node2 == 2 or node1 == 2:
@@ -289,8 +282,9 @@ class AnimatBrain:
                 continue
             nodeChange = nodeQ
             nodeQ = nodeQ + self.learningRate*(self.historyRewards[step][need] + self.discount*(self.historyGlobalQs[step][need]-nodeQ))
-            nodeChange = abs(nodeQ-nodeChange) #TODO: Check if this has bias towards positive nodes because how change is calculated
-            print(nodeChange)
+            nodeChange = abs(nodeQ-nodeChange)
+            if connection1 == 2 or connection2 == 2:
+                print('NodeChange: {}'.format(nodeChange)) #TODO: Figure out why this never triggers
             #Can be added to initiate the nodes values but currently not used
             #nodeNr += 1   
             #nodeSumReward += self.historyReward[step][need]
