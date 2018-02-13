@@ -6,9 +6,9 @@ position = 0
 reward = [0,0]
 attributes = [np.array([1,0,0]), np.array([0,1,0]), np.array([1,0,0]), np.array([0,0,1]), np.array([0,1,0])]
 eatRewards = [[0.7,-0.05],[-0.05,0.7],[0.7,-0.05],[-0.2,-0.2],[-0.05, -0.8]]
-animat = AnimatBrain(3,2,2,  0.9,0.9,  0.1,0.1,1,  0.4,  0.5)
+animat = AnimatBrain(3,2,2,  0.9,0.9,  0.9,0.8,0.1,  0.4,  0.05)
 
-for x in range(0,300):
+for x in range(0,100000):
 
     action = animat.program(attributes[position], reward)
 

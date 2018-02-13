@@ -232,9 +232,7 @@ class AnimatBrain:
                 if node1 == node2:
                     continue
                 if (2,node1,node2) in self.newestNodes:
-                    print("Should not happen")
                     continue
-                print((2,node1,node2))
                 if self.simulateNode(2, node1, node2, need, action, len(self.historyTopActive)):
                     nodeCandidates.append((node1,node2))
         if len(nodeCandidates) > 0:
@@ -279,14 +277,13 @@ class AnimatBrain:
                 continue
             if (nodeType == 1 and connection1 not in self.historyTopActive[step]) or (nodeType == 2 and connection1 not in self.historyTopActive[step-1]):
                 continue
-                print('YAY!')
-                nodeChange = nodeQ
-                nodeQ = nodeQ + learningRate*(self.rewardHistory[step][need] + discount*(self.historyGlobalQ[step][need]-nodeQ))
-                nodeChange = abs(nodeQ-nodeChange)
-                #Can be added to initiate the nodes values but currently not used
-                #nodeNr += 1   
-                #nodeSumReward += self.historyReward[step][need]
-                #nodeSumSqReward += self.historyReward[step][need]**2
-                #nodeR = 1/(1 + math.sqrt(nodeNr*nodeSumSqReward - nodeSumReward**2)/nodeNr)
+            nodeChange = nodeQ
+            nodeQ = nodeQ + self.learningRate*(self.historyRewards[step][need] + self.discount*(self.historyGlobalQs[step][need]-nodeQ))
+            nodeChange = abs(nodeQ-nodeChange)
+            #Can be added to initiate the nodes values but currently not used
+            #nodeNr += 1   
+            #nodeSumReward += self.historyReward[step][need]
+            #nodeSumSqReward += self.historyReward[step][need]**2
+            #nodeR = 1/(1 + math.sqrt(nodeNr*nodeSumSqReward - nodeSumReward**2)/nodeNr)
 
         return nodeChange < self.structureM
