@@ -26,7 +26,7 @@ class AnimatBrain:
         self.historyActionPerformed = []
         self.historyRewards = []
         self.historyGlobalQs = []
-        self.historyMaxLength = 10 
+        self.historyMaxLength = 100
 
         self.initTables(numberOfSensors, numberOfActions, numberOfNeeds)
 
@@ -74,7 +74,7 @@ class AnimatBrain:
         self.surprisedNeeds = []
 
         topActive = self.propogateNetwork(attributes)
-        print(topActive) 
+        #print(topActive) 
         
         self.updateTables(self.actionPerformed, topActive, self.prevTopActive, self.learningRate, self.discount, rewards)
         
@@ -108,7 +108,7 @@ class AnimatBrain:
         #for i in self.qTable:
         #    print(i, self.qTable[i])
 
-        print(self.network)
+        #print(self.network)
 
         return bestAction
 
@@ -135,6 +135,8 @@ class AnimatBrain:
                     if values[3] in topActive:
                         topActive.remove(values[3])
                     topActive.append(node)
+                else:
+                    self.network[node][1] = 0
             elif values[0] == 2: #if this is a SEQ-node
                 if values[4] and self.network[values[3]][1] == 1:
                     self.network[node][1] = 1
@@ -143,6 +145,8 @@ class AnimatBrain:
                     if values[3] in topActive:
                         topActive.remove(values[3])
                     topActive.append(node)
+                else:
+                    self.network[node][1] = 0
                 self.network[node][4] = self.network[values[2]][1]
             else:
                 raise ValueError('No such non-sensor node: {}'.format(values[0]))
@@ -226,9 +230,11 @@ class AnimatBrain:
         for node1 in self.prevTopActive:
             for node2 in self.historyTopActive[-2]:
                 if node1 == node2:
-                    break
-                if (2,node1,node2) in self.newestNodes:
                     continue
+                if (2,node1,node2) in self.newestNodes:
+                    print("Should not happen")
+                    continue
+                print((2,node1,node2))
                 if self.simulateNode(2, node1, node2, need, action, len(self.historyTopActive)):
                     nodeCandidates.append((node1,node2))
         if len(nodeCandidates) > 0:
@@ -238,7 +244,7 @@ class AnimatBrain:
             del self.newestNodes[0]
             return
 
-    def addNode(self, nodeType, connection1, connection2):
+    def addNode(self, nodeType, connection1, connection2, qValue = 0, rValue = 1):
         node = self.nodeNr
         self.nodeNr += 1
         self.network[node] = [nodeType, 0, connection1, connection2]
@@ -246,8 +252,8 @@ class AnimatBrain:
             self.network[node].append(self.network[connection1][1])
         for need in range(0,self.nrOfNeeds):
             for action in range(0,self.nrOfActions):
-                    self.qTable[(need,node,action)] = 0
-                    self.rTable[(need,node,action)] = 1
+                    self.qTable[(need,node,action)] = qValue
+                    self.rTable[(need,node,action)] = rValue
                     self.nrTable[(need,node,action)] = 0
                     self.sumRewardTable[(need,node,action)] = 0
                     self.sumSqRewardTable[(need,node,action)] = 0
@@ -264,15 +270,16 @@ class AnimatBrain:
         nodeNr = 0
         nodeSumReward = 0
         nodeSumSqReward = 0
-        nodeChange = 0
+        nodeChange = 9999999
 
-        for step in range(historyLength-2,-1,-1):
+        for step in range(1,historyLength):
             if self.historyActionPerformed[step] != actionPerformed:
                 continue
             if connection2 not in self.historyTopActive[step]:
                 continue
-            if (nodeType == 1 and connection1 not in self.historyTopActive[step]) or (nodeType == 2 and connection1 not in self.historyTopActive[step+1]):
+            if (nodeType == 1 and connection1 not in self.historyTopActive[step]) or (nodeType == 2 and connection1 not in self.historyTopActive[step-1]):
                 continue
+                print('YAY!')
                 nodeChange = nodeQ
                 nodeQ = nodeQ + learningRate*(self.rewardHistory[step][need] + discount*(self.historyGlobalQ[step][need]-nodeQ))
                 nodeChange = abs(nodeQ-nodeChange)

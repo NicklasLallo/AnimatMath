@@ -1,11 +1,35 @@
 from AnimatBrain import *
 from BrainGraph import *
 
+
+position = 0
+reward = [0,0]
+attributes = [np.array([1,0,0]), np.array([0,1,0]), np.array([1,0,0]), np.array([0,0,1]), np.array([0,1,0])]
+eatRewards = [[0.7,-0.05],[-0.05,0.7],[0.7,-0.05],[-0.2,-0.2],[-0.05, -0.8]]
+animat = AnimatBrain(3,2,2,  0.9,0.9,  0.1,0.1,1,  0.4,  0.5)
+
+for x in range(0,300):
+
+    action = animat.program(attributes[position], reward)
+
+    print(animat.needValues)
+    print(len(animat.network))
+    #print(animat.network)
+
+    if action == 0:
+        position = (position+1)%5
+        reward = [-0.05,-0.05]
+    else:
+        reward = eatRewards[position]
+
+bGraph(animat.network)
+#The swamp AND-node animat from the paper
+'''
 position = 0
 
 reward = [0,0]
 #AnimatBrain(numberOfSensors, numberOfActions, numberOfNeeds, learningRate, discount, structureR, structureZ, structureM, policyParameter, explorationProb):
-animat = AnimatBrain(2,3,2,0.2,0.5,0.1,0.05,0.5,0.4,0.1)
+animat = AnimatBrain(2,3,2,  0.9,0.9,  0.6,0.8,0.1,  0.4,  0.2)
 
 for x in range(0,100):
 
@@ -14,8 +38,10 @@ for x in range(0,100):
     action = animat.program(attributes[position],reward)
 
     print(animat.needValues)
+    #print(animat.qTable)
+    print(animat.network)
     if x == 99:
-        bGraph(animat.network)
+       bGraph(animat.network)
 
     if action == 0:
         position = min(position+1,2)
@@ -30,7 +56,7 @@ for x in range(0,100):
             reward = [-0.3,-0.3]
         else:
             reward = [-0.05, 0.7]
-
+'''
 
 
 
