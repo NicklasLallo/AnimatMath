@@ -217,7 +217,7 @@ class AnimatBrain:
                 if self.simulateNode(1, node1, node2, need, action, len(self.historyTopActive)):
                     nodeCandidates.append((node1,node2))
         if len(nodeCandidates) > 0:
-            (connection1, connection2) = nodeCandidates[r.randint(0, len(nodeCandidates)-1)]
+            (connection1, connection2) = nodeCandidates[r.randrange(0, len(nodeCandidates))]
             self.addNode(1, connection1, connection2)
             self.newestNodes.append((1,connection1,connection2))
             del self.newestNodes[0]
@@ -228,15 +228,25 @@ class AnimatBrain:
             return
         nodeCandidates = []
         for node1 in self.prevTopActive:
+            if node1 == 2:
+                print("1")
             for node2 in self.historyTopActive[-2]:
+                if node2 == 2:
+                    print("2")
                 if node1 == node2:
+                    if node1 == 2:
+                        print("== caught")
                     continue
                 if (2,node1,node2) in self.newestNodes:
+                    if node1 == 2 or node2 == 2:
+                        print("newest caught")
                     continue
                 if self.simulateNode(2, node1, node2, need, action, len(self.historyTopActive)):
+                    if node2 == 2 or node1 == 2:
+                        print("!")
                     nodeCandidates.append((node1,node2))
         if len(nodeCandidates) > 0:
-            (connection1, connection2) = nodeCandidates[r.randint(0, len(nodeCandidates)-1)]
+            (connection1, connection2) = nodeCandidates[r.randrange(0, len(nodeCandidates))]
             self.addNode(2, connection1, connection2)
             self.newestNodes.append((2,connection1,connection2))
             del self.newestNodes[0]
@@ -279,7 +289,8 @@ class AnimatBrain:
                 continue
             nodeChange = nodeQ
             nodeQ = nodeQ + self.learningRate*(self.historyRewards[step][need] + self.discount*(self.historyGlobalQs[step][need]-nodeQ))
-            nodeChange = abs(nodeQ-nodeChange)
+            nodeChange = abs(nodeQ-nodeChange) #TODO: Check if this has bias towards positive nodes because how change is calculated
+            print(nodeChange)
             #Can be added to initiate the nodes values but currently not used
             #nodeNr += 1   
             #nodeSumReward += self.historyReward[step][need]
