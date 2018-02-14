@@ -18,6 +18,9 @@ class AnimatBrain:
         self.structureZ = structureZ            #How much must a Q-entry cahnge for the animat to be surprised by it
         self.structureM = structureM            #How much can the Q-entry of a node-candidate fluctuate and that node is still added
 
+        
+        self.timeBetweenNodeFormation = 30 #Set to 0 to keep original node formation rate
+        self.timeSinceLastNodeFormation = self.timeBetweenNodeFormation
         self.newestNodes = [-1,-1,-1]
         self.surprisedNeeds = []
         self.prevTopActive=[]
@@ -26,7 +29,8 @@ class AnimatBrain:
         self.historyActionPerformed = []
         self.historyRewards = []
         self.historyGlobalQs = []
-        self.historyMaxLength = 100
+        self.historyMaxLength = 1000
+
 
         self.initTables(numberOfSensors, numberOfActions, numberOfNeeds)
 
@@ -78,13 +82,15 @@ class AnimatBrain:
         
         self.updateTables(self.actionPerformed, topActive, self.prevTopActive, self.learningRate, self.discount, rewards)
         
-        self.updateNetwork()
+        self.timeSinceLastNodeFormation = max(0, self.timeSinceLastNodeFormation-1)
+        if self.timeSinceLastNodeFormation == 0:
+            self.updateNetwork()
 
         #Definition 12. Finding the action to take according to policy pi
-        bestActionValue = -2
+        bestActionValue = -9999999999999
         bestAction = 0
         for action in range(0,self.nrOfActions):
-            worstNeedValue = 2
+            worstNeedValue = 9999999999999
             for need in range(0,self.nrOfNeeds):
                 needValue = self.needValues[need] + self.policyParameter * self.getGlobalQValue(topActive, need, action)
                 if needValue < worstNeedValue:
@@ -188,7 +194,8 @@ class AnimatBrain:
             globalQs.append(globalQ) #recording history
             for node in prevTopActive:
                 key = (need,node,actionPerformed)
-                newQ = self.qTable[key] + learningRate*(reward + discount*(globalQ-self.qTable[key]))
+                #newQ = self.qTable[key] + learningRate*(reward + discount*(globalQ-self.qTable[key])) #According to first paper
+                newQ = self.qTable[key] + learningRate*(reward + discount*(globalQ)-self.qTable[key])  #According to second paper
                 if self.isSurprised(self.qTable[key], newQ, self.rTable[key]):
                     self.surprisedNeeds.append(need)
                 self.qTable[key] = newQ
@@ -201,7 +208,6 @@ class AnimatBrain:
 
     def updateNetwork(self):
         #Definition 15
-
         if len(self.surprisedNeeds) == 0:
             return
         need = self.surprisedNeeds[r.randint(0,len(self.surprisedNeeds)-1)]
@@ -222,27 +228,27 @@ class AnimatBrain:
             self.addNode(1, connection1, connection2)
             self.newestNodes.append((1,connection1,connection2))
             del self.newestNodes[0]
+            self.timeSinceLastNodeFormation = self.timeBetweenNodeFormation
             return
 
         #Try to add a SEQ-node
         if len(self.historyTopActive) < 2:
             return
         nodeCandidates = []
-        for node1 in self.prevTopActive:
-            for node2 in self.historyTopActive[-2]:
+        for node2 in self.prevTopActive:
+            for node1 in self.historyTopActive[-2]:
                 if node1 == node2:
                     continue
                 if (2,node1,node2) in self.newestNodes:
                     continue
                 if self.simulateNode(2, node1, node2, need, action, len(self.historyTopActive)):
-                    if node2 == 2 or node1 == 2:
-                        print("!")
                     nodeCandidates.append((node1,node2))
         if len(nodeCandidates) > 0:
             (connection1, connection2) = nodeCandidates[r.randrange(0, len(nodeCandidates))]
             self.addNode(2, connection1, connection2)
             self.newestNodes.append((2,connection1,connection2))
             del self.newestNodes[0]
+            self.timeSinceLastNodeFormation = self.timeBetweenNodeFormation
             return
 
     def addNode(self, nodeType, connection1, connection2, qValue = 0, rValue = 1):
@@ -263,9 +269,9 @@ class AnimatBrain:
         return abs(nowQValue - prevQValue) > self.structureZ and prevRValue > self.structureR
 
     def simulateNode(self, nodeType, connection1, connection2, need, actionPerformed, historyLength):
+        #Hardcoded to work with the current nodes types (AND/SEQ) needs to be rewritten if more types of nodes are added
         if historyLength < 2:
             return False
-        #Hardcoded to work with the current nodes types (AND/SEQ) needs to be rewritten if more types of nodes are added
         nodeQ = 0 #Might be better to give the node Q and R from avg of its connection
         nodeR = 1
         nodeNr = 0
@@ -278,13 +284,11 @@ class AnimatBrain:
                 continue
             if connection2 not in self.historyTopActive[step]:
                 continue
-            if (nodeType == 1 and connection1 not in self.historyTopActive[step]) or (nodeType == 2 and connection1 not in self.historyTopActive[step-1]):
+            if (nodeType == 1 and (connection1 not in self.historyTopActive[step])) or (nodeType == 2 and (connection1 not in self.historyTopActive[step-1])):
                 continue
             nodeChange = nodeQ
-            nodeQ = nodeQ + self.learningRate*(self.historyRewards[step][need] + self.discount*(self.historyGlobalQs[step][need]-nodeQ))
+            nodeQ = nodeQ + self.learningRate*(self.historyRewards[step][need] + self.discount*(self.historyGlobalQs[step][need])-nodeQ)
             nodeChange = abs(nodeQ-nodeChange)
-            if connection1 == 2 or connection2 == 2:
-                print('NodeChange: {}'.format(nodeChange)) #TODO: Figure out why this never triggers
             #Can be added to initiate the nodes values but currently not used
             #nodeNr += 1   
             #nodeSumReward += self.historyReward[step][need]
