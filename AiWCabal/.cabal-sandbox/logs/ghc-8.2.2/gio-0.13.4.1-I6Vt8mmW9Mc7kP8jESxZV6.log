@@ -1,0 +1,32 @@
+cabal: Entering directory '/tmp/cabal-tmp-19019/gio-0.13.4.1'
+[1 of 1] Compiling Main             ( /tmp/cabal-tmp-19019/gio-0.13.4.1/dist/dist-sandbox-146b36c0/setup/setup.hs, /tmp/cabal-tmp-19019/gio-0.13.4.1/dist/dist-sandbox-146b36c0/setup/Main.o )
+Linking /tmp/cabal-tmp-19019/gio-0.13.4.1/dist/dist-sandbox-146b36c0/setup/setup ...
+Configuring gio-0.13.4.1...
+Preprocessing library for gio-0.13.4.1..
+Building library for gio-0.13.4.1..
+[ 1 of 24] Compiling System.GIO.Enums ( dist/dist-sandbox-146b36c0/build/System/GIO/Enums.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Enums.o )
+[ 2 of 24] Compiling System.GIO.File.FileAttribute ( dist/dist-sandbox-146b36c0/build/System/GIO/File/FileAttribute.hs, dist/dist-sandbox-146b36c0/build/System/GIO/File/FileAttribute.o )
+[ 3 of 24] Compiling System.GIO.File.IOError ( dist/dist-sandbox-146b36c0/build/System/GIO/File/IOError.hs, dist/dist-sandbox-146b36c0/build/System/GIO/File/IOError.o )
+[ 4 of 24] Compiling System.GIO.Signals ( dist/dist-sandbox-146b36c0/build/System/GIO/Signals.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Signals.o )
+[ 5 of 24] Compiling System.GIO.Types ( dist/dist-sandbox-146b36c0/build/System/GIO/Types.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Types.o )
+[ 6 of 24] Compiling System.GIO.Icons.ThemedIcon ( dist/dist-sandbox-146b36c0/build/System/GIO/Icons/ThemedIcon.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Icons/ThemedIcon.o )
+[ 7 of 24] Compiling System.GIO.Icons.Icon ( dist/dist-sandbox-146b36c0/build/System/GIO/Icons/Icon.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Icons/Icon.o )
+[ 8 of 24] Compiling System.GIO.Icons.FileIcon ( dist/dist-sandbox-146b36c0/build/System/GIO/Icons/FileIcon.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Icons/FileIcon.o )
+[ 9 of 24] Compiling System.GIO.Icons.EmblemedIcon ( dist/dist-sandbox-146b36c0/build/System/GIO/Icons/EmblemedIcon.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Icons/EmblemedIcon.o )
+[10 of 24] Compiling System.GIO.Icons.Emblem ( dist/dist-sandbox-146b36c0/build/System/GIO/Icons/Emblem.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Icons/Emblem.o )
+[11 of 24] Compiling System.GIO.File.MountOperation ( dist/dist-sandbox-146b36c0/build/System/GIO/File/MountOperation.hs, dist/dist-sandbox-146b36c0/build/System/GIO/File/MountOperation.o )
+[12 of 24] Compiling System.GIO.File.FileMonitor ( dist/dist-sandbox-146b36c0/build/System/GIO/File/FileMonitor.hs, dist/dist-sandbox-146b36c0/build/System/GIO/File/FileMonitor.o )
+[13 of 24] Compiling System.GIO.File.FileInfo ( dist/dist-sandbox-146b36c0/build/System/GIO/File/FileInfo.hs, dist/dist-sandbox-146b36c0/build/System/GIO/File/FileInfo.o )
+[14 of 24] Compiling System.GIO.File.ContentType ( dist/dist-sandbox-146b36c0/build/System/GIO/File/ContentType.hs, dist/dist-sandbox-146b36c0/build/System/GIO/File/ContentType.o )
+[15 of 24] Compiling System.GIO.File.AppInfo ( dist/dist-sandbox-146b36c0/build/System/GIO/File/AppInfo.hs, dist/dist-sandbox-146b36c0/build/System/GIO/File/AppInfo.o )
+[16 of 24] Compiling System.GIO.Async.Cancellable ( dist/dist-sandbox-146b36c0/build/System/GIO/Async/Cancellable.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Async/Cancellable.o )
+[17 of 24] Compiling System.GIO.Async.AsyncResult ( dist/dist-sandbox-146b36c0/build/System/GIO/Async/AsyncResult.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Async/AsyncResult.o )
+[18 of 24] Compiling System.GIO.File.FileEnumerator ( dist/dist-sandbox-146b36c0/build/System/GIO/File/FileEnumerator.hs, dist/dist-sandbox-146b36c0/build/System/GIO/File/FileEnumerator.o )
+[19 of 24] Compiling System.GIO.File.File ( dist/dist-sandbox-146b36c0/build/System/GIO/File/File.hs, dist/dist-sandbox-146b36c0/build/System/GIO/File/File.o )
+[20 of 24] Compiling System.GIO.Volumes.Drive ( dist/dist-sandbox-146b36c0/build/System/GIO/Volumes/Drive.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Volumes/Drive.o )
+[21 of 24] Compiling System.GIO.Volumes.Mount ( dist/dist-sandbox-146b36c0/build/System/GIO/Volumes/Mount.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Volumes/Mount.o )
+[22 of 24] Compiling System.GIO.Volumes.Volume ( dist/dist-sandbox-146b36c0/build/System/GIO/Volumes/Volume.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Volumes/Volume.o )
+[23 of 24] Compiling System.GIO.Volumes.VolumeMonitor ( dist/dist-sandbox-146b36c0/build/System/GIO/Volumes/VolumeMonitor.hs, dist/dist-sandbox-146b36c0/build/System/GIO/Volumes/VolumeMonitor.o )
+[24 of 24] Compiling System.GIO       ( System/GIO.hs, dist/dist-sandbox-146b36c0/build/System/GIO.o )
+Installing library in /home/la1/Documents/MasterThesis/aiw2/.cabal-sandbox/lib/x86_64-linux-ghc-8.2.2/gio-0.13.4.1-I6Vt8mmW9Mc7kP8jESxZV6
+cabal: Leaving directory '/tmp/cabal-tmp-19019/gio-0.13.4.1'

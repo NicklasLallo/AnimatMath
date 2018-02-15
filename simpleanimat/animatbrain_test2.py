@@ -25,13 +25,19 @@ for x in range(0,10000):
         reward = [-0.05,-0.05]
     else:
         reward = eatRewards[position]
-    
 
-print(animat.historyTopActive)
-print(animat.needValues)
+    if x == 9999:
+        print(len(animat.network))
+        print(animat.qTable[(0,0,0)])
+        exportBrain(animat, 'storeanimattest.sav')
+        animat = importBrain('storeanimattest.sav')
+        print(len(animat.network))
+        print(animat.qTable[(0,0,0)])
+
+#print(animat.historyTopActive)
+#print(animat.needValues)
 bGraph(animat.network)
 bTable(animat.qTable,2, animat.nodeNr,2, ['Hunger', 'Thirst'], ['Walk','Eat/Drink'])
-
 #The swamp AND-node animat from the paper
 '''
 position = 0

@@ -1,0 +1,469 @@
+cabal: Entering directory '/tmp/cabal-tmp-19019/gtk-0.14.7'
+[1 of 1] Compiling Main             ( /tmp/cabal-tmp-19019/gtk-0.14.7/dist/dist-sandbox-146b36c0/setup/setup.hs, /tmp/cabal-tmp-19019/gtk-0.14.7/dist/dist-sandbox-146b36c0/setup/Main.o )
+Linking /tmp/cabal-tmp-19019/gtk-0.14.7/dist/dist-sandbox-146b36c0/setup/setup ...
+Configuring gtk-0.14.7...
+Preprocessing library for gtk-0.14.7..
+Building library for gtk-0.14.7..
+[  1 of 209] Compiling Graphics.UI.Gtk.Gdk.Enums ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Enums.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Enums.o )
+[  2 of 209] Compiling Graphics.UI.Gtk.Gdk.Keys ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Keys.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Keys.o )
+[  3 of 209] Compiling Graphics.UI.Gtk.General.Enums ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Enums.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Enums.o )
+[  4 of 209] Compiling Graphics.UI.Gtk.General.Threading ( Graphics/UI/Gtk/General/Threading.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Threading.o )
+[  5 of 209] Compiling Graphics.UI.Gtk.ModelView.Sequence ( Graphics/UI/Gtk/ModelView/Sequence.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/Sequence.o )
+[  6 of 209] Compiling Graphics.UI.Gtk.Printing.PaperSize ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Printing/PaperSize.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Printing/PaperSize.o )
+[  7 of 209] Compiling Graphics.UI.Gtk.Signals ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Signals.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Signals.o )
+[  8 of 209] Compiling Graphics.UI.Gtk.Types ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Types.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Types.o )
+[  9 of 209] Compiling Graphics.UI.Gtk.Special.Ruler ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Special/Ruler.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Special/Ruler.o )
+[ 10 of 209] Compiling Graphics.UI.Gtk.Recent.RecentInfo ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Recent/RecentInfo.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Recent/RecentInfo.o )
+[ 11 of 209] Compiling Graphics.UI.Gtk.Recent.RecentManager ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Recent/RecentManager.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Recent/RecentManager.o )
+[ 12 of 209] Compiling Graphics.UI.Gtk.Printing.PrintSettings ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Printing/PrintSettings.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Printing/PrintSettings.o )
+[ 13 of 209] Compiling Graphics.UI.Gtk.Printing.PrintOperation ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Printing/PrintOperation.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Printing/PrintOperation.o )
+[ 14 of 209] Compiling Graphics.UI.Gtk.Printing.PrintContext ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Printing/PrintContext.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Printing/PrintContext.o )
+[ 15 of 209] Compiling Graphics.UI.Gtk.Printing.PageSetup ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Printing/PageSetup.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Printing/PageSetup.o )
+[ 16 of 209] Compiling Graphics.UI.Gtk.Multiline.TextTagTable ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/TextTagTable.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/TextTagTable.o )
+[ 17 of 209] Compiling Graphics.UI.Gtk.Multiline.TextMark ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/TextMark.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/TextMark.o )
+[ 18 of 209] Compiling Graphics.UI.Gtk.ModelView.Types ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/Types.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/Types.o )
+[ 19 of 209] Compiling Graphics.UI.Gtk.ModelView.TreeRowReference ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeRowReference.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeRowReference.o )
+[ 20 of 209] Compiling Graphics.UI.Gtk.Misc.SizeGroup ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/SizeGroup.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/SizeGroup.o )
+[ 21 of 209] Compiling Graphics.UI.Gtk.Misc.IMMulticontext ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/IMMulticontext.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/IMMulticontext.o )
+[ 22 of 209] Compiling Graphics.UI.Gtk.Misc.IMContextSimple ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/IMContextSimple.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/IMContextSimple.o )
+[ 23 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.MenuShell ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/MenuShell.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/MenuShell.o )
+[ 24 of 209] Compiling Graphics.UI.Gtk.General.Settings ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Settings.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Settings.o )
+[ 25 of 209] Compiling Graphics.UI.Gtk.General.RcStyle ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/RcStyle.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/RcStyle.o )
+[ 26 of 209] Compiling Graphics.UI.Gtk.General.DNDTypes ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/DNDTypes.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/DNDTypes.o )
+[ 27 of 209] Compiling Graphics.UI.Gtk.ModelView.TreeDrag ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeDrag.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeDrag.o )
+[ 28 of 209] Compiling Graphics.UI.Gtk.ModelView.CustomStore ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CustomStore.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CustomStore.o )
+[ 29 of 209] Compiling Graphics.UI.Gtk.ModelView.TreeModel ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeModel.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeModel.o )
+[ 30 of 209] Compiling Graphics.UI.Gtk.ModelView.TreeStore ( Graphics/UI/Gtk/ModelView/TreeStore.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeStore.o )
+[ 31 of 209] Compiling Graphics.UI.Gtk.ModelView.TreeModelSort ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeModelSort.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeModelSort.o )
+[ 32 of 209] Compiling Graphics.UI.Gtk.ModelView.TreeModelFilter ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeModelFilter.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeModelFilter.o )
+[ 33 of 209] Compiling Graphics.UI.Gtk.ModelView.ListStore ( Graphics/UI/Gtk/ModelView/ListStore.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/ListStore.o )
+[ 34 of 209] Compiling Graphics.UI.Gtk.ModelView.CellLayout ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellLayout.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellLayout.o )
+[ 35 of 209] Compiling Graphics.UI.Gtk.Gdk.Pixmap ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Pixmap.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Pixmap.o )
+[ 36 of 209] Compiling Graphics.UI.Gtk.Gdk.PixbufData ( Graphics/UI/Gtk/Gdk/PixbufData.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/PixbufData.o )
+[ 37 of 209] Compiling Graphics.UI.Gtk.Gdk.PixbufAnimation ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/PixbufAnimation.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/PixbufAnimation.o )
+[ 38 of 209] Compiling Graphics.UI.Gtk.Gdk.DisplayManager ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/DisplayManager.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/DisplayManager.o )
+[ 39 of 209] Compiling Graphics.UI.Gtk.Entry.EntryBuffer ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/EntryBuffer.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/EntryBuffer.o )
+[ 40 of 209] Compiling Graphics.UI.Gtk.Entry.Editable ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/Editable.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/Editable.o )
+[ 41 of 209] Compiling Graphics.UI.Gtk.Embedding.Types ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Embedding/Types.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Embedding/Types.o )
+[ 42 of 209] Compiling Graphics.UI.Gtk.Embedding.Embedding ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Embedding/Embedding.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Embedding/Embedding.o )
+[ 43 of 209] Compiling Graphics.UI.Gtk.Builder ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Builder.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Builder.o )
+[ 44 of 209] Compiling Graphics.UI.Gtk.ActionMenuToolbar.RecentAction ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ActionMenuToolbar/RecentAction.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ActionMenuToolbar/RecentAction.o )
+[ 45 of 209] Compiling Graphics.UI.Gtk.Abstract.Separator ( Graphics/UI/Gtk/Abstract/Separator.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Separator.o )
+[ 46 of 209] Compiling Graphics.UI.Gtk.Abstract.Scrollbar ( Graphics/UI/Gtk/Abstract/Scrollbar.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Scrollbar.o )
+[ 47 of 209] Compiling Graphics.UI.Gtk.Abstract.Scale ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Scale.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Scale.o )
+[ 48 of 209] Compiling Graphics.UI.Gtk.Abstract.Object ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Object.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Object.o )
+[ 49 of 209] Compiling Graphics.UI.Gtk.Special.VRuler ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Special/VRuler.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Special/VRuler.o )
+[ 50 of 209] Compiling Graphics.UI.Gtk.Special.HRuler ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Special/HRuler.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Special/HRuler.o )
+[ 51 of 209] Compiling Graphics.UI.Gtk.Selectors.HSV ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/HSV.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/HSV.o )
+[ 52 of 209] Compiling Graphics.UI.Gtk.Selectors.FontSelectionDialog ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FontSelectionDialog.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FontSelectionDialog.o )
+[ 53 of 209] Compiling Graphics.UI.Gtk.Selectors.FontSelection ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FontSelection.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FontSelection.o )
+[ 54 of 209] Compiling Graphics.UI.Gtk.Selectors.FontButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FontButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FontButton.o )
+[ 55 of 209] Compiling Graphics.UI.Gtk.Selectors.FileFilter ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FileFilter.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FileFilter.o )
+[ 56 of 209] Compiling Graphics.UI.Gtk.Selectors.FileChooser ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FileChooser.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FileChooser.o )
+[ 57 of 209] Compiling Graphics.UI.Gtk.Selectors.FileChooserWidget ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FileChooserWidget.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FileChooserWidget.o )
+[ 58 of 209] Compiling Graphics.UI.Gtk.Selectors.FileChooserButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FileChooserButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FileChooserButton.o )
+[ 59 of 209] Compiling Graphics.UI.Gtk.Scrolling.VScrollbar ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Scrolling/VScrollbar.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Scrolling/VScrollbar.o )
+[ 60 of 209] Compiling Graphics.UI.Gtk.Scrolling.ScrolledWindow ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Scrolling/ScrolledWindow.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Scrolling/ScrolledWindow.o )
+[ 61 of 209] Compiling Graphics.UI.Gtk.Scrolling.HScrollbar ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Scrolling/HScrollbar.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Scrolling/HScrollbar.o )
+[ 62 of 209] Compiling Graphics.UI.Gtk.Recent.RecentFilter ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Recent/RecentFilter.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Recent/RecentFilter.o )
+[ 63 of 209] Compiling Graphics.UI.Gtk.Recent.RecentChooserWidget ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Recent/RecentChooserWidget.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Recent/RecentChooserWidget.o )
+[ 64 of 209] Compiling Graphics.UI.Gtk.Recent.RecentChooserMenu ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Recent/RecentChooserMenu.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Recent/RecentChooserMenu.o )
+[ 65 of 209] Compiling Graphics.UI.Gtk.Recent.RecentChooser ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Recent/RecentChooser.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Recent/RecentChooser.o )
+[ 66 of 209] Compiling Graphics.UI.Gtk.Ornaments.VSeparator ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Ornaments/VSeparator.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Ornaments/VSeparator.o )
+[ 67 of 209] Compiling Graphics.UI.Gtk.Ornaments.HSeparator ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Ornaments/HSeparator.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Ornaments/HSeparator.o )
+[ 68 of 209] Compiling Graphics.UI.Gtk.Ornaments.Frame ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Ornaments/Frame.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Ornaments/Frame.o )
+[ 69 of 209] Compiling Graphics.UI.Gtk.ModelView.TreeSelection ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeSelection.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeSelection.o )
+[ 70 of 209] Compiling Graphics.UI.Gtk.ModelView.CellRendererToggle ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererToggle.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererToggle.o )
+[ 71 of 209] Compiling Graphics.UI.Gtk.ModelView.CellRendererSpin ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererSpin.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererSpin.o )
+[ 72 of 209] Compiling Graphics.UI.Gtk.ModelView.CellRendererProgress ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererProgress.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererProgress.o )
+[ 73 of 209] Compiling Graphics.UI.Gtk.ModelView.CellRendererPixbuf ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererPixbuf.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererPixbuf.o )
+[ 74 of 209] Compiling Graphics.UI.Gtk.ModelView.CellRendererCombo ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererCombo.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererCombo.o )
+[ 75 of 209] Compiling Graphics.UI.Gtk.ModelView.CellRendererAccel ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererAccel.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererAccel.o )
+[ 76 of 209] Compiling Graphics.UI.Gtk.Misc.Viewport ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Viewport.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Viewport.o )
+[ 77 of 209] Compiling Graphics.UI.Gtk.Misc.Tooltips ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Tooltips.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Tooltips.o )
+[ 78 of 209] Compiling Graphics.UI.Gtk.Misc.HandleBox ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/HandleBox.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/HandleBox.o )
+[ 79 of 209] Compiling Graphics.UI.Gtk.Misc.EventBox ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/EventBox.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/EventBox.o )
+[ 80 of 209] Compiling Graphics.UI.Gtk.Misc.Calendar ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Calendar.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Calendar.o )
+[ 81 of 209] Compiling Graphics.UI.Gtk.Misc.Arrow ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Arrow.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Arrow.o )
+[ 82 of 209] Compiling Graphics.UI.Gtk.Misc.Adjustment ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Adjustment.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Adjustment.o )
+[ 83 of 209] Compiling Graphics.UI.Gtk.Misc.Accessible ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Accessible.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Accessible.o )
+[ 84 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.ToolItemGroup ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ToolItemGroup.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ToolItemGroup.o )
+[ 85 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.TearoffMenuItem ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/TearoffMenuItem.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/TearoffMenuItem.o )
+[ 86 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.SeparatorToolItem ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/SeparatorToolItem.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/SeparatorToolItem.o )
+[ 87 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.SeparatorMenuItem ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/SeparatorMenuItem.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/SeparatorMenuItem.o )
+[ 88 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.RadioMenuItem ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/RadioMenuItem.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/RadioMenuItem.o )
+[ 89 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.OptionMenu ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/OptionMenu.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/OptionMenu.o )
+[ 90 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.MenuItem ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/MenuItem.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/MenuItem.o )
+[ 91 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.MenuBar ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/MenuBar.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/MenuBar.o )
+[ 92 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.CheckMenuItem ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/CheckMenuItem.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/CheckMenuItem.o )
+[ 93 of 209] Compiling Graphics.UI.Gtk.Layout.VPaned ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/VPaned.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/VPaned.o )
+[ 94 of 209] Compiling Graphics.UI.Gtk.Layout.VButtonBox ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/VButtonBox.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/VButtonBox.o )
+[ 95 of 209] Compiling Graphics.UI.Gtk.Layout.VBox ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/VBox.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/VBox.o )
+[ 96 of 209] Compiling Graphics.UI.Gtk.Layout.HPaned ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/HPaned.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/HPaned.o )
+[ 97 of 209] Compiling Graphics.UI.Gtk.Layout.HButtonBox ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/HButtonBox.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/HButtonBox.o )
+[ 98 of 209] Compiling Graphics.UI.Gtk.Layout.HBox ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/HBox.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/HBox.o )
+[ 99 of 209] Compiling Graphics.UI.Gtk.Layout.Expander ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/Expander.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/Expander.o )
+[100 of 209] Compiling Graphics.UI.Gtk.Layout.AspectFrame ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/AspectFrame.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/AspectFrame.o )
+[101 of 209] Compiling Graphics.UI.Gtk.Layout.Alignment ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/Alignment.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/Alignment.o )
+[102 of 209] Compiling Graphics.UI.Gtk.General.Structs ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Structs.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Structs.o )
+[103 of 209] Compiling Graphics.UI.Gtk.Selectors.FileSelection ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FileSelection.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FileSelection.o )
+[104 of 209] Compiling Graphics.UI.Gtk.Selectors.ColorSelectionDialog ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/ColorSelectionDialog.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/ColorSelectionDialog.o )
+[105 of 209] Compiling Graphics.UI.Gtk.Selectors.ColorSelection ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/ColorSelection.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/ColorSelection.o )
+[106 of 209] Compiling Graphics.UI.Gtk.Selectors.ColorButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/ColorButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/ColorButton.o )
+[107 of 209] Compiling Graphics.UI.Gtk.Multiline.Types ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/Types.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/Types.o )
+[108 of 209] Compiling Graphics.UI.Gtk.ModelView.TreeViewColumn ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeViewColumn.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeViewColumn.o )
+[109 of 209] Compiling Graphics.UI.Gtk.ModelView.TreeSortable ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeSortable.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeSortable.o )
+[110 of 209] Compiling Graphics.UI.Gtk.ModelView.CellView ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellView.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellView.o )
+[111 of 209] Compiling Graphics.UI.Gtk.ModelView.CellRendererText ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererText.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererText.o )
+[112 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.ComboBox ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ComboBox.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ComboBox.o )
+[113 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.ComboBoxEntry ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ComboBoxEntry.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ComboBoxEntry.o )
+[114 of 209] Compiling Graphics.UI.Gtk.ModelView.CellRendererSpinner ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererSpinner.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRendererSpinner.o )
+[115 of 209] Compiling Graphics.UI.Gtk.Misc.Tooltip ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Tooltip.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/Tooltip.o )
+[116 of 209] Compiling Graphics.UI.Gtk.Misc.DrawingArea ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/DrawingArea.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Misc/DrawingArea.o )
+[117 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.ToolPalette ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ToolPalette.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ToolPalette.o )
+[118 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.ToolItem ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ToolItem.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ToolItem.o )
+[119 of 209] Compiling Graphics.UI.Gtk.General.Style ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Style.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Style.o )
+[120 of 209] Compiling Graphics.UI.Gtk.General.IconTheme ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/IconTheme.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/IconTheme.o )
+[121 of 209] Compiling Graphics.UI.Gtk.Gdk.Screen ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Screen.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Screen.o )
+[122 of 209] Compiling Graphics.UI.Gtk.Gdk.Region ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Region.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Region.o )
+[123 of 209] Compiling Graphics.UI.Gtk.Gdk.Pixbuf ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Pixbuf.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Pixbuf.o )
+[124 of 209] Compiling Graphics.UI.Gtk.Gdk.Keymap ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Keymap.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Keymap.o )
+[125 of 209] Compiling Graphics.UI.Gtk.Gdk.GC ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/GC.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/GC.o )
+[126 of 209] Compiling Graphics.UI.Gtk.ModelView.CellRenderer ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRenderer.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellRenderer.o )
+[127 of 209] Compiling Graphics.UI.Gtk.Gdk.Events ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Events.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Events.o )
+[128 of 209] Compiling Graphics.UI.Gtk.ModelView.TreeView ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeView.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/TreeView.o )
+[129 of 209] Compiling Graphics.UI.Gtk.ModelView.IconView ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/IconView.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/IconView.o )
+[130 of 209] Compiling Graphics.UI.Gtk.General.StockItems ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/StockItems.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/StockItems.o )
+[131 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.ToolButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ToolButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ToolButton.o )
+[132 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.ToggleToolButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ToggleToolButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ToggleToolButton.o )
+[133 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.RadioToolButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/RadioToolButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/RadioToolButton.o )
+[134 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.MenuToolButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/MenuToolButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/MenuToolButton.o )
+[135 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.ImageMenuItem ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ImageMenuItem.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/ImageMenuItem.o )
+[136 of 209] Compiling Graphics.UI.Gtk.General.IconFactory ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/IconFactory.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/IconFactory.o )
+[137 of 209] Compiling Graphics.UI.Gtk.ActionMenuToolbar.ToggleAction ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ActionMenuToolbar/ToggleAction.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ActionMenuToolbar/ToggleAction.o )
+[138 of 209] Compiling Graphics.UI.Gtk.ActionMenuToolbar.RadioAction ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ActionMenuToolbar/RadioAction.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ActionMenuToolbar/RadioAction.o )
+[139 of 209] Compiling Graphics.UI.Gtk.General.Selection ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Selection.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Selection.o )
+[140 of 209] Compiling Graphics.UI.Gtk.General.Clipboard ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Clipboard.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Clipboard.o )
+[141 of 209] Compiling Graphics.UI.Gtk.General.Drag ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Drag.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/Drag.o )
+[142 of 209] Compiling Graphics.UI.Gtk.Gdk.EventM ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/EventM.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/EventM.o )
+
+Graphics/UI/Gtk/Gdk/EventM.hsc:390:15: warning: [-Woverflowed-literals]
+    Literal -1 is out of the Word32 range 0..4294967295
+    |
+390 | allModMask = -1
+    |               ^
+[143 of 209] Compiling Graphics.UI.Gtk.Multiline.TextTag ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/TextTag.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/TextTag.o )
+[144 of 209] Compiling Graphics.UI.Gtk.Multiline.TextView ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/TextView.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/TextView.o )
+[145 of 209] Compiling Graphics.UI.Gtk.Multiline.TextIter ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/TextIter.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/TextIter.o )
+[146 of 209] Compiling Graphics.UI.Gtk.Multiline.TextBuffer ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/TextBuffer.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Multiline/TextBuffer.o )
+[147 of 209] Compiling Graphics.UI.Gtk.ModelView.CellEditable ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellEditable.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView/CellEditable.o )
+[148 of 209] Compiling Graphics.UI.Gtk.Gdk.Display ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Display.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Display.o )
+[149 of 209] Compiling Graphics.UI.Gtk.Gdk.AppLaunchContext ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/AppLaunchContext.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/AppLaunchContext.o )
+[150 of 209] Compiling Graphics.UI.Gtk.Gdk.Drawable ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Drawable.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Drawable.o )
+[151 of 209] Compiling Graphics.UI.Gtk.Gdk.Cursor ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Cursor.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Cursor.o )
+[152 of 209] Compiling Graphics.UI.Gtk.Gdk.Gdk ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Gdk.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/Gdk.o )
+[153 of 209] Compiling Graphics.UI.Gtk.Gdk.DrawWindow ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/DrawWindow.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Gdk/DrawWindow.o )
+[154 of 209] Compiling Graphics.UI.Gtk.Cairo ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Cairo.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Cairo.o )
+[155 of 209] Compiling Graphics.UI.Gtk.General.General ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/General.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/General/General.o )
+[156 of 209] Compiling Graphics.UI.Gtk.Entry.VScale ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/VScale.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/VScale.o )
+[157 of 209] Compiling Graphics.UI.Gtk.Entry.SpinButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/SpinButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/SpinButton.o )
+[158 of 209] Compiling Graphics.UI.Gtk.Entry.HScale ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/HScale.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/HScale.o )
+[159 of 209] Compiling Graphics.UI.Gtk.Entry.EntryCompletion ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/EntryCompletion.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/EntryCompletion.o )
+[160 of 209] Compiling Graphics.UI.Gtk.ModelView ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ModelView.o )
+[161 of 209] Compiling Graphics.UI.Gtk.Entry.Entry ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/Entry.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Entry/Entry.o )
+[162 of 209] Compiling Graphics.UI.Gtk.Embedding.Socket ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Embedding/Socket.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Embedding/Socket.o )
+[163 of 209] Compiling Graphics.UI.Gtk.Embedding.Plug ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Embedding/Plug.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Embedding/Plug.o )
+[164 of 209] Compiling Graphics.UI.Gtk.Display.Statusbar ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/Statusbar.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/Statusbar.o )
+[165 of 209] Compiling Graphics.UI.Gtk.Display.Spinner ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/Spinner.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/Spinner.o )
+[166 of 209] Compiling Graphics.UI.Gtk.Display.ProgressBar ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/ProgressBar.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/ProgressBar.o )
+[167 of 209] Compiling Graphics.UI.Gtk.Display.Label ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/Label.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/Label.o )
+[168 of 209] Compiling Graphics.UI.Gtk.Display.Image ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/Image.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/Image.o )
+[169 of 209] Compiling Graphics.UI.Gtk.Display.StatusIcon ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/StatusIcon.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/StatusIcon.o )
+[170 of 209] Compiling Graphics.UI.Gtk.Display.AccelLabel ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/AccelLabel.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/AccelLabel.o )
+[171 of 209] Compiling Graphics.UI.Gtk.Buttons.VolumeButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/VolumeButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/VolumeButton.o )
+[172 of 209] Compiling Graphics.UI.Gtk.Buttons.ToggleButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/ToggleButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/ToggleButton.o )
+[173 of 209] Compiling Graphics.UI.Gtk.Buttons.ScaleButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/ScaleButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/ScaleButton.o )
+[174 of 209] Compiling Graphics.UI.Gtk.Buttons.RadioButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/RadioButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/RadioButton.o )
+[175 of 209] Compiling Graphics.UI.Gtk.Buttons.LinkButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/LinkButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/LinkButton.o )
+[176 of 209] Compiling Graphics.UI.Gtk.Buttons.CheckButton ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/CheckButton.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/CheckButton.o )
+[177 of 209] Compiling Graphics.UI.Gtk.Buttons.Button ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/Button.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Buttons/Button.o )
+[178 of 209] Compiling Graphics.UI.Gtk.ActionMenuToolbar.UIManager ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ActionMenuToolbar/UIManager.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ActionMenuToolbar/UIManager.o )
+[179 of 209] Compiling Graphics.UI.Gtk.ActionMenuToolbar.Action ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ActionMenuToolbar/Action.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ActionMenuToolbar/Action.o )
+[180 of 209] Compiling Graphics.UI.Gtk.ActionMenuToolbar.ActionGroup ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ActionMenuToolbar/ActionGroup.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/ActionMenuToolbar/ActionGroup.o )
+[181 of 209] Compiling Graphics.UI.Gtk.Abstract.Widget ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Widget.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Widget.o )
+[182 of 209] Compiling Graphics.UI.Gtk.Abstract.Range ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Range.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Range.o )
+[183 of 209] Compiling Graphics.UI.Gtk.Abstract.Misc ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Misc.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Misc.o )
+[184 of 209] Compiling Graphics.UI.Gtk.Abstract.IMContext ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/IMContext.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/IMContext.o )
+[185 of 209] Compiling Graphics.UI.Gtk.Abstract.ContainerChildProperties ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/ContainerChildProperties.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/ContainerChildProperties.o )
+[186 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.Toolbar ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/Toolbar.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/Toolbar.o )
+[187 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.Menu ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/Menu.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/Menu.o )
+[188 of 209] Compiling Graphics.UI.Gtk.Layout.Table ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/Table.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/Table.o )
+[189 of 209] Compiling Graphics.UI.Gtk.Layout.Notebook ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/Notebook.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/Notebook.o )
+[190 of 209] Compiling Graphics.UI.Gtk.Layout.Layout ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/Layout.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/Layout.o )
+[191 of 209] Compiling Graphics.UI.Gtk.Layout.Fixed ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/Fixed.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Layout/Fixed.o )
+[192 of 209] Compiling Graphics.UI.Gtk.Abstract.Paned ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Paned.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Paned.o )
+[193 of 209] Compiling Graphics.UI.Gtk.Abstract.Container ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Container.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Container.o )
+[194 of 209] Compiling Graphics.UI.Gtk.MenuComboToolbar.Combo ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/Combo.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/MenuComboToolbar/Combo.o )
+[195 of 209] Compiling Graphics.UI.Gtk.Abstract.ButtonBox ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/ButtonBox.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/ButtonBox.o )
+[196 of 209] Compiling Graphics.UI.Gtk.Abstract.Box ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Box.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Box.o )
+[197 of 209] Compiling Graphics.UI.Gtk.Abstract.Bin ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Bin.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Abstract/Bin.o )
+[198 of 209] Compiling Graphics.UI.Gtk.Windows.AboutDialog ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/AboutDialog.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/AboutDialog.o )
+[199 of 209] Compiling Graphics.UI.Gtk.Windows.Assistant ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/Assistant.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/Assistant.o )
+[200 of 209] Compiling Graphics.UI.Gtk.Windows.Dialog ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/Dialog.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/Dialog.o )
+[201 of 209] Compiling Graphics.UI.Gtk.Windows.Invisible ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/Invisible.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/Invisible.o )
+[202 of 209] Compiling Graphics.UI.Gtk.Windows.MessageDialog ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/MessageDialog.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/MessageDialog.o )
+[203 of 209] Compiling Graphics.UI.Gtk.Display.InfoBar ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/InfoBar.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Display/InfoBar.o )
+[204 of 209] Compiling Graphics.UI.Gtk.Windows.OffscreenWindow ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/OffscreenWindow.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/OffscreenWindow.o )
+[205 of 209] Compiling Graphics.UI.Gtk.Windows.Window ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/Window.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/Window.o )
+[206 of 209] Compiling Graphics.UI.Gtk.Selectors.FileChooserDialog ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FileChooserDialog.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Selectors/FileChooserDialog.o )
+[207 of 209] Compiling Graphics.UI.Gtk.Windows.WindowGroup ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/WindowGroup.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk/Windows/WindowGroup.o )
+[208 of 209] Compiling Graphics.UI.Gtk  ( dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/Gtk.o )
+[209 of 209] Compiling Graphics.UI.GtkInternals ( dist/dist-sandbox-146b36c0/build/Graphics/UI/GtkInternals.hs, dist/dist-sandbox-146b36c0/build/Graphics/UI/GtkInternals.o )
+Graphics/UI/Gtk/General/hsgthread.c: In function ‘gtk2hs_threads_initialise’:
+
+Graphics/UI/Gtk/General/hsgthread.c:105:5: error:
+     warning: ‘g_static_mutex_init’ is deprecated: Use 'g_mutex_init' instead [-Wdeprecated-declarations]
+         g_static_mutex_init(&gtk2hs_finalizer_mutex);
+         ^~~~~~~~~~~~~~~~~~~
+    |
+105 |     g_static_mutex_init(&gtk2hs_finalizer_mutex);
+    |     ^
+
+In file included from /usr/include/glib-2.0/glib.h:108:0: error:
+    0,
+                     from Graphics/UI/Gtk/General/hsgthread.c:34:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:150:9: error:
+     note: declared here
+     void    g_static_mutex_init           (GStaticMutex *mutex);
+             ^~~~~~~~~~~~~~~~~~~
+    |
+150 | void    g_static_mutex_init           (GStaticMutex *mutex);
+    |         ^
+
+Graphics/UI/Gtk/General/hsgthread.c:113:5: error:
+     warning: ‘g_thread_init’ is deprecated [-Wdeprecated-declarations]
+         g_thread_init(NULL);
+         ^~~~~~~~~~~~~
+    |
+113 |     g_thread_init(NULL);
+    |     ^
+
+In file included from /usr/include/glib-2.0/glib.h:108:0: error:
+    0,
+                     from Graphics/UI/Gtk/General/hsgthread.c:34:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:265:10: error:
+     note: declared here
+     void     g_thread_init                   (gpointer vtable);
+              ^~~~~~~~~~~~~
+    |
+265 | void     g_thread_init                   (gpointer vtable);
+    |          ^
+Graphics/UI/Gtk/General/hsgthread.c: In function ‘gtk2hs_g_object_unref_from_mainloop’:
+
+Graphics/UI/Gtk/General/hsgthread.c:136:5: error:
+     warning: ‘g_static_mutex_get_mutex_impl’ is deprecated: Use 'GMutex' instead [-Wdeprecated-declarations]
+         g_static_mutex_lock(&gtk2hs_finalizer_mutex);
+         ^~~~~~~~~~~~~~~~~~~
+    |
+136 |     g_static_mutex_lock(&gtk2hs_finalizer_mutex);
+    |     ^
+
+In file included from /usr/include/glib-2.0/glib.h:108:0: error:
+    0,
+                     from Graphics/UI/Gtk/General/hsgthread.c:34:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:154:9: error:
+     note: declared here
+     GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    |
+154 | GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+    |         ^
+
+Graphics/UI/Gtk/General/hsgthread.c:181:5: error:
+     warning: ‘g_static_mutex_get_mutex_impl’ is deprecated: Use 'GMutex' instead [-Wdeprecated-declarations]
+         g_static_mutex_unlock(&gtk2hs_finalizer_mutex);
+         ^~~~~~~~~~~~~~~~~~~~~
+    |
+181 |     g_static_mutex_unlock(&gtk2hs_finalizer_mutex);
+    |     ^
+
+In file included from /usr/include/glib-2.0/glib.h:108:0: error:
+    0,
+                     from Graphics/UI/Gtk/General/hsgthread.c:34:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:154:9: error:
+     note: declared here
+     GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    |
+154 | GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+    |         ^
+Graphics/UI/Gtk/General/hsgthread.c: In function ‘gtk2hs_run_finalizers’:
+
+Graphics/UI/Gtk/General/hsgthread.c:201:5: error:
+     warning: ‘g_static_mutex_get_mutex_impl’ is deprecated: Use 'GMutex' instead [-Wdeprecated-declarations]
+         g_static_mutex_lock(&gtk2hs_finalizer_mutex);
+         ^~~~~~~~~~~~~~~~~~~
+    |
+201 |     g_static_mutex_lock(&gtk2hs_finalizer_mutex);
+    |     ^
+
+In file included from /usr/include/glib-2.0/glib.h:108:0: error:
+    0,
+                     from Graphics/UI/Gtk/General/hsgthread.c:34:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:154:9: error:
+     note: declared here
+     GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    |
+154 | GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+    |         ^
+
+Graphics/UI/Gtk/General/hsgthread.c:224:5: error:
+     warning: ‘g_static_mutex_get_mutex_impl’ is deprecated: Use 'GMutex' instead [-Wdeprecated-declarations]
+         g_static_mutex_unlock(&gtk2hs_finalizer_mutex);
+         ^~~~~~~~~~~~~~~~~~~~~
+    |
+224 |     g_static_mutex_unlock(&gtk2hs_finalizer_mutex);
+    |     ^
+
+In file included from /usr/include/glib-2.0/glib.h:108:0: error:
+    0,
+                     from Graphics/UI/Gtk/General/hsgthread.c:34:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:154:9: error:
+     note: declared here
+     GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    |
+154 | GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+    |         ^
+Graphics/UI/Gtk/General/hsgthread.c: In function ‘gtk2hs_threads_initialise’:
+
+Graphics/UI/Gtk/General/hsgthread.c:105:5: error:
+     warning: ‘g_static_mutex_init’ is deprecated: Use 'g_mutex_init' instead [-Wdeprecated-declarations]
+         g_static_mutex_init(&gtk2hs_finalizer_mutex);
+         ^~~~~~~~~~~~~~~~~~~
+    |
+105 |     g_static_mutex_init(&gtk2hs_finalizer_mutex);
+    |     ^
+
+In file included from /usr/include/glib-2.0/glib.h:108:0: error:
+    0,
+                     from Graphics/UI/Gtk/General/hsgthread.c:34:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:150:9: error:
+     note: declared here
+     void    g_static_mutex_init           (GStaticMutex *mutex);
+             ^~~~~~~~~~~~~~~~~~~
+    |
+150 | void    g_static_mutex_init           (GStaticMutex *mutex);
+    |         ^
+
+Graphics/UI/Gtk/General/hsgthread.c:113:5: error:
+     warning: ‘g_thread_init’ is deprecated [-Wdeprecated-declarations]
+         g_thread_init(NULL);
+         ^~~~~~~~~~~~~
+    |
+113 |     g_thread_init(NULL);
+    |     ^
+
+In file included from /usr/include/glib-2.0/glib.h:108:0: error:
+    0,
+                     from Graphics/UI/Gtk/General/hsgthread.c:34:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:265:10: error:
+     note: declared here
+     void     g_thread_init                   (gpointer vtable);
+              ^~~~~~~~~~~~~
+    |
+265 | void     g_thread_init                   (gpointer vtable);
+    |          ^
+Graphics/UI/Gtk/General/hsgthread.c: In function ‘gtk2hs_g_object_unref_from_mainloop’:
+
+Graphics/UI/Gtk/General/hsgthread.c:136:5: error:
+     warning: ‘g_static_mutex_get_mutex_impl’ is deprecated: Use 'GMutex' instead [-Wdeprecated-declarations]
+         g_static_mutex_lock(&gtk2hs_finalizer_mutex);
+         ^~~~~~~~~~~~~~~~~~~
+    |
+136 |     g_static_mutex_lock(&gtk2hs_finalizer_mutex);
+    |     ^
+
+In file included from /usr/include/glib-2.0/glib.h:108:0: error:
+    0,
+                     from Graphics/UI/Gtk/General/hsgthread.c:34:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:154:9: error:
+     note: declared here
+     GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    |
+154 | GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+    |         ^
+
+Graphics/UI/Gtk/General/hsgthread.c:181:5: error:
+     warning: ‘g_static_mutex_get_mutex_impl’ is deprecated: Use 'GMutex' instead [-Wdeprecated-declarations]
+         g_static_mutex_unlock(&gtk2hs_finalizer_mutex);
+         ^~~~~~~~~~~~~~~~~~~~~
+    |
+181 |     g_static_mutex_unlock(&gtk2hs_finalizer_mutex);
+    |     ^
+
+In file included from /usr/include/glib-2.0/glib.h:108:0: error:
+    0,
+                     from Graphics/UI/Gtk/General/hsgthread.c:34:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:154:9: error:
+     note: declared here
+     GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    |
+154 | GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+    |         ^
+Graphics/UI/Gtk/General/hsgthread.c: In function ‘gtk2hs_run_finalizers’:
+
+Graphics/UI/Gtk/General/hsgthread.c:201:5: error:
+     warning: ‘g_static_mutex_get_mutex_impl’ is deprecated: Use 'GMutex' instead [-Wdeprecated-declarations]
+         g_static_mutex_lock(&gtk2hs_finalizer_mutex);
+         ^~~~~~~~~~~~~~~~~~~
+    |
+201 |     g_static_mutex_lock(&gtk2hs_finalizer_mutex);
+    |     ^
+
+In file included from /usr/include/glib-2.0/glib.h:108:0: error:
+    0,
+                     from Graphics/UI/Gtk/General/hsgthread.c:34:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:154:9: error:
+     note: declared here
+     GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    |
+154 | GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+    |         ^
+
+Graphics/UI/Gtk/General/hsgthread.c:224:5: error:
+     warning: ‘g_static_mutex_get_mutex_impl’ is deprecated: Use 'GMutex' instead [-Wdeprecated-declarations]
+         g_static_mutex_unlock(&gtk2hs_finalizer_mutex);
+         ^~~~~~~~~~~~~~~~~~~~~
+    |
+224 |     g_static_mutex_unlock(&gtk2hs_finalizer_mutex);
+    |     ^
+
+In file included from /usr/include/glib-2.0/glib.h:108:0: error:
+    0,
+                     from Graphics/UI/Gtk/General/hsgthread.c:34:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:154:9: error:
+     note: declared here
+     GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    |
+154 | GMutex *g_static_mutex_get_mutex_impl (GStaticMutex *mutex);
+    |         ^
+Installing library in /home/la1/Documents/MasterThesis/aiw2/.cabal-sandbox/lib/x86_64-linux-ghc-8.2.2/gtk-0.14.7-GTM6TOWZl4l6iv8HruUIXU
+cabal: Leaving directory '/tmp/cabal-tmp-19019/gtk-0.14.7'

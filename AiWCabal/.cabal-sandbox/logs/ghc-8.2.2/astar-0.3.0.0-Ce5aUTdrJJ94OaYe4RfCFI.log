@@ -1,0 +1,7 @@
+cabal: Entering directory '/home/la1/Documents/MasterThesis/aiw2/astar-0.3.0.0'
+Configuring astar-0.3.0.0...
+Preprocessing library for astar-0.3.0.0..
+Building library for astar-0.3.0.0..
+[1 of 1] Compiling Data.Graph.AStar ( src/Data/Graph/AStar.hs, dist/dist-sandbox-146b36c0/build/Data/Graph/AStar.o )
+Installing library in /home/la1/Documents/MasterThesis/aiw2/.cabal-sandbox/lib/x86_64-linux-ghc-8.2.2/astar-0.3.0.0-Ce5aUTdrJJ94OaYe4RfCFI
+cabal: Leaving directory '/home/la1/Documents/MasterThesis/aiw2/astar-0.3.0.0'

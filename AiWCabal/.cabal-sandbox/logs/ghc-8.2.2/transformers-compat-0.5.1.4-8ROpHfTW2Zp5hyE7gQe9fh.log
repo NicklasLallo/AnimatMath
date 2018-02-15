@@ -1,0 +1,8 @@
+cabal: Entering directory '/tmp/cabal-tmp-19022/transformers-compat-0.5.1.4'
+Configuring transformers-compat-0.5.1.4...
+Preprocessing library for transformers-compat-0.5.1.4..
+Building library for transformers-compat-0.5.1.4..
+[1 of 2] Compiling Control.Monad.Trans.Instances ( src/Control/Monad/Trans/Instances.hs, dist/dist-sandbox-146b36c0/build/Control/Monad/Trans/Instances.o )
+[2 of 2] Compiling Paths_transformers_compat ( dist/dist-sandbox-146b36c0/build/autogen/Paths_transformers_compat.hs, dist/dist-sandbox-146b36c0/build/Paths_transformers_compat.o )
+Installing library in /home/la1/Documents/MasterThesis/aiw2/.cabal-sandbox/lib/x86_64-linux-ghc-8.2.2/transformers-compat-0.5.1.4-8ROpHfTW2Zp5hyE7gQe9fh
+cabal: Leaving directory '/tmp/cabal-tmp-19022/transformers-compat-0.5.1.4'

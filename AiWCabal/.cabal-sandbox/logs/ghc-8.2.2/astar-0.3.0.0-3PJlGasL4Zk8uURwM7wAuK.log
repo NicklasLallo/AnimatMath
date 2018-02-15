@@ -1,0 +1,50 @@
+cabal: Entering directory '/home/la1/Documents/MasterThesis/aiw2/astar-0.3.0.0'
+Configuring astar-0.3.0.0...
+Preprocessing library for astar-0.3.0.0..
+Building library for astar-0.3.0.0..
+[1 of 1] Compiling Data.Graph.AStar ( src/Data/Graph/AStar.hs, dist/dist-sandbox-146b36c0/build/Data/Graph/AStar.o )
+
+src/Data/Graph/AStar.hs:6:1: error:
+    Could not find module ‘Data.Set’
+    Perhaps you meant Data.Int (from base-4.10.1.0)
+    Use -v to see a list of the files searched for.
+  |
+6 | import qualified Data.Set as Set
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/Data/Graph/AStar.hs:7:1: error:
+    Could not find module ‘Data.Set’
+    Perhaps you meant Data.Int (from base-4.10.1.0)
+    Use -v to see a list of the files searched for.
+  |
+7 | import Data.Set (Set, (\\))
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/Data/Graph/AStar.hs:8:1: error:
+    Could not find module ‘Data.Map’
+    Use -v to see a list of the files searched for.
+  |
+8 | import qualified Data.Map as Map
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/Data/Graph/AStar.hs:9:1: error:
+    Could not find module ‘Data.Map’
+    Use -v to see a list of the files searched for.
+  |
+9 | import Data.Map (Map, (!))
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/Data/Graph/AStar.hs:10:1: error:
+    Could not find module ‘Data.PSQueue’
+    Use -v to see a list of the files searched for.
+   |
+10 | import qualified Data.PSQueue as PSQ
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/Data/Graph/AStar.hs:11:1: error:
+    Could not find module ‘Data.PSQueue’
+    Use -v to see a list of the files searched for.
+   |
+11 | import Data.PSQueue (PSQ, Binding(..), minView)
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+cabal: Leaving directory '/home/la1/Documents/MasterThesis/aiw2/astar-0.3.0.0'

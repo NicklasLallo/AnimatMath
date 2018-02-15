@@ -1,0 +1,9 @@
+cabal: Entering directory '/tmp/cabal-tmp-19020/parallel-3.2.1.1'
+Configuring parallel-3.2.1.1...
+Preprocessing library for parallel-3.2.1.1..
+Building library for parallel-3.2.1.1..
+[1 of 3] Compiling Control.Parallel ( Control/Parallel.hs, dist/dist-sandbox-146b36c0/build/Control/Parallel.o )
+[2 of 3] Compiling Control.Seq      ( Control/Seq.hs, dist/dist-sandbox-146b36c0/build/Control/Seq.o )
+[3 of 3] Compiling Control.Parallel.Strategies ( Control/Parallel/Strategies.hs, dist/dist-sandbox-146b36c0/build/Control/Parallel/Strategies.o )
+Installing library in /home/la1/Documents/MasterThesis/aiw2/.cabal-sandbox/lib/x86_64-linux-ghc-8.2.2/parallel-3.2.1.1-6PIhrl6oqe7Af1Z2sa6T1
+cabal: Leaving directory '/tmp/cabal-tmp-19020/parallel-3.2.1.1'

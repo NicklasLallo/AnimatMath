@@ -1,0 +1,10 @@
+cabal: Entering directory '/tmp/cabal-tmp-19019/ansi-terminal-0.8.0.1'
+Configuring ansi-terminal-0.8.0.1...
+Preprocessing library for ansi-terminal-0.8.0.1..
+Building library for ansi-terminal-0.8.0.1..
+[1 of 4] Compiling System.Console.ANSI.Types ( System/Console/ANSI/Types.hs, dist/dist-sandbox-146b36c0/build/System/Console/ANSI/Types.o )
+[2 of 4] Compiling System.Console.ANSI.Codes ( System/Console/ANSI/Codes.hs, dist/dist-sandbox-146b36c0/build/System/Console/ANSI/Codes.o )
+[3 of 4] Compiling System.Console.ANSI.Unix ( System/Console/ANSI/Unix.hs, dist/dist-sandbox-146b36c0/build/System/Console/ANSI/Unix.o )
+[4 of 4] Compiling System.Console.ANSI ( System/Console/ANSI.hs, dist/dist-sandbox-146b36c0/build/System/Console/ANSI.o )
+Installing library in /home/la1/Documents/MasterThesis/aiw2/.cabal-sandbox/lib/x86_64-linux-ghc-8.2.2/ansi-terminal-0.8.0.1-1ACuSYWLYbA6EptIrIJkN4
+cabal: Leaving directory '/tmp/cabal-tmp-19019/ansi-terminal-0.8.0.1'

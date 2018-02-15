@@ -1,0 +1,26 @@
+cabal: Entering directory '/tmp/cabal-tmp-19020/cairo-0.13.4.2'
+[1 of 1] Compiling Main             ( /tmp/cabal-tmp-19020/cairo-0.13.4.2/dist/dist-sandbox-146b36c0/setup/setup.hs, /tmp/cabal-tmp-19020/cairo-0.13.4.2/dist/dist-sandbox-146b36c0/setup/Main.o )
+Linking /tmp/cabal-tmp-19020/cairo-0.13.4.2/dist/dist-sandbox-146b36c0/setup/setup ...
+Configuring cairo-0.13.4.2...
+Preprocessing library for cairo-0.13.4.2..
+Building library for cairo-0.13.4.2..
+[ 1 of 18] Compiling Graphics.Rendering.Cairo.Matrix ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Matrix.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Matrix.o )
+[ 2 of 18] Compiling Graphics.Rendering.Cairo.Types ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Types.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Types.o )
+[ 3 of 18] Compiling Graphics.Rendering.Cairo.Internal.Utilities ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Utilities.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Utilities.o )
+[ 4 of 18] Compiling Graphics.Rendering.Cairo.Internal.Surfaces.Surface ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Surfaces/Surface.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Surfaces/Surface.o )
+[ 5 of 18] Compiling Graphics.Rendering.Cairo.Internal.Surfaces.SVG ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Surfaces/SVG.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Surfaces/SVG.o )
+[ 6 of 18] Compiling Graphics.Rendering.Cairo.Internal.Surfaces.PS ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Surfaces/PS.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Surfaces/PS.o )
+[ 7 of 18] Compiling Graphics.Rendering.Cairo.Internal.Surfaces.PNG ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Surfaces/PNG.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Surfaces/PNG.o )
+[ 8 of 18] Compiling Graphics.Rendering.Cairo.Internal.Surfaces.PDF ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Surfaces/PDF.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Surfaces/PDF.o )
+[ 9 of 18] Compiling Graphics.Rendering.Cairo.Internal.Surfaces.Image ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Surfaces/Image.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Surfaces/Image.o )
+[10 of 18] Compiling Graphics.Rendering.Cairo.Internal.Region ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Region.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Region.o )
+[11 of 18] Compiling Graphics.Rendering.Cairo.Internal.Fonts.FontOptions ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Fonts/FontOptions.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Fonts/FontOptions.o )
+[12 of 18] Compiling Graphics.Rendering.Cairo.Internal.Drawing.Transformations ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Drawing/Transformations.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Drawing/Transformations.o )
+[13 of 18] Compiling Graphics.Rendering.Cairo.Internal.Drawing.Text ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Drawing/Text.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Drawing/Text.o )
+[14 of 18] Compiling Graphics.Rendering.Cairo.Internal.Drawing.Patterns ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Drawing/Patterns.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Drawing/Patterns.o )
+[15 of 18] Compiling Graphics.Rendering.Cairo.Internal.Drawing.Paths ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Drawing/Paths.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Drawing/Paths.o )
+[16 of 18] Compiling Graphics.Rendering.Cairo.Internal.Drawing.Cairo ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Drawing/Cairo.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal/Drawing/Cairo.o )
+[17 of 18] Compiling Graphics.Rendering.Cairo.Internal ( Graphics/Rendering/Cairo/Internal.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo/Internal.o )
+[18 of 18] Compiling Graphics.Rendering.Cairo ( Graphics/Rendering/Cairo.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Cairo.o )
+Installing library in /home/la1/Documents/MasterThesis/aiw2/.cabal-sandbox/lib/x86_64-linux-ghc-8.2.2/cairo-0.13.4.2-6YXqdupIUtsBa2mpq5DXYS
+cabal: Leaving directory '/tmp/cabal-tmp-19020/cairo-0.13.4.2'

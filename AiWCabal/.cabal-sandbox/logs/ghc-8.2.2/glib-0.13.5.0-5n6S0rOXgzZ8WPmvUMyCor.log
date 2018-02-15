@@ -1,0 +1,37 @@
+cabal: Entering directory '/tmp/cabal-tmp-19019/glib-0.13.5.0'
+[1 of 1] Compiling Main             ( /tmp/cabal-tmp-19019/glib-0.13.5.0/dist/dist-sandbox-146b36c0/setup/setup.hs, /tmp/cabal-tmp-19019/glib-0.13.5.0/dist/dist-sandbox-146b36c0/setup/Main.o )
+Linking /tmp/cabal-tmp-19019/glib-0.13.5.0/dist/dist-sandbox-146b36c0/setup/setup ...
+Configuring glib-0.13.5.0...
+Preprocessing library for glib-0.13.5.0..
+Building library for glib-0.13.5.0..
+[ 1 of 21] Compiling System.Glib.Attributes ( System/Glib/Attributes.hs, dist/dist-sandbox-146b36c0/build/System/Glib/Attributes.o )
+[ 2 of 21] Compiling System.Glib.FFI  ( System/Glib/FFI.hs, dist/dist-sandbox-146b36c0/build/System/Glib/FFI.o )
+[ 3 of 21] Compiling System.Glib.Flags ( System/Glib/Flags.hs, dist/dist-sandbox-146b36c0/build/System/Glib/Flags.o )
+[ 4 of 21] Compiling System.Glib.GList ( dist/dist-sandbox-146b36c0/build/System/Glib/GList.hs, dist/dist-sandbox-146b36c0/build/System/Glib/GList.o )
+[ 5 of 21] Compiling System.Glib.GString ( dist/dist-sandbox-146b36c0/build/System/Glib/GString.hs, dist/dist-sandbox-146b36c0/build/System/Glib/GString.o )
+[ 6 of 21] Compiling System.Glib.GType ( dist/dist-sandbox-146b36c0/build/System/Glib/GType.hs, dist/dist-sandbox-146b36c0/build/System/Glib/GType.o )
+[ 7 of 21] Compiling System.Glib.GTypeConstants ( dist/dist-sandbox-146b36c0/build/System/Glib/GTypeConstants.hs, dist/dist-sandbox-146b36c0/build/System/Glib/GTypeConstants.o )
+[ 8 of 21] Compiling System.Glib.GValue ( dist/dist-sandbox-146b36c0/build/System/Glib/GValue.hs, dist/dist-sandbox-146b36c0/build/System/Glib/GValue.o )
+[ 9 of 21] Compiling System.Glib.GParameter ( dist/dist-sandbox-146b36c0/build/System/Glib/GParameter.hs, dist/dist-sandbox-146b36c0/build/System/Glib/GParameter.o )
+
+System/Glib/GParameter.hsc:42:10: warning: [-Wmissing-methods]
+    • No explicit implementation for
+        either ‘peek’ or ‘peekElemOff’ or ‘peekByteOff’
+    • In the instance declaration for ‘Storable GParameter’
+   |
+42 | instance Storable GParameter where
+   |          ^^^^^^^^^^^^^^^^^^^
+[10 of 21] Compiling System.Glib.Types ( dist/dist-sandbox-146b36c0/build/System/Glib/Types.hs, dist/dist-sandbox-146b36c0/build/System/Glib/Types.o )
+[11 of 21] Compiling System.Glib.UTFString ( System/Glib/UTFString.hs, dist/dist-sandbox-146b36c0/build/System/Glib/UTFString.o )
+[12 of 21] Compiling System.Glib.GObject ( dist/dist-sandbox-146b36c0/build/System/Glib/GObject.hs, dist/dist-sandbox-146b36c0/build/System/Glib/GObject.o )
+[13 of 21] Compiling System.Glib.Signals ( dist/dist-sandbox-146b36c0/build/System/Glib/Signals.hs, dist/dist-sandbox-146b36c0/build/System/Glib/Signals.o )
+[14 of 21] Compiling System.Glib.MainLoop ( dist/dist-sandbox-146b36c0/build/System/Glib/MainLoop.hs, dist/dist-sandbox-146b36c0/build/System/Glib/MainLoop.o )
+[15 of 21] Compiling System.Glib.GValueTypes ( dist/dist-sandbox-146b36c0/build/System/Glib/GValueTypes.hs, dist/dist-sandbox-146b36c0/build/System/Glib/GValueTypes.o )
+[16 of 21] Compiling System.Glib.StoreValue ( dist/dist-sandbox-146b36c0/build/System/Glib/StoreValue.hs, dist/dist-sandbox-146b36c0/build/System/Glib/StoreValue.o )
+[17 of 21] Compiling System.Glib.Properties ( dist/dist-sandbox-146b36c0/build/System/Glib/Properties.hs, dist/dist-sandbox-146b36c0/build/System/Glib/Properties.o )
+[18 of 21] Compiling System.Glib.GError ( dist/dist-sandbox-146b36c0/build/System/Glib/GError.hs, dist/dist-sandbox-146b36c0/build/System/Glib/GError.o )
+[19 of 21] Compiling System.Glib.GDateTime ( dist/dist-sandbox-146b36c0/build/System/Glib/GDateTime.hs, dist/dist-sandbox-146b36c0/build/System/Glib/GDateTime.o )
+[20 of 21] Compiling System.Glib.Utils ( dist/dist-sandbox-146b36c0/build/System/Glib/Utils.hs, dist/dist-sandbox-146b36c0/build/System/Glib/Utils.o )
+[21 of 21] Compiling System.Glib      ( System/Glib.hs, dist/dist-sandbox-146b36c0/build/System/Glib.o )
+Installing library in /home/la1/Documents/MasterThesis/aiw2/.cabal-sandbox/lib/x86_64-linux-ghc-8.2.2/glib-0.13.5.0-5n6S0rOXgzZ8WPmvUMyCor
+cabal: Leaving directory '/tmp/cabal-tmp-19019/glib-0.13.5.0'

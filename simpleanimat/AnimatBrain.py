@@ -1,6 +1,7 @@
 import numpy as np
 import random as r 
 import math
+import pickle
 
 class AnimatBrain:
 
@@ -296,3 +297,14 @@ class AnimatBrain:
             #nodeR = 1/(1 + math.sqrt(nodeNr*nodeSumSqReward - nodeSumReward**2)/nodeNr)
 
         return nodeChange < self.structureM
+
+    #####
+    
+#Creates a pickle dump of the AnimatBrain
+def exportBrain(animat, filename):
+    with open(filename,'wb') as output:
+        pickle.dump(animat, output, pickle.HIGHEST_PROTOCOL)
+#Reads a pickle file and returns the animat inside it
+def importBrain(filename):
+    with open(filename, 'rb') as input:
+        return pickle.load(input)

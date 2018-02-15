@@ -1,0 +1,7 @@
+cabal: Entering directory '/tmp/cabal-tmp-19022/monad-parallel-0.7.2.2'
+Configuring monad-parallel-0.7.2.2...
+Preprocessing library for monad-parallel-0.7.2.2..
+Building library for monad-parallel-0.7.2.2..
+[1 of 1] Compiling Control.Monad.Parallel ( Control/Monad/Parallel.hs, dist/dist-sandbox-146b36c0/build/Control/Monad/Parallel.o )
+Installing library in /home/la1/Documents/MasterThesis/aiw2/.cabal-sandbox/lib/x86_64-linux-ghc-8.2.2/monad-parallel-0.7.2.2-CCjtnYCaFFS7zv5Kj27UQV
+cabal: Leaving directory '/tmp/cabal-tmp-19022/monad-parallel-0.7.2.2'

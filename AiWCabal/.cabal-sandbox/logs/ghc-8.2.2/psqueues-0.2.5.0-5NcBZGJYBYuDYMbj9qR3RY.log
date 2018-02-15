@@ -1,0 +1,13 @@
+cabal: Entering directory '/tmp/cabal-tmp-2658/psqueues-0.2.5.0'
+Configuring psqueues-0.2.5.0...
+Preprocessing library for psqueues-0.2.5.0..
+Building library for psqueues-0.2.5.0..
+[1 of 7] Compiling Data.BitUtil     ( src/Data/BitUtil.hs, dist/dist-sandbox-146b36c0/build/Data/BitUtil.o )
+[2 of 7] Compiling Data.IntPSQ.Internal ( src/Data/IntPSQ/Internal.hs, dist/dist-sandbox-146b36c0/build/Data/IntPSQ/Internal.o )
+[3 of 7] Compiling Data.IntPSQ      ( src/Data/IntPSQ.hs, dist/dist-sandbox-146b36c0/build/Data/IntPSQ.o )
+[4 of 7] Compiling Data.OrdPSQ.Internal ( src/Data/OrdPSQ/Internal.hs, dist/dist-sandbox-146b36c0/build/Data/OrdPSQ/Internal.o )
+[5 of 7] Compiling Data.OrdPSQ      ( src/Data/OrdPSQ.hs, dist/dist-sandbox-146b36c0/build/Data/OrdPSQ.o )
+[6 of 7] Compiling Data.HashPSQ.Internal ( src/Data/HashPSQ/Internal.hs, dist/dist-sandbox-146b36c0/build/Data/HashPSQ/Internal.o )
+[7 of 7] Compiling Data.HashPSQ     ( src/Data/HashPSQ.hs, dist/dist-sandbox-146b36c0/build/Data/HashPSQ.o )
+Installing library in /home/la1/Documents/MasterThesis/aiw2/.cabal-sandbox/lib/x86_64-linux-ghc-8.2.2/psqueues-0.2.5.0-5NcBZGJYBYuDYMbj9qR3RY
+cabal: Leaving directory '/tmp/cabal-tmp-2658/psqueues-0.2.5.0'

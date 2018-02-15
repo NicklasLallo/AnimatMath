@@ -1,0 +1,22 @@
+cabal: Entering directory '/tmp/cabal-tmp-19020/pango-0.13.4.0'
+[1 of 1] Compiling Main             ( /tmp/cabal-tmp-19020/pango-0.13.4.0/dist/dist-sandbox-146b36c0/setup/setup.hs, /tmp/cabal-tmp-19020/pango-0.13.4.0/dist/dist-sandbox-146b36c0/setup/Main.o )
+Linking /tmp/cabal-tmp-19020/pango-0.13.4.0/dist/dist-sandbox-146b36c0/setup/setup ...
+Configuring pango-0.13.4.0...
+Preprocessing library for pango-0.13.4.0..
+Building library for pango-0.13.4.0..
+[ 1 of 14] Compiling Graphics.Rendering.Pango.Types ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Types.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Types.o )
+[ 2 of 14] Compiling Graphics.Rendering.Pango.BasicTypes ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/BasicTypes.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/BasicTypes.o )
+[ 3 of 14] Compiling Graphics.Rendering.Pango.Structs ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Structs.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Structs.o )
+[ 4 of 14] Compiling Graphics.Rendering.Pango.GlyphStorage ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/GlyphStorage.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/GlyphStorage.o )
+[ 5 of 14] Compiling Graphics.Rendering.Pango.Enums ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Enums.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Enums.o )
+[ 6 of 14] Compiling Graphics.Rendering.Pango.Description ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Description.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Description.o )
+[ 7 of 14] Compiling Graphics.Rendering.Pango.Font ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Font.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Font.o )
+[ 8 of 14] Compiling Graphics.Rendering.Pango.Context ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Context.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Context.o )
+[ 9 of 14] Compiling Graphics.Rendering.Pango.Attributes ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Attributes.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Attributes.o )
+[10 of 14] Compiling Graphics.Rendering.Pango.Rendering ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Rendering.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Rendering.o )
+[11 of 14] Compiling Graphics.Rendering.Pango.Markup ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Markup.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Markup.o )
+[12 of 14] Compiling Graphics.Rendering.Pango.Layout ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Layout.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Layout.o )
+[13 of 14] Compiling Graphics.Rendering.Pango.Cairo ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Cairo.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango/Cairo.o )
+[14 of 14] Compiling Graphics.Rendering.Pango ( dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango.hs, dist/dist-sandbox-146b36c0/build/Graphics/Rendering/Pango.o )
+Installing library in /home/la1/Documents/MasterThesis/aiw2/.cabal-sandbox/lib/x86_64-linux-ghc-8.2.2/pango-0.13.4.0-3onyDMQH2Ns34Lp4do0JIW
+cabal: Leaving directory '/tmp/cabal-tmp-19020/pango-0.13.4.0'
