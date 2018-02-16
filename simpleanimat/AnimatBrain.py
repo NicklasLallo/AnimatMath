@@ -5,7 +5,7 @@ import pickle
 
 class AnimatBrain:
 
-    def __init__(self, numberOfSensors, numberOfActions, numberOfNeeds, learningRate, discount, structureR, structureZ, structureM, policyParameter, explorationProb):
+    def __init__(self, numberOfSensors, numberOfActions, numberOfNeeds, learningRate, discount, structureR, structureZ, structureM, policyParameter, explorationProb, historyMaxLength = 1000, timeBetweenNodeFormation = 0):
         #TODO: Init network etc
         self.nrOfSensors = numberOfSensors
         self.nrOfActions = numberOfActions
@@ -20,7 +20,7 @@ class AnimatBrain:
         self.structureM = structureM            #How much can the Q-entry of a node-candidate fluctuate and that node is still added
 
         
-        self.timeBetweenNodeFormation = 30 #Set to 0 to keep original node formation rate
+        self.timeBetweenNodeFormation = timeBetweenNodeFormation #Set to 0 to keep original node formation rate
         self.timeSinceLastNodeFormation = self.timeBetweenNodeFormation
         self.newestNodes = [-1,-1,-1]
         self.surprisedNeeds = []
@@ -30,7 +30,7 @@ class AnimatBrain:
         self.historyActionPerformed = []
         self.historyRewards = []
         self.historyGlobalQs = []
-        self.historyMaxLength = 1000
+        self.historyMaxLength = historyMaxLength
 
 
         self.initTables(numberOfSensors, numberOfActions, numberOfNeeds)
