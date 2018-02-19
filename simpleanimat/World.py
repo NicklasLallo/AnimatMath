@@ -17,30 +17,36 @@ class World:
         self.animatTypeNr = 0
         self.animatsVisible = animatsVisible
         self.sideeffectHandeler = sideeffectHandeler
+        self.nextRewards = [0]*animatNr
         for x in range(self.animatNr):
-            self.animats.append[animats[x], animatPos[x], animatType[x]]
+            self.animats.append((animats[x], animatPos[x], animatType[x]))
             if animatType[x]+1 > self.animatTypeNr:
                 self.animatTypeNr = animatType[x]+1
 
-    def getAnimatAndAttributes(self, nr):
-        animat = (self.animats[nr])
-        (x,y) = animat[1]
-        attributes = self.blocks[self.structure[y][x]]
+    def getAnimatAttributes(self, nr):
+        (animatBrain, (x,y), animatType) = self.animats[nr]
+        (attributes, rewards) = self.blocks[self.structure[y][x]]
         if self.animatsVisible:
             animatAttributes = [0]*self.animatTypeNr
-            for ani in self.animats:
-                if ani[0] == animat[0]:
+            for (ani,pos,aniType) in self.animats:
+                if ani == animatBrain:
                     continue
-                if ani[1] == animat[1]:
-                    animatAttributes[ani[2]] = 1
+                if pos == (x,y):
+                    animatAttributes[aniType] = 1
             attributes += animatAttributes
-        return (animat[0], attributes)
+        return (attributes, rewards)
 
-    def runAnimat(self, nr, reward):
-        (animat, attributes) = getAnimatAndAttributes(nr)
-        action = animat.program(attributes, reward)
+    def runAnimat(self, nr):
+        (attributes, rewards) = getAnimatAttributes(nr)
+        (animatBrain, pos, animatType) = self.animats[nr]
+        action = animatBrain.program(attributes, self.nextRewards[nr])
+        self.nextRewards[nr] = rewards[action][animatType]
         if sideeffectHandeler != None:
             sideeffectHandeler.handleAction(animat, action, self)
+
+    def worldStep(self):
+        for nr in range(animatNr):
+            runAnimat(nr)
         
 
 
