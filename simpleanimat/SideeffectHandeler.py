@@ -5,5 +5,5 @@ class SideeffectHandeler:
         raise NotImplementedError("SideeffectHandeler is an abstract supertype and cannot be instantiated.")
 
     #Takes an animat, the action it performed, and the world to cause potential sideeffects of the action to the world
-    def handleAction(animat, action, world):
+    def handleAction(self, animat, action, world):
         raise NotImplementedError("Any SideeffectHandler needs to implement a the handleAction function.")

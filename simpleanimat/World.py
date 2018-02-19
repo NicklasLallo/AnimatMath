@@ -42,7 +42,7 @@ class World:
         action = animatBrain.program(attributes, self.nextRewards[nr])
         self.nextRewards[nr] = rewards[action][animatType]
         if sideeffectHandeler != None:
-            sideeffectHandeler.handleAction(animat, action, self)
+            sideeffectHandeler.handleAction(nr, action, self)
 
     def worldStep(self):
         for nr in range(animatNr):
