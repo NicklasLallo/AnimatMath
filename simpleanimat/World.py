@@ -39,6 +39,8 @@ class World:
     def runAnimat(self, nr, reward):
         (animat, attributes) = getAnimatAndAttributes(nr)
         action = animat.program(attributes, reward)
+        if sideeffectHandeler != None:
+            sideeffectHandeler.handleAction(animat, action, self)
         
 
 
