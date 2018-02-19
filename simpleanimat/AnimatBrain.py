@@ -1,4 +1,3 @@
-import numpy as np
 import random as r 
 import math
 import pickle
@@ -119,11 +118,10 @@ class AnimatBrain:
 
         return bestAction
 
-    def propogateNetwork(self, attributes):
+    def propogateNetwork(self, attrs):
         #TODO: Replace placeholderfunction
         #Takes the array of active sensors and returns a list of topactive nodes
         #return [i for i, x in enumerate(attributes.tolist()) if x == 1]
-        attrs = attributes.tolist()
         sensor = 0
         topActive = []
         for value in attrs:

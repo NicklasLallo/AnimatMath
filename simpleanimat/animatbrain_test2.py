@@ -6,7 +6,7 @@ import random as r
 
 position = 0
 reward = [0,0]
-attributes = [np.array([1,0,0]), np.array([0,1,0]), np.array([1,0,0]), np.array([0,0,1]), np.array([0,1,0])]
+attributes = [[1,0,0],[0,1,0],[1,0,0],[0,0,1],[0,1,0]]
 eatRewards = [[0.7,-0.05],[-0.05,0.7],[0.7,-0.05],[-0.2,-0.2],[-0.05, -0.8]]
 animat = AnimatBrain(3,2,2,  0.750721904233344, 0.5637440246471103, 0.9384171865197604, 0.489492166955507, 0.6602059448636848, 0.8178567097150351,  0.05)
 
@@ -48,7 +48,7 @@ animat = AnimatBrain(2,3,2,  0.9,0.9,  0.6,0.8,0.1,  0.4,  0.2)
 
 for x in range(0,100):
 
-    attributes = [np.array([0,1]),np.array([1,1]),np.array([1,0])]
+    attributes = [[0,1],[1,1],[1,0]]
 
     action = animat.program(attributes[position],reward)
 
@@ -80,9 +80,9 @@ for x in range(0,100):
 #for x in range(0,10):
 #
 #    if position == 0:
-#        attributes = np.array([1,0])
+#        attributes = [1,0]
 #    else:
-#        attributes = np.array([0,1])
+#        attributes = [0,1]
 #
 #    action = animat.program(attributes, reward)
 #    print('Action: {}, Position: {}'.format(action, position))
