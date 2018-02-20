@@ -19,17 +19,17 @@ class MoveHandeler(SideeffectHandeler):
         ymove = 0
         if action == self.right:
             xmove += 1
-        elif: action == self.up:
+        elif action == self.up:
             ymove -= 1
-        elif: action == self.left:
+        elif action == self.left:
             xmove -=1
-        elif: acion == self.down:
+        elif action == self.down:
             ymove += 1
         if xmove == 0 and ymove == 0:
             return
         x += xmove
         y += ymove
-        if x >= xsize or y >= ysize or x < 0 or y < 0
+        if x >= xsize or y >= ysize or x < 0 or y < 0:
             return
         if world.structure[y][x] in self.impassableBlocks:
             return

@@ -9,7 +9,7 @@ class World:
     #animats is a list of AnimatBrain
     #animatPos is a list with the same length as animats containing tuples (x,y) which is the starting positions for all animats
     #animatTypes is a list with the same length as animats that denotes what animatType (int) for all animats
-    def __init__(self, blockTypesAndAttributesAndRewards, structure, animats, animatPos, animatTypes, animatsVisible=False, sideeffectHandeler = None):
+    def __init__(self, blockTypesAndAttributesAndRewards, structure, animats, animatPos, animatTypes, animatNeeds, animatsVisible=False, sideeffectHandeler = None):
         self.blocks = blockTypesAndAttributesAndRewards
         self.structure = structure
         self.animats = []
@@ -17,11 +17,12 @@ class World:
         self.animatTypeNr = 0
         self.animatsVisible = animatsVisible
         self.sideeffectHandeler = sideeffectHandeler
-        self.nextRewards = [0]*animatNr
+        self.nextRewards = []
         for x in range(self.animatNr):
-            self.animats.append((animats[x], animatPos[x], animatType[x]))
-            if animatType[x]+1 > self.animatTypeNr:
-                self.animatTypeNr = animatType[x]+1
+            self.nextRewards.append([0]*animatNeeds[x])
+            self.animats.append((animats[x], animatPos[x], animatTypes[x]))
+            if animatTypes[x]+1 > self.animatTypeNr:
+                self.animatTypeNr = animatTypes[x]+1
 
     def getAnimatAttributes(self, nr):
         (animatBrain, (x,y), animatType) = self.animats[nr]
@@ -33,20 +34,21 @@ class World:
                     continue
                 if pos == (x,y):
                     animatAttributes[aniType] = 1
-            attributes += animatAttributes
-        return (attributes, rewards)
+            attrs = list(attributes)
+            attrs += animatAttributes
+        return (attrs, rewards)
 
     def runAnimat(self, nr):
-        (attributes, rewards) = getAnimatAttributes(nr)
+        (attributes, rewards) = self.getAnimatAttributes(nr)
         (animatBrain, pos, animatType) = self.animats[nr]
         action = animatBrain.program(attributes, self.nextRewards[nr])
-        self.nextRewards[nr] = rewards[action][animatType]
-        if sideeffectHandeler != None:
-            sideeffectHandeler.handleAction(nr, action, self)
+        self.nextRewards[nr] = rewards[animatType][action]
+        if self.sideeffectHandeler != None:
+            self.sideeffectHandeler.handleAction(nr, action, self)
 
     def worldStep(self):
-        for nr in range(animatNr):
-            runAnimat(nr)
+        for nr in range(self.animatNr):
+            self.runAnimat(nr)
         
 
 
