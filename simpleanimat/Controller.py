@@ -27,9 +27,9 @@ def oldconfigToWorld(filename):
     #World
     structure = config['world'].split(splitter)
     if secondsplitter == None:
-        structure = map(list, structure)
+        structure = list(map(lambda x: list(x), structure))
     else:
-        structure = map(split(secondsplitter), structure)
+        structure = list(map(lambda x: x.split(secondsplitter), structure))
 
     temp_blocks = config['blocks']
     blocks = {}
@@ -52,13 +52,13 @@ def oldconfigToWorld(filename):
     actionNames = []
     nrOfActions = len(rewards)
     temp_action = 0
-    for action, actionreward in rewards:
+    for action, actionreward in rewards.items():
         actionNames.append(action)
         genericreward = [0]*nrOfNeeds
         if '*' in actionreward:
-            genericreward = [reward['*']]*nrOfNeeds
-        for block, (attributes, [rewards]) in blocks:
-            blockactionreward = genericreward
+            genericreward = [actionreward['*']]*nrOfNeeds
+        for block, (attributes, [rews]) in blocks.items():
+            blockactionreward = list(genericreward)
             if block in actionreward:
                 temp_blockactionreward = actionreward[block]
                 if type(temp_blockactionreward) is int or type(temp_blockactionreward) is float:
@@ -66,11 +66,11 @@ def oldconfigToWorld(filename):
                 else:
                     if '*' in temp_blockactionreward:
                         blockactionreward = [temp_blockactionreward['*']]*nrOfNeeds
-                    for need, val in temp_blockactionreward:
+                    for need, val in temp_blockactionreward.items():
                         if need == '*':
                             continue
                         blockactionreward[needNames.index(need)] = val 
-            rewards.append(blockactionreward)
+            rews.append(blockactionreward)
 
     sideeffectHandeler = None
     if 'sideeffectHandeler' in config:
@@ -81,11 +81,11 @@ def oldconfigToWorld(filename):
     #Animats
     agent = config['agent']
     constants = agent['network']
-    exploreProb = agent['epsilon']
-    historyMaxLength = agent['max_reward_history']
-    learningRate = agent['q_learning_factor']
-    discount = agent['q_discount_factor']
-    reward_learning_factor = agent['reward_learning_factor']
+    explorationProb = constants['epsilon']
+    historyMaxLength = constants['max_reward_history']
+    learningRate = constants['q_learning_factor']
+    discount = constants['q_discount_factor']
+    reward_learning_factor = constants['reward_learning_factor']
     structureZ = 2
     if 'surprise_const' in agent:
         structureZ = agent['surprise_const']
@@ -105,7 +105,7 @@ def oldconfigToWorld(filename):
 
 
     #Putting it all together
-    animat = Animat(nrOfAttributes, nrOfActions, nrOfNeeds, learningRate, discount, structureR, structureZ, structureM, policyParameter, explorationProb, historyMaxLength)
+    animat = AnimatBrain(nrOfAttributes, nrOfActions, nrOfNeeds, learningRate, discount, structureR, structureZ, structureM, policyParameter, explorationProb, historyMaxLength)
     world = World(blocks, structure, [animat], [position], [0], [nrOfNeeds], sideeffectHandeler)
 
     return world

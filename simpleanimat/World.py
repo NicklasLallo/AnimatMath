@@ -27,6 +27,7 @@ class World:
     def getAnimatAttributes(self, nr):
         (animatBrain, (x,y), animatType) = self.animats[nr]
         (attributes, rewards) = self.blocks[self.structure[y][x]]
+        attrs = list(attributes)
         if self.animatsVisible:
             animatAttributes = [0]*self.animatTypeNr
             for (ani,pos,aniType) in self.animats:
@@ -34,7 +35,6 @@ class World:
                     continue
                 if pos == (x,y):
                     animatAttributes[aniType] = 1
-            attrs = list(attributes)
             attrs += animatAttributes
         return (attrs, rewards)
 
