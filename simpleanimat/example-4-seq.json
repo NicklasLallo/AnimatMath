@@ -12,24 +12,23 @@
     "x": {"4":1}
   },
   "rewards":{
-      "eat": { "a":{"energy":0.3, "water":-0.001 }, "*":-0.01 },
-      "drink": { "b":{"energy":-0.001, "water":0.3 }, "c":-0.1, "*":-0.01 },
-      "left": { "*":-0.001 },
-      "right": { "*":-0.001 },
-      "up": { "*":-0.001 },
-      "down": { "*":-0.001 },
-      "wait": { "*":-0.0001 }
+      "eat": { "a":{"energy":0.3, "water":-0.02 }, "*":-0.03 },
+      "drink": { "b":{"energy":-0.02, "water":0.3 }, "c":-0.1, "*":-0.03 },
+      "left": { "*":-0.1 },
+      "right": { "*":-0.01 },
+      "up": { "*":-0.1 },
+      "down": { "*":-0.1 }
     },
     "transform": {
       "eat": { "a": " " },
       "drink": { "b": " " }
     },
   
-  "sideeffectHandeler": ["MoveHandeler", [3,4,2,5], []],
+  "MoveHandeler": [["right","up","left","down"], []],
   "agent":{
     "wellbeeing_const": { "water":0, "energy": 0 },
     "wellbeeing_function": "min",
-    "surprise_const": 2.0,
+    "surprise_const": 0.02,
     "features":{"SEQ":1, "AND":1},
     "network":{
       "sensors":["1", "2", "3", "4"],

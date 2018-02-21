@@ -24,9 +24,12 @@ class World:
             if animatTypes[x]+1 > self.animatTypeNr:
                 self.animatTypeNr = animatTypes[x]+1
 
+    def getBlock(self, x, y):
+        return self.structure[y][x]
+
     def getAnimatAttributes(self, nr):
         (animatBrain, (x,y), animatType) = self.animats[nr]
-        (attributes, rewards) = self.blocks[self.structure[y][x]]
+        (attributes, rewards) = self.blocks[self.getBlock(x,y)]
         attrs = list(attributes)
         if self.animatsVisible:
             animatAttributes = [0]*self.animatTypeNr

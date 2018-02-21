@@ -5,6 +5,8 @@ import json
 from BrainTable import *
 from BrainGraph import *
 from MoveHandeler import *
+from TransformHandeler import *
+from MultiHandeler import *
 
 
 def oldconfigToWorld(filename):
@@ -25,6 +27,7 @@ def oldconfigToWorld(filename):
 
 
     #World
+    handelers = []
     structure = config['world'].split(splitter)
     if secondsplitter == None:
         structure = list(map(lambda x: list(x), structure))
@@ -39,6 +42,7 @@ def oldconfigToWorld(filename):
             if attr not in uniqueAttributes:
                 uniqueAttributes.append(attr)
     nrOfAttributes = len(uniqueAttributes)
+    print(nrOfAttributes)
     for blockType, attrs in temp_blocks.items():
         attributes = [0]*nrOfAttributes
         blocks[blockType] = (attributes,[[]])
@@ -72,11 +76,21 @@ def oldconfigToWorld(filename):
                         blockactionreward[needNames.index(need)] = val 
             rews.append(blockactionreward)
 
-    sideeffectHandeler = None
-    if 'sideeffectHandeler' in config:
-        temp_sid = config['sideeffectHandeler']
-        if temp_sid[0] == 'MoveHandeler':
-            sideeffectHandeler = MoveHandeler(temp_sid[1], temp_sid[2])
+    if 'MoveHandeler' in config:
+        temp_sid = config['MoveHandeler']
+        handelers.append(MoveHandeler(list(map(lambda x: actionNames.index(x), temp_sid[0])), temp_sid[1]))
+
+    if 'transform' in config:
+        transformations = {}
+        for action, transform in config['transform'].items():
+            transformations[actionNames.index(action)] = transform
+        handelers.append(TransformHandeler(transformations))
+
+    if len(handelers) == 0:
+        sideeffectHandeler = None
+    else:
+        sideeffectHandeler = MultiHandeler(handelers)
+
 
     #Animats
     agent = config['agent']
@@ -86,13 +100,13 @@ def oldconfigToWorld(filename):
     learningRate = constants['q_learning_factor']
     discount = constants['q_discount_factor']
     reward_learning_factor = constants['reward_learning_factor']
-    structureZ = 2
+    structureZ = 0.4
     if 'surprise_const' in agent:
         structureZ = agent['surprise_const']
-    structureR = 0.5
+    structureR = 0.6
     if 'reliablility_const' in agent:
         structureR = agent['reliability_const']
-    structureM = 0
+    structureM = 0.05
     if 'newnode_const' in agent:
         structureM = agent['newnode_const']
     policyParameter = 0.7
@@ -106,7 +120,7 @@ def oldconfigToWorld(filename):
 
     #Putting it all together
     animat = AnimatBrain(nrOfAttributes, nrOfActions, nrOfNeeds, learningRate, discount, structureR, structureZ, structureM, policyParameter, explorationProb, historyMaxLength)
-    world = World(blocks, structure, [animat], [position], [0], [nrOfNeeds], sideeffectHandeler)
+    world = World(blocks, structure, [animat], [position], [0], [nrOfNeeds], False, sideeffectHandeler)
 
     return world
 
