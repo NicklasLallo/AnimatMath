@@ -6,7 +6,7 @@ class MathExpression:
     minDepth = 2
     maxDepth = 12
 
-    def __init__(self, complexitylvl=1):
+    def __init__(self):
         pass
 
     def genExp():

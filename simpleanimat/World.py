@@ -48,6 +48,7 @@ class World:
         self.nextRewards[nr] = rewards[animatType][action]
         if self.sideeffectHandeler != None:
             self.sideeffectHandeler.handleAction(nr, action, self)
+        return action
 
     def worldStep(self):
         for nr in range(self.animatNr):

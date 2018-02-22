@@ -11,7 +11,7 @@ eatRewards = [[0.7,-0.05],[-0.05,0.7],[0.7,-0.05],[-0.2,-0.2],[-0.05, -0.8]]
 animat = AnimatBrain(3,2,2,  0.750721904233344, 0.5637440246471103, 0.9384171865197604, 0.489492166955507, 0.6602059448636848, 0.8178567097150351,  0.05)
 
 
-for x in range(0,10000):
+for x in range(0,150):
 
     action = animat.program(attributes[position], reward)
 
@@ -34,9 +34,9 @@ for x in range(0,10000):
         print(len(animat.network))
         print(animat.qTable[(0,0,0)])
 
-#print(animat.historyTopActive)
-#print(animat.needValues)
-bGraph(animat.network)
+print(animat.historyTopActive)
+print(animat.needValues)
+#bGraph(animat.network)
 bTable(animat.qTable,2, animat.nodeNr,2, ['Hunger', 'Thirst'], ['Walk','Eat/Drink'])
 #The swamp AND-node animat from the paper
 '''

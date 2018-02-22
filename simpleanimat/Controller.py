@@ -7,7 +7,7 @@ from BrainGraph import *
 from MoveHandeler import *
 from TransformHandeler import *
 from MultiHandeler import *
-
+from MathExpression import *
 
 def oldconfigToWorld(filename):
     jason = open(filename, 'r', encoding = 'utf-8')
@@ -124,4 +124,19 @@ def oldconfigToWorld(filename):
 
     return world
 
+def mathTranslator(expr, answer, rDepth, brain, characters):
+    structure = [list(expr + '?')]
+    nrOfCharacters = len(characters)
+    blocks = {'?': (([0]*nrOfCharacters) + [1],  [[[-2],[1 if answer else -2],[-2 if answer else 1]]])}
+    nrOfCharacters += 1
+    i = 0
+    for block in characters:
+        attributes = [0]*nrOfCharacters
+        attributes[i] = 1
+        reward = [[[0.001],[-3],[-3]]]
+        blocks[block] = (attributes, reward)
 
+    return World(blocks, structure, [brain], [(0,0)], [0], [1], False, MoveHandeler([0,1,1,1],[]))
+
+    
+    
