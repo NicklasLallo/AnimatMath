@@ -69,7 +69,8 @@ class AnimatBrain:
     def program(self, attributes, rewards, forceExploitation = False):
         #Takes the active sensors (and a boolean flag for forcing exploitation), propogates the network, searches the Q-table and returns the action to perform 
 
-        self.historyRewards.append(rewards)
+        if len(self.historyTopActive) > 0:
+            self.historyRewards.append(rewards)
         if len(self.historyRewards) > self.historyMaxLength:
             del self.historyRewards[0]
 
@@ -297,6 +298,22 @@ class AnimatBrain:
 
     #####
     
+    #Removes all activity from the network, useful when switching the world of the animat. Optionally one can add a empty timestep to further prevent relations bewteen worlds
+    def flushNetwork(self, addEmptyTimeStep = False):
+        for node, values in self.network.items():
+            values[1] = 0
+        
+        if not addEmptyTimeStep:
+            return
+        self.historyTopActive.append([])
+        self.historyActionPerformed.append(-1)
+        self.historyRewards.append([0]*self.nrOfNeeds)
+        self.historyGlobalQs.append([0]*self.nrOfNeeds)
+        self.prevTopActive = []
+
+
+
+
 #Creates a pickle dump of the AnimatBrain
 def exportBrain(animat, filename):
     with open(filename,'wb') as output:
