@@ -131,6 +131,8 @@ class Brain():
                 (nrOfInserts, nextStates) = self.TransitionTable[(stateSequence[-1], action)]
                 for nextState in nextStates:
                     (nextStateAction, nextStateReward) = self.simpleMultiStateTreeSearch(stateSequence + nextState, depth-1)
+                    if nextStateAction == None:
+                        nextStateReward = 0
                     actionReward += (nextStates[nextState]/nrOfInserts) * nextStateReward
                 if actionReward > bestReward:
                     bestReward = actionReward
