@@ -29,7 +29,35 @@ class Brain():
             return r.choice(self.actionList)
 
         return action
-        
+
+    def multiStateProgram(self, stateSequence, depth = 4, exploreProb = 0, prevAction=None, reward=None, goalReward = 0.1):
+        if prevAction != None:
+            self.oneStateLearning(stateSequence[:-1], prevAction, stateSequence, reward)
+            self.updateTransitionTable(stateSequence[-2], prevAction, stateSequence[-1])
+
+        if r.random() < exploreProb:
+            return r.choice(self.actionList)
+
+        bestGain = -99999
+        stateEnd = len(stateSequence)-1
+        possibleStates = []
+        for (state, action), gain in self.ETable.items():
+            if state[0:stateEnd] == stateSequence:
+                possibleStates.append((state,action))
+                if gain > bestGain:
+                    bestGain = gain 
+        goodStates = []
+        for (state, action) in possibleStates:
+            if self.ETable[(state,action)] > bestGain-goalReward:
+                goodStates.append(state)
+
+        (action, expectedReward, actionValue) = self.sequenceTreeSearch(stateSequence, depth, goodStates)
+ 
+        if action == None:
+            return r.choice(self.actionList)
+
+        return action
+
     #Helpful functions
     
     def bestActionAndReward(self, state):
@@ -43,6 +71,14 @@ class Brain():
                     bestAction = action
 
         return (bestAction, bestReward)
+
+    def possibleGoalSequences(self, stateSequence, goalSequences):
+        stateEnd = len(stateSequence)-1
+        possibleGoals = []
+        for sequence in goalSequences:
+            if sequence[0:stateEnd] == stateSequence:
+                possibleGoals.append(sequence)
+        return possibleGoals
        
 
     #oneState methods. Used when we do not wish to consider any smaller version of the state
@@ -92,6 +128,27 @@ class Brain():
         else:
             self.TransitionTable[(oldState, action)] = (1, {newState : 1})
 
+        if (oldState) in self.TransitionTable:
+            (nrOfInserts, nextStates) = self.TransitionTable[(oldState)]
+            if newState in nextStates:
+                nextStates[newState] += 1
+            else:
+                nextStates[newState] = 1
+            self.TransitionTable[(oldState)] = (nrOfInserts+1, nextStates)
+        else:
+            self.TransitionTable[(oldState)] = (1, {newState : 1})
+
+        if (action) in self.TransitionTable:
+            (nrOfInserts, nextStates) = self.TransitionTable[(action)]
+            if newState in nextStates:
+                nextStates[newState] += 1
+            else:
+                nextStates[newState] = 1
+            self.TransitionTable[(action)] = (nrOfInserts+1, nextStates)
+        else:
+            self.TransitionTable[(action)] = (1, {newState : 1})
+
+
     def oneStateTranstionTreeSearch(self, state, depth):
         if depth == 0:
             return bestActionAndReward(state)
@@ -115,6 +172,8 @@ class Brain():
                 actionReward = self.QTable[(state,action)]
 
         return (bestAction, bestReward)
+
+    #Baby's first tree-serach
 
     def simpleMultiStateTreeSearch(self, stateSequence, depth):
         if depth == 0:
@@ -141,3 +200,47 @@ class Brain():
                 actionReward = self.QTable[(stateSequence,action)]
 
         return (bestAction, bestReward)
+
+
+    #Smarter Tree-Search
+    
+    def sequenceTreeSearch(self, stateSequence, depth, goalSequences):
+        if depth == 0:
+            (bestAction, bestReward) = self.bestActionAndReward(stateSequence)
+            return (bestAction, bestReward, 1)
+
+        bestAction = None
+        bestReward = -99999999
+        bestValue  = 0
+
+        for action in self.actionList:
+            actionReward = 0
+            value = 0
+            if (stateSequence, action) in self.ETable:
+                actionReward = self.ETable[(stateSequence, action)]
+
+            if (stateSequence[-1],action) in self.TransitionTable:
+                value = 1
+                (nrOfInserts, nextStates) = self.TransitionTable[(stateSequence[-1], action)]
+                for nextState in nextStates:
+                    nextSequence = stateSequence + nextState
+                    possibleGoals = self.possibleGoalSequences(nextSequence, goalSequences)
+                    if len(possibleGoals) == 0:
+                        value -= (nextStates[nextState]/nrOfInserts)
+                        continue
+                    (nextStateAction,nextStateReward,nextStateValue) = sequenceTreeSearch(nextSequence, depth-1, possibleGoals)
+                    actionReward += (nextStates[nextState]/nrOfInserts) * nextStateReward
+                    value -= (1 - nextStateValue)*(nextStates[nextState]/nrOfInserts)
+            elif (stateSequence, action) in self.QTable:
+                value = 0.25
+                actionReward = self.QTable([stateSequence,action])
+
+            actionReward = actionReward
+            if value >= bestValue and actionReward > bestReward:
+                bestReward = actionReward
+                bestAction = action
+                bestValue = value
+        return (bestAction,bestReward,bestValue)
+
+
+
