@@ -1,7 +1,7 @@
 import random as r
 from Brain import *
 
-actionList = ["R", "1", "0", "2"]
+actionList = ["RETURN", "1", "0", "2"]
 
 #This is trinary
 trainingSet = [
@@ -23,15 +23,13 @@ animat = Brain(actionList, 0.5, 0.9)
 for x in range(2):
     for y in range(100):
         expr = str(r.choice(trainingSet))
-        if r.random() < 0.70:
-            expr = "="
         action = animat.simpleMultiStateProgram(expr, 4, exploreRate)
         while True:
-            if action == "R":
+            if action == "RETURN":
                 reward = -1
                 if expr in trainingSet:
                     reward = 1
-                a = animat.simpleMultiStateProgram(expr+"D", 0, 0, "R", reward)
+                a = animat.simpleMultiStateProgram(expr+"D", 0, 0, "RETURN", reward)
                 break
             expr += action
             action = animat.simpleMultiStateProgram(expr,4,exploreRate,action,0)
@@ -43,7 +41,7 @@ for x in range(2):
             expr = expr[:-1]
         action = animat.simpleMultiStateProgram(expr, 4, 0)
         while True:
-            if action == "R":
+            if action == "RETURN":
                 if expr in trainingSet:
                     correct += 1
                 else:
