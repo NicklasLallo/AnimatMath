@@ -15,6 +15,7 @@ class Brain():
 
     #Runnable
 
+
     def simpleMultiStateProgram(self, stateSequence, depth=4, exploreProb=0, prevAction=None, reward=None):
         if prevAction != None:
             self.oneStateLearning(stateSequence[:-1], prevAction, stateSequence, reward)
@@ -30,7 +31,7 @@ class Brain():
 
         return action
 
-    def multiStateProgram(self, stateSequence, depth = 4, exploreProb = 0, prevAction=None, reward=None, goalReward = 0.1):
+    def multiStateProgram(self, stateSequence, depth = 4, exploreProb = 0, prevAction=None, reward=None, goalReward = 0.1, debug = False):
         if prevAction != None:
             self.oneStateLearning(stateSequence[:-1], prevAction, stateSequence, reward)
             self.updateTransitionTable(stateSequence[-2], prevAction, stateSequence[-1])
@@ -39,7 +40,7 @@ class Brain():
             return r.choice(self.actionList)
 
         bestGain = -99999
-        stateEnd = len(stateSequence)-1
+        stateEnd = len(stateSequence)
         possibleStates = []
         for (state, action), gain in self.ETable.items():
             if state[0:stateEnd] == stateSequence:
@@ -51,7 +52,11 @@ class Brain():
             if self.ETable[(state,action)] > bestGain-goalReward:
                 goodStates.append(state)
 
-        (action, expectedReward, actionValue) = self.sequenceTreeSearch(stateSequence, depth, goodStates)
+        if debug:
+            #print(possibleStates)
+            print(goodStates)
+
+        (action, expectedReward, actionValue) = self.sequenceTreeSearch(stateSequence, depth, goodStates, debug)
  
         if action == None:
             return r.choice(self.actionList)
@@ -73,13 +78,24 @@ class Brain():
         return (bestAction, bestReward)
 
     def possibleGoalSequences(self, stateSequence, goalSequences):
-        stateEnd = len(stateSequence)-1
+        stateEnd = len(stateSequence)
         possibleGoals = []
         for sequence in goalSequences:
             if sequence[0:stateEnd] == stateSequence:
                 possibleGoals.append(sequence)
         return possibleGoals
        
+    def topQEntries(self, number = 10):
+        topList = [("","",-9999)]*number
+        for (state,action), reward in self.QTable.items():
+            for (anotherState, anotherAction, anotherReward) in topList:
+                if reward > anotherReward:
+                    topList.append((state, action, reward))
+                    topList.remove((anotherState, anotherAction, anotherReward)) 
+                    state = anotherState
+                    action = anotherAction
+                    reward = anotherReward
+        return topList
 
     #oneState methods. Used when we do not wish to consider any smaller version of the state
 
@@ -175,7 +191,7 @@ class Brain():
 
     #Baby's first tree-serach
 
-    def simpleMultiStateTreeSearch(self, stateSequence, depth):
+    def simpleMultiStateTreeSearch(self, stateSequence, depth, debug = False):
         if depth == 0:
             return self.bestActionAndReward(stateSequence)
 
@@ -204,7 +220,7 @@ class Brain():
 
     #Smarter Tree-Search
     
-    def sequenceTreeSearch(self, stateSequence, depth, goalSequences):
+    def sequenceTreeSearch(self, stateSequence, depth, goalSequences, debug = False):
         if depth == 0:
             (bestAction, bestReward) = self.bestActionAndReward(stateSequence)
             return (bestAction, bestReward, 1)
@@ -228,7 +244,7 @@ class Brain():
                     if len(possibleGoals) == 0:
                         value -= (nextStates[nextState]/nrOfInserts)
                         continue
-                    (nextStateAction,nextStateReward,nextStateValue) = sequenceTreeSearch(nextSequence, depth-1, possibleGoals)
+                    (nextStateAction,nextStateReward,nextStateValue) = self.sequenceTreeSearch(nextSequence, depth-1, possibleGoals)
                     actionReward += (nextStates[nextState]/nrOfInserts) * nextStateReward
                     value -= (1 - nextStateValue)*(nextStates[nextState]/nrOfInserts)
             elif (stateSequence, action) in self.QTable:
@@ -236,10 +252,13 @@ class Brain():
                 actionReward = self.QTable([stateSequence,action])
 
             actionReward = actionReward
-            if value >= bestValue and actionReward > bestReward:
-                bestReward = actionReward
-                bestAction = action
-                bestValue = value
+            #if value >= bestValue and actionReward >= bestReward:
+                #if actionReward > bestReward or value > bestValue or r.random() < 2/len(self.actionList):
+            if actionReward >= bestReward:
+                if actionReward > bestReward or r.random() < 2/len(self.actionList):
+                    bestReward = actionReward
+                    bestAction = action
+                    bestValue = value
         return (bestAction,bestReward,bestValue)
 
 
