@@ -1,5 +1,5 @@
 import random as r
-from Brain import *
+from Solver import *
 import itertools as it
 
 class Abstracter():
@@ -20,11 +20,14 @@ class Abstracter():
         for match in range(len(structure[0])):
             position = 0
             variables = [[]] * len(structure[1])
+            breakagain = False
             for char in structure[0][match]:
                 if position >= len(sequence):
+                    breakagain = True
                     break
                 if type(char) is str:
                     if char != sequence[position]:
+                        breakagain = True
                         break
                     position+=1
                 else:
@@ -32,9 +35,10 @@ class Abstracter():
                     if variables[char] == []:
                         variables[char] = []
                         if sequence[position] not in whitelist:
+                            breakagain = True
                             break
                         if not repeating:
-                            variables[char].apppend(sequence[position])
+                            variables[char].append(sequence[position])
                             position+=1
                         else:
                             while sequence[position] in whitelist:
@@ -43,25 +47,31 @@ class Abstracter():
                                 if position >= len(sequence):
                                     break
                     else:
-                        breakagain = False
+                        breakagainagain = False
                         for entry in variables[char]:
                             if position >= len(sequence) or entry != sequence[position]:
-                                breakagain = True
+                                breakagainagain = True
                                 break
                             position += 1
-                        if breakagain or sequence[position] in whitelist:
+                        if breakagainagain or sequence[position] in whitelist:
+                            breakagain = True
                             break
-            output = (match + 1) % 2
-            retString = []
-            for char in structure[0][output]:
-                if type(char) is str:
-                    retString.append(char)
-                else:
-                    retString.append(variables[char])
-            return list(it.chain.from_iterable(retString))
+            if (not breakagain) and (position == len(sequence)):
+                output = (match + 1) % 2
+                retString = []
+                for char in structure[0][output]:
+                    if type(char) is str:
+                        retString.append(char)
+                    else:
+                        retString.append(variables[char])
+                return list(it.chain.from_iterable(retString))
 
-
-abstracter = Abstracter()
-print(abstracter.structures[0])
-print(Abstracter.applyStructureChange("32*22", abstracter.structures[0]))
-
+    def fakeMultiplicationTableAbstracter(sequence):
+        if len(sequence) == 1:
+            return "1"
+        if len(sequnce) == 2:
+            return "1*"
+        if len(sequence) == 3:
+            return "1*1"
+        if len(sequence) == 4:
+            return str(int(sequence[0])*int(sequence[2])) + "="
