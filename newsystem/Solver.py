@@ -1,4 +1,5 @@
-import random as r 
+import random as r
+from graph import *
 
 class Solver():
     
@@ -31,7 +32,7 @@ class Solver():
 
         return action
 
-    def multiStateProgram(self, stateSequence, depth = 4, exploreProb = 0, prevAction=None, reward=None, goalReward = 0.1, debug = False):
+    def multiStateProgram(self, stateSequence, depth = 4, exploreProb = 0, prevAction=None, reward=None, additionalGoalStates = ([],[]), goalReward = 0.1, debug = False):
         if prevAction != None:
             self.oneStateLearning(stateSequence[:-1], prevAction, stateSequence, reward)
             self.updateTransitionTable(stateSequence[-2], prevAction, stateSequence[-1])
@@ -47,7 +48,7 @@ class Solver():
                 possibleStates.append((state,action))
                 if gain > bestGain:
                     bestGain = gain 
-        goodStates = []
+        goodStates = list(map(lambda x: x[0], additionalGoalStates[0]))
         for (state, action) in possibleStates:
             if self.ETable[(state,action)] > bestGain-goalReward:
                 goodStates.append(state)
@@ -56,10 +57,16 @@ class Solver():
             #print(possibleStates)
             print(goodStates)
 
-        (action, expectedReward, actionValue) = self.sequenceTreeSearch(stateSequence, depth, goodStates, debug)
+        (action, expectedReward, storage) = self.sequenceTreeSearch(stateSequence, depth, goodStates, debug, additionalGoalStates)
  
         if action == None:
             return r.choice(self.actionList)
+        if len(additionalGoalStates[0]) > 0: 
+            print("AbstractState: {}, AbstractGoalStates: {}, ActionTaken: {}".format(stateSequence, additionalGoalStates, action))
+            print(storage[1])
+            gra = GRA()
+            gra.addNodes(storage)
+            gra.plotGraph()
 
         return action
 
@@ -220,36 +227,39 @@ class Solver():
 
     #Smarter Tree-Search
     
-    def sequenceTreeSearch(self, stateSequence, depth, goalSequences, debug = False):
+    def sequenceTreeSearch(self, stateSequence, depth, goalSequences, debug = False, abstractGoals = ([],[])):
         if depth == 0:
             (bestAction, bestReward) = self.bestActionAndReward(stateSequence)
-            return (bestAction, bestReward, 1)
+            return (bestAction, bestReward, ([],[]))
 
         bestAction = None
         bestReward = -99999999
-        bestValue  = 0
+        nextStorage = ([],[])
+        thisStorage = ([],0)
 
         for action in self.actionList:
             actionReward = 0
-            value = 0
             if (stateSequence, action) in self.ETable:
                 actionReward = self.ETable[(stateSequence, action)]
+            elif (stateSequence, action) in abstractGoals[0]:
+                actionReward = 0.9 ##Super hardcoded
+            thisReward = actionReward
 
             if (stateSequence[-1],action) in self.TransitionTable:
-                value = 1
                 (nrOfInserts, nextStates) = self.TransitionTable[(stateSequence[-1], action)]
                 for nextState in nextStates:
                     nextSequence = stateSequence + nextState
                     possibleGoals = self.possibleGoalSequences(nextSequence, goalSequences)
                     if len(possibleGoals) == 0:
-                        value -= (nextStates[nextState]/nrOfInserts)
                         continue
-                    (nextStateAction,nextStateReward,nextStateValue) = self.sequenceTreeSearch(nextSequence, depth-1, possibleGoals)
+                    (nextStateAction,nextStateReward,nextStorage) = self.sequenceTreeSearch(nextSequence, depth-1, possibleGoals)
                     actionReward += (nextStates[nextState]/nrOfInserts) * nextStateReward
-                    value -= (1 - nextStateValue)*(nextStates[nextState]/nrOfInserts)
             elif (stateSequence, action) in self.QTable:
-                value = 0.25
                 actionReward = self.QTable([stateSequence,action])
+            elif (stateSequence,action) in abstractGoals[0]:
+                actionReward = 0.9
+
+            thisStorage[0].append((action, thisReward, actionReward))
 
             actionReward = actionReward
             #if value >= bestValue and actionReward >= bestReward:
@@ -258,8 +268,12 @@ class Solver():
                 if actionReward > bestReward or r.random() < 2/len(self.actionList):
                     bestReward = actionReward
                     bestAction = action
-                    bestValue = value
-        return (bestAction,bestReward,bestValue)
+                    storage = nextStorage
+                    thisStorage = (thisStorage[0],self.actionList.index(bestAction))
+        (layers, anchors) = storage
+        layers.insert(0, thisStorage[0])
+        anchors.insert(0, thisStorage[1])
+        return (bestAction,bestReward,storage)
 
 
 

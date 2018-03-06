@@ -69,9 +69,26 @@ class Abstracter():
     def fakeMultiplicationTableAbstracter(sequence):
         if len(sequence) == 1:
             return "1"
-        if len(sequnce) == 2:
+        if len(sequence) == 2 and sequence[1] == "*":
             return "1*"
-        if len(sequence) == 3:
+        if len(sequence) == 3 and sequence[1] == "*":
             return "1*1"
-        if len(sequence) == 4:
-            return str(int(sequence[0])*int(sequence[2])) + "="
+        if len(sequence) == 4 and sequence[1] == "*" and sequence[3] == "=":
+            return "{}=".format(int(sequence[0]) * int(sequence[2]))
+        return sequence
+
+    def fakeEqualsAbstracter(sequence):
+        if sequence[-1] == "=":
+            return sequence + sequence[:-1]
+        i = sequence.find("=")
+        if i == -1:
+            return None
+        if len(sequence) > 2*i+1:
+            return None
+        for x in range(i):
+            if len(sequence) <= x+i+1:
+                break
+            if sequence[x] != sequence[x+i+1]:
+                return None
+        return sequence[:i] + "=" + sequence[:i]
+
