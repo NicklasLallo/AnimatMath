@@ -329,7 +329,7 @@ class Solver():
                     reward = thisReward
                     for nextState in nextStates:
                         nextSequence = sequence + nextState
-                        reward += returns[nextSequence][1]
+                        reward += returns[nextSequence][1]*(nextStates[nextState]/nrOfInserts)
                 if reward > bestReward:
                     bestAction = action
                     bestReward = reward
