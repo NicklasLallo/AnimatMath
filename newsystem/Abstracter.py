@@ -67,14 +67,16 @@ class Abstracter():
                 return list(it.chain.from_iterable(retString))
 
     def fakeMultiplicationTableAbstracter(sequence):
-        if len(sequence) == 1:
-            return "1"
-        if len(sequence) == 2 and sequence[1] == "*":
-            return "1*"
-        if len(sequence) == 3 and sequence[1] == "*":
-            return "1*1"
+        #if len(sequence) == 1:
+        #    return "X"
+        #if len(sequence) == 2 and sequence[1] == "*":
+        #    return "X*"
+        #if len(sequence) == 3 and sequence[1] == "*":
+        #    return "X*X"
         if len(sequence) == 4 and sequence[1] == "*" and sequence[3] == "=":
             return "{}=".format(int(sequence[0]) * int(sequence[2]))
+        if len(sequence) > 4 and sequence[1] == "*" and sequence[3] == "=":
+            return "{}=".format(int(sequence[0]) * int(sequence[2])) + sequence[4:]
         return sequence
 
     def fakeEqualsAbstracter(sequence):
@@ -91,4 +93,3 @@ class Abstracter():
             if sequence[x] != sequence[x+i+1]:
                 return None
         return sequence[:i] + "=" + sequence[:i]
-

@@ -2,16 +2,17 @@ from Solver import *
 from Abstracter import *
 
 def abstractState(sequence):
-    return Abstracter.fakeMultiplicationTableAbstracter(sequence)
+    ret = Abstracter.fakeMultiplicationTableAbstracter(sequence)
+    return ret
 
 def abstractGoal(sequence):
     state = Abstracter.fakeEqualsAbstracter(sequence)
     ret = {}
     if state != None:
-        ret[state] = ("RETURN", 0.9)
+        ret[state] = ("RETURN", 1)
     return ret
 
-actionList = ["RETURN", ">>>", "1", "0", "2","3","4","5","6","7","8","9"]
+actionList = ["RETURN", "1", "0", "2","3","4","5","6","7","8","9"]
 
 
 #This is decimal
@@ -23,7 +24,9 @@ for x in range(10):
 for x in range(90):
     trainingSet.append("{}={}".format(x,x))
 
-exploreRate = 0.05
+exploreRate = 1
+
+equalsTrainingProb = 0.11
 
 depth = 4
 
@@ -34,11 +37,12 @@ for x in range(20):
     loading = 1000
     for y in range(loading):
         if ((y/loading)*100)%10 == 0:
-            print('', end = '#', flush=True)
+            print('', end = '#', flush = True)
 
         expression = str(r.choice(trainingSet))
-        position = 0
-        expr = expression[0]
+        expr = expression
+        if r.random() < equalsTrainingProb:
+            expr = "="
         action = animat.multiStateProgram(abstractState(expr), depth, exploreRate, None, None, abstractGoal(abstractState(expr)))
         for z in range(20):
             reward = 0
@@ -46,15 +50,8 @@ for x in range(20):
                 reward = -1
                 if expr in trainingSet:
                     reward = 1
-                a = animat.multiStateProgram(abstractState(expr+"D"), 0, 0, "RETURN", reward, abstractGoal(abstractState(expr)))
+                #a = animat.multiStateProgram(abstractState(expr+"D"), 0, exploreRate, "RETURN", reward, abstractGoal(abstractState(expr)))
                 break
-            elif action == ">>>":
-                reward = 0.01
-                if position+1 < len(expression): 
-                    position += 1
-                else:
-                    reward = -0.1
-                expr += expression[position]
             else:
                 expr += action
             action = animat.multiStateProgram(abstractState(expr),depth,exploreRate,action,reward,abstractGoal(abstractState(expr)))
@@ -62,9 +59,10 @@ for x in range(20):
     correct = 0
     f.write('\nIteration {}\n'.format(x))
     for expression in trainingSet:
-        expr = expression[0]
+        i = expression.find("=")
+        expr = expression[0:i+1]
         position = 0
-        action = animat.multiStateProgram(abstractState(expr), depth, 0, None, None, abstractGoal(abstractState(expr)), 0.01, False)
+        action = animat.multiStateProgram(abstractState(expr), depth, 0, None, None, abstractGoal(abstractState(expr)))
         for y in range(20):
             if action == "RETURN":
                 if expr in trainingSet:
@@ -73,13 +71,9 @@ for x in range(20):
                     f.write(expr+'\n')
                     #print(expr)
                 break
-            elif action == ">>>":
-                if expression[position] != "=":
-                    position += 1
-                expr += expression[position] 
             else:
                 expr += action
-            action = animat.multiStateProgram(abstractState(expr), depth, 0, None, None, abstractGoal(abstractState(expr)), 0.01, False)
+            action = animat.multiStateProgram(abstractState(expr), depth, 0, None, None, abstractGoal(abstractState(expr)))
     print(correct/len(trainingSet))
     print(correct)
     print(len(trainingSet))

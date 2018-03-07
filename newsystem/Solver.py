@@ -32,7 +32,7 @@ class Solver():
 
         return action
 
-    def multiStateProgram(self, stateSequence, depth = 4, exploreProb = 0, prevAction=None, reward=None, additionalGoalStates = ([],[]), goalReward = 0.1, debug = False):
+    def multiStateProgram(self, stateSequence, depth = 4, exploreProb = 0, prevAction=None, reward=None, additionalGoalStates = {}, goalReward = 0.1, debug = False):
         if prevAction != None:
             self.oneStateLearning(stateSequence[:-1], prevAction, stateSequence, reward)
             self.updateTransitionTable(stateSequence[-2], prevAction, stateSequence[-1])
@@ -43,30 +43,34 @@ class Solver():
         bestGain = -99999
         stateEnd = len(stateSequence)
         possibleStates = []
-        for (state, action), gain in self.ETable.items():
+        for (state, action), gain in self.QTable.items():
             if state[0:stateEnd] == stateSequence:
                 possibleStates.append((state,action))
                 if gain > bestGain:
                     bestGain = gain 
-        goodStates = list(map(lambda x: x[0], additionalGoalStates[0]))
+        goodStates = additionalGoalStates
         for (state, action) in possibleStates:
-            if self.ETable[(state,action)] > bestGain-goalReward:
-                goodStates.append(state)
-
+            if self.QTable[(state,action)] > bestGain-goalReward:
+                if state in goodStates and goodStates[state][1] < self.QTable[(state,action)]:
+                    goodStates[state] = (action, self.QTable[(state,action)])
+        
+        #if exploreProb == 0:
+        #    print(goodStates)
         if debug:
             #print(possibleStates)
             print(goodStates)
 
-        (action, expectedReward, storage) = self.sequenceTreeSearch(stateSequence, depth, goodStates, debug, additionalGoalStates)
+        (action, expectedReward, storage) = self.improvedTreeSearch(stateSequence, depth, goodStates, 0.5, debug)
  
         if action == None:
             return r.choice(self.actionList)
-        if len(additionalGoalStates[0]) > 0: 
-            print("AbstractState: {}, AbstractGoalStates: {}, ActionTaken: {}".format(stateSequence, additionalGoalStates, action))
-            print(storage[1])
-            gra = GRA()
-            gra.addNodes(storage)
-            gra.plotGraph()
+        if debug:
+            if len(additionalGoalStates[0]) > 0: 
+                print("AbstractState: {}, AbstractGoalStates: {}, ActionTaken: {}".format(stateSequence, additionalGoalStates, action))
+                print(storage[1])
+                gra = GRA()
+                gra.addNodes(storage)
+                gra.plotGraph()
 
         return action
 
@@ -84,12 +88,12 @@ class Solver():
 
         return (bestAction, bestReward)
 
-    def possibleGoalSequences(self, stateSequence, goalSequences):
+    def possibleGoalSequences(self, stateSequence, goals):
         stateEnd = len(stateSequence)
-        possibleGoals = []
-        for sequence in goalSequences:
+        possibleGoals = {}
+        for sequence in goals:
             if sequence[0:stateEnd] == stateSequence:
-                possibleGoals.append(sequence)
+                possibleGoals[sequence] = goals[sequence]
         return possibleGoals
        
     def topQEntries(self, number = 10):
@@ -103,6 +107,26 @@ class Solver():
                     action = anotherAction
                     reward = anotherReward
         return topList
+
+    def getTransitions(self, state, action):
+        if (state, action) in self.TransitionTable:
+            return self.TransitionTable[(state,action)]
+        gotAction = (action) in self.TransitionTable
+        gotState = (state in self.TransitionTable)
+        if gotAction and not gotState:
+            return self.TransitionTable[(action)]
+        elif gotState and not gotAction:
+            return self.TransitionTable[(state)]
+        elif gotAction and gotState:
+            (actionInserts, actionTransitions) = self.TransitionTable[(action)]
+            (stateInserts, stateTransitions) = self.TransitionTable[(state)]
+            actionEntropy = sum(map(lambda x: (actionTransitions[x]/actionInserts)**2))
+            stateEntropy = sum(map(lambda x: (stateTransitions[x]/stateInserts)**2))
+            if actionEntropy > stateEntropy:
+                return self.TransitionTable[(action)]
+            else:
+                return self.TransitionTable[(state)]
+        return (0,[])
 
     #oneState methods. Used when we do not wish to consider any smaller version of the state
 
@@ -276,65 +300,67 @@ class Solver():
         return (bestAction,bestReward,storage)
 
 
-        #Next Gen Tree-Search
-        #sequence is a string with each char a state in the history states
-        #depth is the maximum depth of the branch
-        #goals is a dictionary with sequences as keys and (bestAction, reward) as value
-        #distanceToGoalDiscount is a factor of how much of the goal reward is given to an end state depending on the distance to the nearest goal
-        def improvedTreeSearch(self, sequence, depth, goals, distanceToGoalDiscount = 0, debug = False):
-            if sequence in goals:
-                (bestAction, reward) = goals[sequence]
-                return (bestAction, reward, (sequence, reward, reward, None, None))
+    #Next Gen Tree-Search
+    #sequence is a string with each char a state in the history states
+    #depth is the maximum depth of the branch
+    #goals is a dictionary with sequences as keys and (bestAction, reward) as value
+    #distanceToGoalDiscount is a factor of how much of the goal reward is given to an end state depending on the distance to the nearest goal
+    def improvedTreeSearch(self, sequence, depth, goals, distanceToGoalDiscount = 0, debug = False):
+        if sequence in goals:
+            (bestAction, reward) = goals[sequence]
+            return (bestAction, reward, (sequence, reward, reward, None, None))
 
-            if depth == 0:
-                (bestAction, reward) = bestActionAndReward(sequence)
-                distanceToGoal = 0
-                if len(goals) > 0:
-                    distanceToGoal = min(map(len, goals))
-                reward += distanceToGoalDiscount^distanceToGoal
-                return (bestAction, reward, (sequence, reward, reward, None, None))
+        if depth == 0:
+            (bestAction, reward) = self.bestActionAndReward(sequence)
+            distanceToGoal = 0
+            if len(goals) > 0:
+                distanceToGoal = min(map(len, goals))
+            reward += distanceToGoalDiscount**distanceToGoal
+            return (bestAction, reward, (sequence, reward, reward, None, None))
 
-            nextSequences = set()
-            for action in self.actionList:
-                if (sequence[-1], action) in self.TransitionTable:
-                    (_, nextStates) = self.TransitionTable[(sequence[-1], action)]
-                    for nextState in nextStates:
-                        nextSequences.add(sequence + nextState)
+        nextSequences = set()
+        for action in self.actionList:
+            (_, nextStates) = self.getTransitions(sequence[-1], action)
+            if len(nextStates) > 0:
+                for nextState in nextStates:
+                    nextSequences.add(sequence + nextState)
 
-            returns = {}
-            for nextSequence in nextSequences:
-                possibleGoals = self.possibleGoalSequences(nextSequence, goals)
-                if len(possibleGoals) == 0:
-                    (bestAction, reward) = bestActionAndReward(nextSequence)
-                    returns[nextSequence] = (bestAction, reward, (nextSequence, reward, reward, None, None))
-                else:
-                    returns[nextSequence] = improvedTreeSearch(nextSequence, depth-1, possibleGoals, distanceToGoalDiscount, debug)
+        returns = {}
+        for nextSequence in nextSequences:
+            possibleGoals = self.possibleGoalSequences(nextSequence, goals)
+            if len(possibleGoals) == 0:
+                (bestAction, reward)  = self.bestActionAndReward(nextSequence)
+                returns[nextSequence] = (bestAction, reward, (nextSequence, reward, reward, None, None))
+            else:
+                returns[nextSequence] = self.improvedTreeSearch(nextSequence, depth-1, possibleGoals, distanceToGoalDiscount, debug)
 
-            bestAction = None
-            bestReward = -999999
-            bestNextSequence = None
+        bestAction = None
+        bestReward = -999999
+        bestNextSequence = None
 
-            for action in actionList:
-                thisReward = -9999999
-                thisNextSequence = None
-                if (sequence[-1], action) not in self.TransitionTable:
-                    if (sequence, action) in self.QTable:
-                        thisReward = self.QTable[(sequence, reward)]
-                else:
-                    (nrOfInserts, nextStates) = self.TransitionTable[(sequence[-1],  action)]
-                    if (sequence, action) in self.ETable:
-                        thisReward = self.ETable[(sequence, action)]
-                    else:
-                        thisReward = 0
+        for action in self.actionList:
+            thisReward = -9999999
+            thisNextSequence = None
+            reward = thisReward
+            (nrOfInserts, nextStates) = self.getTransitions(sequence[-1], action)
+            if len(nextStates) == 0:
+                if (sequence, action) in self.QTable:
+                    thisReward = self.QTable[(sequence, reward)]
                     reward = thisReward
-                    for nextState in nextStates:
-                        nextSequence = sequence + nextState
-                        reward += returns[nextSequence][1]*(nextStates[nextState]/nrOfInserts)
-                if reward > bestReward:
-                    bestAction = action
-                    bestReward = reward
-            if bestAction = None
-            bestAction = r.choice(actionList)
-            if not debug:
-                returns = None
-            return (bestAction, bestReward, (sequence, thisReward, reward, returns, None))
+            else:
+                if (sequence, action) in self.ETable:
+                    thisReward = self.ETable[(sequence, action)]
+                else:
+                    thisReward = 0
+                reward = thisReward
+                for nextState in nextStates:
+                    nextSequence = sequence + nextState
+                    reward += returns[nextSequence][1]*(nextStates[nextState]/nrOfInserts)
+            if reward > bestReward:
+                bestAction = action
+                bestReward = reward
+        if bestAction == None:
+            bestAction = r.choice(self.actionList)
+        if not debug:
+            returns = None
+        return (bestAction, bestReward, (sequence, thisReward, reward, returns, None))
