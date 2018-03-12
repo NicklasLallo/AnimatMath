@@ -7,15 +7,20 @@ class Abstracter():
     def __init__(self):
 
         self.cheat_digits = (["0","1","2","3","4","5","6","7","8","9"], True)
+        self.all_chars = (["0","1","2","3","4","5","6","7","8","9","0","+","*","="],True)
 
         self.structures = [
-            [[[0,"*",1],[1,"*",0]],[self.cheat_digits, self.cheat_digits], "dummy best action", []]
+            [[[0,"*",1],[1,"*",0]],[self.cheat_digits, self.cheat_digits], "dummy best action", []],
+            [[[0, "+", 1, "*", 2, "+" ,3],[0, "+", 2, "*",1, "+" ,3]], [self.all_chars, self.cheat_digits, self.cheat_digits, self.all_chars], "dummy best action", []]
                 
         ]
         
-        self.goals = []
+        self.goals = [
+            [[0, "=", 0], [self.cheat_digits], ["RETURN"], [1], []]
+        ]
 
-
+    #Takes a sequence and a structure and attempts to apply that structure to that sequence.
+    #Returns the altered sequence if successful and None otherwise.
     def applyStructureChange(sequence, structure):
         for match in range(len(structure[0])):
             position = 0
@@ -65,6 +70,13 @@ class Abstracter():
                     else:
                         retString.append(variables[char])
                 return list(it.chain.from_iterable(retString))
+            return None
+
+    #Takes a sequence and an abstract goal and checks whether the sequence can lead to that goal 
+    #Returns the reformated goal if successful and None otherwise
+    def checkAbstractGoal(sequence, goal):
+        pass
+        
 
     def fakeMultiplicationTableAbstracter(sequence):
         #if len(sequence) == 1:

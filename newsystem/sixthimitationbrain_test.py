@@ -17,9 +17,14 @@ actionList = ["RETURN", "1", "0", "2","3","4","5","6","7","8","9"]
 
 #This is decimal
 trainingSet = []
+print(trainingSet)
 for x in range(10):
     for y in range(10):
         trainingSet.append("{}*{}={}".format(x,y,x*y))
+
+print(trainingSet)
+
+
 
 for x in range(90):
     trainingSet.append("{}={}".format(x,x))
