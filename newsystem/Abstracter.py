@@ -19,64 +19,86 @@ class Abstracter():
             [[0, "=", 0], [self.cheat_digits], ["RETURN"], [1], []]
         ]
 
+    #Takes a sequence and an abstracted sequence and checks if the abstraction can matches the sequence
+    def doesMatch(sequence, abstraction, abstractionvariables, allowPartial = False):
+        position = 0
+        variables = [[]] * len(abstractionvariables)
+        ret = True
+        for char in abstraction:
+            if position >= len(sequence):
+                ret = allowPartial
+                break
+            if type(char) is str:
+                if char != sequence[position]:
+                    ret = False
+                    break
+                position+=1
+            else:
+                (whitelist, repeating) = abstractionvariables[char]
+                if variables[char] == []:
+                    variables[char] = []
+                    if sequence[position] not in whitelist:
+                        ret = False
+                        break
+                    if not repeating:
+                        variables[char].append(sequence[position])
+                        position+=1
+                    else:
+                        while sequence[position] in whitelist:
+                            variables[char].append(sequence[position])
+                            position+=1
+                            if position >= len(sequence):
+                                break
+                else:
+                    breakagain = False
+                    for entry in variables[char]:
+                        if position >= len(sequence) or entry != sequence[position]:
+                            breakagain = True
+                            break
+                        position += 1
+                    if breakagain or (position != len(sequence) and sequence[position]) in whitelist:
+                        ret = False
+                        if position == len(sequence):
+                            ret = allowPartial
+                        break
+        return (ret and (position == len(sequence)), variables)
+    
+
     #Takes a sequence and a structure and attempts to apply that structure to that sequence.
     #Returns the altered sequence if successful and None otherwise.
     def applyStructureChange(sequence, structure):
-        for match in range(len(structure[0])):
-            position = 0
-            variables = [[]] * len(structure[1])
-            breakagain = False
-            for char in structure[0][match]:
-                if position >= len(sequence):
-                    breakagain = True
-                    break
+        (match, variables) = abstracter.doesMatch(sequence, structure[0][0], structure[1])
+        if match:
+            retString = []
+            for char in structure[0][1]:
                 if type(char) is str:
-                    if char != sequence[position]:
-                        breakagain = True
-                        break
-                    position+=1
+                    retString.append(char)
                 else:
-                    (whitelist, repeating) = structure[1][char]
-                    if variables[char] == []:
-                        variables[char] = []
-                        if sequence[position] not in whitelist:
-                            breakagain = True
-                            break
-                        if not repeating:
-                            variables[char].append(sequence[position])
-                            position+=1
-                        else:
-                            while sequence[position] in whitelist:
-                                variables[char].append(sequence[position])
-                                position+=1
-                                if position >= len(sequence):
-                                    break
-                    else:
-                        breakagainagain = False
-                        for entry in variables[char]:
-                            if position >= len(sequence) or entry != sequence[position]:
-                                breakagainagain = True
-                                break
-                            position += 1
-                        if breakagainagain or sequence[position] in whitelist:
-                            breakagain = True
-                            break
-            if (not breakagain) and (position == len(sequence)):
-                output = (match + 1) % 2
-                retString = []
-                for char in structure[0][output]:
-                    if type(char) is str:
-                        retString.append(char)
-                    else:
-                        retString.append(variables[char])
-                return list(it.chain.from_iterable(retString))
-            return None
+                    retString.append(variables[char])
+            return list(it.chain.from_iterable(retString))
+        return None
 
     #Takes a sequence and an abstract goal and checks whether the sequence can lead to that goal 
     #Returns the reformated goal if successful and None otherwise
     def checkAbstractGoal(sequence, goal):
+        (match, variables) = Abstracter.doesMatch(sequence, goal[0], goal[1], True)
+        if not match:
+            return None
+        for variable in variables:
+            if variable == []:
+                return None
+        retString = []
+        for char in goal[0]
+            if type(char) is str:
+                retString.append(char)
+            else:
+                retString.append(variables[char])
+        return list(it.chain.from_iterable(retString))
+
+    def judgeAbstractGoal():
         pass
-        
+
+
 
     def fakeMultiplicationTableAbstracter(sequence):
         #if len(sequence) == 1:
@@ -105,3 +127,13 @@ class Abstracter():
             if sequence[x] != sequence[x+i+1]:
                 return None
         return sequence[:i] + "=" + sequence[:i]
+
+a = Abstracter()
+print(Abstracter.checkAbstractGoal("134=", a.goals[0]))
+print(Abstracter.checkAbstractGoal("13", a.goals[0]))
+print(Abstracter.checkAbstractGoal("=", a.goals[0]))
+print(Abstracter.checkAbstractGoal("13=", a.goals[0]))
+print(Abstracter.checkAbstractGoal("134=2", a.goals[0]))
+print(Abstracter.checkAbstractGoal("134=123", a.goals[0]))
+print(Abstracter.checkAbstractGoal("134=1", a.goals[0]))
+
