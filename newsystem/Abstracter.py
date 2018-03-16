@@ -88,15 +88,57 @@ class Abstracter():
             if variable == []:
                 return None
         retString = []
-        for char in goal[0]
+        for char in goal[0]:
             if type(char) is str:
                 retString.append(char)
             else:
                 retString.append(variables[char])
         return list(it.chain.from_iterable(retString))
 
-    def judgeAbstractGoal():
-        pass
+    def judgeAbstractGoal(goal, solver):
+        goodMatches = 0
+        badMatches = 0
+        for sequence in solver.qTable:
+            (match, _) = Abstracter.doesMatch(sequence, goal[0], goal[1])
+            if not match: 
+                continue
+            (bestAction, reward) = solver.bestActionAndReward(sequence)
+            if bestAction == goal[2][0]:
+                goodMatches += 1
+            else:
+                badMatches += 1
+        return (goodMatches, badMatches)
+
+
+    def testStructureFormationRule(testSequence, solver):
+        action, r = solver.bestActionAndReward(testSequence)
+        for sequence in solver.qTable:
+            (bestAction, reward) = solver.bestActionAndReward(testSequence)
+            if bestAction != action:
+                continue
+            startpos = 0
+            endpos = -1
+            breakagain = False
+
+            while testSequence[startpos] == sequence[startpos]:
+                startpos += 1
+                if startpos == len(testSequence) or startpos == len(sequence):
+                    breakagain = True
+                    break
+
+            while testSequence[endpos] == sequence[endpos]:
+                endpos -= 1
+                if -endpos > len(testSequence) or -endpos > len(sequence):
+                    breakagain = True
+                    break
+
+            if breakagain:
+                continue
+            
+            newStructure = [[1,t]]
+
+
+
 
 
 

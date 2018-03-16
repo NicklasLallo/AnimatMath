@@ -108,6 +108,7 @@ class Solver():
                     reward = anotherReward
         return topList
 
+    #Given a state and an action finds the dictionary with the most useful transitions and the number of inserts to that dictionary
     def getTransitions(self, state, action):
         if (state, action) in self.TransitionTable:
             return self.TransitionTable[(state,action)]
@@ -127,6 +128,35 @@ class Solver():
             else:
                 return self.TransitionTable[(state)]
         return (0,[])
+
+    #Given a sequence and a goal finds the probability that one can successfully navigate from one to the other
+    def reliabilityToGoal(self, sequence, goal):
+        
+        if sequence != goal[0:len(sequence)]:
+            return 0
+
+        position = len(sequence)
+        state = sequence[-1]
+        nextState = goal[position]
+        reliability = 1
+        while True:
+            if position >= len(goal):
+                if positon > len(goal):
+                    reliability = 0
+                break
+            actionReliability  = 0
+            for action in self.actionList:
+                (nrOfInserts, transitions) = self.getTransitions(state, action)
+                if nextState in transtions and transitions[nextState]/nrOfInserts > actionReliability:
+                    actionReliability = transitions[nextState]/nrOfInserts
+            if actionReliability == 0:
+                return 0
+            position += 1
+            reliability *= actionReliability
+            state = nextState
+            nextState = goal[position]
+
+        return reliability
 
     #oneState methods. Used when we do not wish to consider any smaller version of the state
 
@@ -311,11 +341,12 @@ class Solver():
             return (bestAction, reward, (sequence, reward, reward, None, None))
 
         if depth == 0:
-            (bestAction, reward) = self.bestActionAndReward(sequence)
-            distanceToGoal = 0
-            if len(goals) > 0:
-                distanceToGoal = min(map(len, goals))
-            reward += distanceToGoalDiscount**distanceToGoal
+            #(bestAction, reward) = self.bestActionAndReward(sequence)
+            reward = 0 
+            for goal, (action, aReward) in goals.items():
+                if self.reliabilityToGoal(sequence, goal)*aReward > reward:
+                    reward = self.reliabilityToGoal(sequence, goal)*aReward
+                    bestAction = action
             return (bestAction, reward, (sequence, reward, reward, None, None))
 
         nextSequences = set()
