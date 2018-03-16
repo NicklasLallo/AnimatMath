@@ -81,7 +81,7 @@ display_step = 1000
 n_input = 7
 
 # number of units in RNN cell
-n_hidden = 512
+n_hidden = 1024
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_input, 1])
@@ -196,19 +196,15 @@ with tf.Session() as session:
         words = list(sentence)
         if len(words) != 4:
             continue
-        try:
-            symbols_in_keys = np.zeros([n_input], zeros)#[dictionary[str(words[i])] for i in range(len(words))]
-            symbols_in_keys[n_input-4:n_input] = words
-            out_symbol = ""
-            while out_symbol != "R":
-                keys = np.reshape(np.array(symbols_in_keys), [-1, n_input, 1])
-                onehot_pred = session.run(pred, feed_dict={x: keys})
-                onehot_pred_index = int(tf.argmax(onehot_pred, 1).eval())
-                out_symbol = id_to_char[onehot_pred_index]
-                sentence = "%s %s" % (sentence,out_symbol)
-                symbols_in_keys = symbols_in_keys[1:]
-                symbols_in_keys.append(onehot_pred_index)
-            print(sentence)
-        except:
-            print("Word not in dictionary")
+        out_symbol = ""
+        while out_symbol != "R":
+            symbols_in_keys = np.zeros([n_input])#[dictionary[str(words[i])] for i in range(len(words))]
+            symbols_in_keys[n_input-len(words):n_input] = list(map(lambda x: char_to_id[x], words))
+            keys = np.reshape(np.array(symbols_in_keys), [-1, n_input, 1])
+            onehot_pred = session.run(pred, feed_dict={x: keys})
+            onehot_pred_index = int(tf.argmax(onehot_pred, 1).eval())
+            out_symbol = id_to_char[onehot_pred_index]
+            sentence = "%s %s" % (sentence,out_symbol)
+            words.append(out_symbol)
+        print(sentence)
 
