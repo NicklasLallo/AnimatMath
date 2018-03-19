@@ -74,6 +74,54 @@ class Solver():
 
         return action
 
+    def multiStateProgram2(self, stateSequence, abstractSequence = None, depth = 4, exploreProb = 0, prevAction=None, reward=None, additionalGoalStates = {}, goalReward = 0.1, debug = False):
+        if prevAction != None:
+            self.oneStateLearning(stateSequence[:-1], prevAction, stateSequence, reward)
+            self.updateTransitionTable(stateSequence[-2], prevAction, stateSequence[-1])
+            #if abstractSequence != None: #Uncomment to give it confirmaion bias!
+            #    self.oneStateLearning(abstractSequence[:-1], prevAction, abstractSequence, reward)
+            #    self.updateTransitionTable(abstractSequence[-2], prevAction, abstractSequence[-1])
+
+        if abstractSequence == None:
+            abstractSequence = stateSequence
+
+        if r.random() < exploreProb:
+            return r.choice(self.actionList)
+
+        bestGain = -99999
+        stateEnd = len(abstractSequence)
+        possibleStates = []
+        for (state, action), gain in self.QTable.items():
+            if state[0:stateEnd] == abstractSequence:
+                possibleStates.append((state,action))
+                if gain > bestGain:
+                    bestGain = gain 
+        goodStates = additionalGoalStates
+        for (state, action) in possibleStates:
+            if self.QTable[(state,action)] > bestGain-goalReward:
+                if state in goodStates and goodStates[state][1] < self.QTable[(state,action)]:
+                    goodStates[state] = (action, self.QTable[(state,action)])
+        
+        #if exploreProb == 0:
+        #    print(goodStates)
+        if debug:
+            #print(possibleStates)
+            print(goodStates)
+
+        (action, expectedReward, storage) = self.improvedTreeSearch(abstractSequence, depth, goodStates, 0.5, debug)
+ 
+        if action == None:
+            return r.choice(self.actionList)
+        if debug:
+            if len(additionalGoalStates[0]) > 0: 
+                print("AbstractState: {}, AbstractGoalStates: {}, ActionTaken: {}".format(stateSequence, additionalGoalStates, action))
+                print(storage[1])
+                gra = GRA()
+                gra.addNodes(storage)
+                gra.plotGraph()
+
+        return action
+
     #Helpful functions
     
     def bestActionAndReward(self, state):
@@ -121,8 +169,8 @@ class Solver():
         elif gotAction and gotState:
             (actionInserts, actionTransitions) = self.TransitionTable[(action)]
             (stateInserts, stateTransitions) = self.TransitionTable[(state)]
-            actionEntropy = sum(map(lambda x: (actionTransitions[x]/actionInserts)**2))
-            stateEntropy = sum(map(lambda x: (stateTransitions[x]/stateInserts)**2))
+            actionEntropy = sum(map(lambda x: (actionTransitions[x]/actionInserts)**2, actionTransitions))
+            stateEntropy = sum(map(lambda x: (stateTransitions[x]/stateInserts)**2, stateTransitions))
             if actionEntropy > stateEntropy:
                 return self.TransitionTable[(action)]
             else:

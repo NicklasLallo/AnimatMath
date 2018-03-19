@@ -10,13 +10,13 @@ class Abstracter():
         self.all_chars = (["0","1","2","3","4","5","6","7","8","9","0","+","*","="],True)
 
         self.structures = [
-            [[[0,"*",1],[1,"*",0]],[self.cheat_digits, self.cheat_digits], "dummy best action", []],
-            [[[0, "+", 1, "*", 2, "+" ,3],[0, "+", 2, "*",1, "+" ,3]], [self.all_chars, self.cheat_digits, self.cheat_digits, self.all_chars], "dummy best action", []]
+            [[[0,"*",1],[1,"*",0]],[self.cheat_digits, self.cheat_digits], ["dummy best action"], []],
+            [[[0, "+", 1, "*", 2, "+" ,3],[0, "+", 2, "*",1, "+" ,3]], [self.all_chars, self.cheat_digits, self.cheat_digits, self.all_chars], ["dummy best action"], []]
                 
         ]
         
         self.goals = [
-            [[0, "=", 0], [self.cheat_digits], ["RETURN"], [1], []]
+            [[[0, "=", 0]], [self.cheat_digits], ["RETURN"], [1], []]
         ]
 
     #Takes a sequence and an abstracted sequence and checks if the abstraction can matches the sequence
@@ -37,18 +37,19 @@ class Abstracter():
                 (whitelist, repeating) = abstractionvariables[char]
                 if variables[char] == []:
                     variables[char] = []
-                    if sequence[position] not in whitelist:
+                    if sequence[position] not in whitelist and 1 not in whitelist:
                         ret = False
                         break
                     if not repeating:
                         variables[char].append(sequence[position])
                         position+=1
                     else:
-                        while sequence[position] in whitelist:
+                        while sequence[position] in whitelist or 1 in whitelist:
                             variables[char].append(sequence[position])
                             position+=1
                             if position >= len(sequence):
                                 break
+                            if sequence()
                 else:
                     breakagain = False
                     for entry in variables[char]:
@@ -56,7 +57,7 @@ class Abstracter():
                             breakagain = True
                             break
                         position += 1
-                    if breakagain or (position != len(sequence) and sequence[position]) in whitelist:
+                    if breakagain or (position != len(sequence) and (sequence[position]) in whitelist or 1 in whitelist):
                         ret = False
                         if position == len(sequence):
                             ret = allowPartial
@@ -81,39 +82,40 @@ class Abstracter():
     #Takes a sequence and an abstract goal and checks whether the sequence can lead to that goal 
     #Returns the reformated goal if successful and None otherwise
     def checkAbstractGoal(sequence, goal):
-        (match, variables) = Abstracter.doesMatch(sequence, goal[0], goal[1], True)
+        (match, variables) = Abstracter.doesMatch(sequence, goal[0][0], goal[1], True)
         if not match:
             return None
         for variable in variables:
             if variable == []:
                 return None
         retString = []
-        for char in goal[0]:
+        for char in goal[0][0]:
             if type(char) is str:
                 retString.append(char)
             else:
                 retString.append(variables[char])
         return list(it.chain.from_iterable(retString))
 
-    def judgeAbstractGoal(goal, solver):
+    def judgeAbstraction(abstraction, solver):
         goodMatches = 0
         badMatches = 0
-        for sequence in solver.qTable:
-            (match, _) = Abstracter.doesMatch(sequence, goal[0], goal[1])
+        for sequence in solver.QTable:
+            (match, _) = Abstracter.doesMatch(sequence, abstraction[0][0], abstraction[1])
             if not match: 
                 continue
             (bestAction, reward) = solver.bestActionAndReward(sequence)
-            if bestAction == goal[2][0]:
+            if bestAction == abstraction[2][0]:
                 goodMatches += 1
             else:
                 badMatches += 1
         return (goodMatches, badMatches)
 
 
-    def testStructureFormationRule(testSequence, solver):
+    def testStructureFormationRule(self, testSequence, solver):
         action, r = solver.bestActionAndReward(testSequence)
-        for sequence in solver.qTable:
-            (bestAction, reward) = solver.bestActionAndReward(testSequence)
+        
+        for (sequence, bestAction) in solver.QTable:
+            (bestAction, reward) = solver.bestActionAndReward(sequence)
             if bestAction != action:
                 continue
             startpos = 0
@@ -132,15 +134,34 @@ class Abstracter():
                     breakagain = True
                     break
 
-            if breakagain:
+            if breakagain or (startpos == 0 and endpos == -1):
                 continue
-            
-            newStructure = [[1,t]]
 
+            seqLen = len(sequence)+endpos+1
+            tesLen = len(testSequence)+endpos+1
 
+            if sequence[startpos:seqLen] == "" or testSequence[startpos:tesLen] == "":
+                continue
 
+            newStructure = [
+                [list(it.chain.from_iterable([[0],testSequence[startpos:tesLen],[1]])), list(it.chain.from_iterable([[0],sequence[startpos:seqLen],[1]]))],
+                [([1],True),([1],True)],#[(list(set(testSequence[0:startPos])),True),(list(set(testSequence[endPos:-1])),True)],
+                [action], []
+            ]
 
+            print(newStructure, flush = True)
 
+            (goodMatches, badMatches) = Abstracter.judgeAbstraction(newStructure, solver)
+            #print((goodMatches, badMatches))
+            #print(newStructure, flush = True)
+            #print(testSequence, flush = True)
+            #print(sequence, flush = True)
+            if goodMatches > 0 or badMatches > 0:
+                print(newStructure, flush = True)
+
+            if badMatches == 0 and goodMatches > 1:
+                self.structures.append(newStructure)
+                return newStructure
 
     def fakeMultiplicationTableAbstracter(sequence):
         #if len(sequence) == 1:
@@ -170,7 +191,30 @@ class Abstracter():
                 return None
         return sequence[:i] + "=" + sequence[:i]
 
+
+class FakeSolver():
+    def __init__(self):
+        self.QTable = [
+            ("1+1=2",1),
+            ("2=2",1),
+            ("2+2=4",1),
+            ("3+3=3",1)
+        ]
+
+    def bestActionAndReward(self, state):
+        return (1, 1)
+
+
+
+f = FakeSolver()
+
 a = Abstracter()
+
+print(a.testStructureFormationRule("1+1=2", f))
+
+
+print(Abstracter.doesMatch("2=2", [1,'=',0], [([1],True),([1],True)]))
+
 print(Abstracter.checkAbstractGoal("134=", a.goals[0]))
 print(Abstracter.checkAbstractGoal("13", a.goals[0]))
 print(Abstracter.checkAbstractGoal("=", a.goals[0]))
