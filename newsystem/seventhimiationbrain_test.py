@@ -1,5 +1,5 @@
-from Solver import *
-from Abstracter import *
+from Solver2 import *
+from Abstracter2 import *
 
 def abstractState(sequence):
     ret = Abstracter.fakeMultiplicationTableAbstracter(sequence)
@@ -49,22 +49,23 @@ for x in range(20):
         expr = expression
         if r.random() < equalsTrainingProb:
             expr = "="
-        action = animat.multiStateProgram(abstractState(expr), depth, exploreRate, None, None, abstractGoal(abstractState(expr)))
-        for z in range(20):
+        action = animat.multiStateProgram2(expr, abstractState(expr), depth, exploreRate, None, None, abstractGoal(abstractState(expr)))
+        for z in range(10):
             reward = 0
             if action == "RETURN":
                 reward = -1
                 if expr in trainingSet:
                     reward = 1
-                a = animat.multiStateProgram(abstractState(expr+"D"), 0, exploreRate, "RETURN", reward, abstractGoal(abstractState(expr)))
+                a = animat.multiStateProgram2(expr+"D", abstractState(expr+"D"), 0, exploreRate, "RETURN", reward, abstractGoal(abstractState(expr)))
                 if x < 5 or reward != 1:
                     break
                 a = Abstracter()
+                print(expr)
                 print(a.testStructureFormationRule(expr, animat), flush = True)
                 break
             else:
                 expr += action
-            action = animat.multiStateProgram(abstractState(expr),depth,exploreRate,action,reward,abstractGoal(abstractState(expr)))
+            action = animat.multiStateProgram2(expr,abstractState(expr),depth,exploreRate,action,reward,abstractGoal(abstractState(expr)))
 
             
     correct = 0
@@ -73,7 +74,7 @@ for x in range(20):
         i = expression.find("=")
         expr = expression[0:i+1]
         position = 0
-        action = animat.multiStateProgram(abstractState(expr), depth, 0, None, None, abstractGoal(abstractState(expr)))
+        action = animat.multiStateProgram2(expr,abstractState(expr), depth, 0, None, None, abstractGoal(abstractState(expr)))
         for y in range(20):
             if action == "RETURN":
                 if expr in trainingSet:
@@ -84,7 +85,7 @@ for x in range(20):
                 break
             else:
                 expr += action
-            action = animat.multiStateProgram(abstractState(expr), depth, 0, None, None, abstractGoal(abstractState(expr)))
+            action = animat.multiStateProgram2(expr, abstractState(expr), depth, 0, None, None, abstractGoal(abstractState(expr)))
     print(correct/len(trainingSet))
     print(correct)
     print(len(trainingSet))

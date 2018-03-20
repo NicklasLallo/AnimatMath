@@ -118,10 +118,6 @@ class Abstracter():
         badMatches = 0
         for (sequence, action) in solver.QTable:
             newSequence = Abstracter.applyStructureChange(sequence, structure)
-            print(structure)
-            print(sequence)
-            print(newSequence)
-            print()
             if newSequence == None: 
                 continue
             (bestAction, reward) = solver.bestActionAndReward(sequence)
@@ -176,7 +172,6 @@ class Abstracter():
                 [([1],True),([1],True)],#[(list(set(testSequence[0:startPos])),True),(list(set(testSequence[endPos:-1])),True)],
                 [action], []
             ]
-            print(newStructure, flush = True)
 
             (goodMatches, badMatches) = Abstracter.judgeStructureRule(newStructure, solver)
             #print((goodMatches, badMatches))
