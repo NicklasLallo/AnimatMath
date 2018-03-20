@@ -11,7 +11,8 @@ class Abstracter():
 
         self.structures = [
             [[[0,"*",1],[1,"*",0]],[self.cheat_digits, self.cheat_digits], ["dummy best action"], []],
-            [[[0, "+", 1, "*", 2, "+" ,3],[0, "+", 2, "*",1, "+" ,3]], [self.all_chars, self.cheat_digits, self.cheat_digits, self.all_chars], ["dummy best action"], []]
+            [[[0, "+", 1, "*", 2, "+" ,3],[0, "+", 2, "*",1, "+" ,3]], [self.all_chars, self.cheat_digits, self.cheat_digits, self.all_chars], ["dummy best action"], []],
+            [[[0, '1', '+', '1', 1], [0, '2', 1]], [([1], True), ([1], True)], [1], []]
                 
         ]
         
@@ -24,7 +25,8 @@ class Abstracter():
         position = 0
         variables = [[]] * len(abstractionvariables)
         ret = True
-        for char in abstraction:
+        for charNr in range(len(abstraction)):
+            char = abstraction[charNr]
             if position >= len(sequence):
                 ret = allowPartial
                 break
@@ -45,11 +47,12 @@ class Abstracter():
                         position+=1
                     else:
                         while sequence[position] in whitelist or 1 in whitelist:
+                            if charNr+1 < len(abstraction) and type(abstraction[charNr+1]) is str and abstraction[charNr+1] == sequence[position]:
+                                break
                             variables[char].append(sequence[position])
                             position+=1
                             if position >= len(sequence):
                                 break
-                            if sequence()
                 else:
                     breakagain = False
                     for entry in variables[char]:
@@ -68,7 +71,7 @@ class Abstracter():
     #Takes a sequence and a structure and attempts to apply that structure to that sequence.
     #Returns the altered sequence if successful and None otherwise.
     def applyStructureChange(sequence, structure):
-        (match, variables) = abstracter.doesMatch(sequence, structure[0][0], structure[1])
+        (match, variables) = Abstracter.doesMatch(sequence, structure[0][0], structure[1])
         if match:
             retString = []
             for char in structure[0][1]:
@@ -76,7 +79,7 @@ class Abstracter():
                     retString.append(char)
                 else:
                     retString.append(variables[char])
-            return list(it.chain.from_iterable(retString))
+            return "".join(list(it.chain.from_iterable(retString)))
         return None
 
     #Takes a sequence and an abstract goal and checks whether the sequence can lead to that goal 
@@ -94,9 +97,9 @@ class Abstracter():
                 retString.append(char)
             else:
                 retString.append(variables[char])
-        return list(it.chain.from_iterable(retString))
+        return "".join(list(it.chain.from_iterable(retString)))
 
-    def judgeAbstraction(abstraction, solver):
+    def judgeGoalRule(abstraction, solver):
         goodMatches = 0
         badMatches = 0
         for sequence in solver.QTable:
@@ -109,6 +112,31 @@ class Abstracter():
             else:
                 badMatches += 1
         return (goodMatches, badMatches)
+
+    def judgeStructureRule(structure, solver):
+        goodMatches = 0
+        badMatches = 0
+        for (sequence, action) in solver.QTable:
+            newSequence = Abstracter.applyStructureChange(sequence, structure)
+            print(structure)
+            print(sequence)
+            print(newSequence)
+            print()
+            if newSequence == None: 
+                continue
+            (bestAction, reward) = solver.bestActionAndReward(sequence)
+            (bestAction2, reward) = solver.bestActionAndReward(newSequence)
+            
+            if bestAction == None or bestAction2 == None:
+                continue
+
+            if bestAction == bestAction2:
+                goodMatches += 1
+            else:
+                badMatches += 1
+        return (goodMatches, badMatches)
+
+
 
 
     def testStructureFormationRule(self, testSequence, solver):
@@ -148,10 +176,9 @@ class Abstracter():
                 [([1],True),([1],True)],#[(list(set(testSequence[0:startPos])),True),(list(set(testSequence[endPos:-1])),True)],
                 [action], []
             ]
-
             print(newStructure, flush = True)
 
-            (goodMatches, badMatches) = Abstracter.judgeAbstraction(newStructure, solver)
+            (goodMatches, badMatches) = Abstracter.judgeStructureRule(newStructure, solver)
             #print((goodMatches, badMatches))
             #print(newStructure, flush = True)
             #print(testSequence, flush = True)
@@ -198,7 +225,10 @@ class FakeSolver():
             ("1+1=2",1),
             ("2=2",1),
             ("2+2=4",1),
-            ("3+3=3",1)
+            ("3+3=3",1),
+            ("2*(1+1)=4",2),
+            ("2*2=4",2),
+            ("1+2=3", 1)
         ]
 
     def bestActionAndReward(self, state):
@@ -212,8 +242,17 @@ a = Abstracter()
 
 print(a.testStructureFormationRule("1+1=2", f))
 
+print()
 
-print(Abstracter.doesMatch("2=2", [1,'=',0], [([1],True),([1],True)]))
+print(Abstracter.doesMatch("1+1=2", [0, '1', '+', '1', 1], [([1], True), ([1], True)]))
+print(Abstracter.doesMatch("2*(1+1)=4", [0, '1', '+', '1', 1], [([1], True), ([1], True)]))
+
+print()
+
+
+print(Abstracter.applyStructureChange("1+1=2",[[[0, '1', '+', '1', 1], [0, '2', 1]], [([1], True), ([1], True)], [1], []]))
+
+print()
 
 print(Abstracter.checkAbstractGoal("134=", a.goals[0]))
 print(Abstracter.checkAbstractGoal("13", a.goals[0]))
