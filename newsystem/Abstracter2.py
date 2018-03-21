@@ -138,7 +138,7 @@ class Abstracter():
 
     def testStructureFormationRule(self, testSequence, solver):
         bestStructure = None
-        bestStructureMatches = 0
+        bestStructureMatches = 1
         action, r = solver.bestActionAndReward(testSequence)
         
         #For each encountered sequence we shall compare it to the sequence to be tested
@@ -195,8 +195,16 @@ class Abstracter():
                 self.structures.append(newStructure)
                 bestStructure = newStructure
                 bestStructureMatches = goodMatches
-        print(bestStructureMatches) 
-        print(Abstracter.judgeStructureRule(bestStructure, solver))
+        
+        if bestStructure != None:
+            f = open("test_data.txt", "w")
+            f.write(str(Abstracter.judgeStructureRule(bestStructure, solver)))
+            f.write("\n")
+            f.write(str(bestStructure))
+            f.write("\n")
+            f.write(str(solver.QTable.keys()))
+            f.write("\n\n")
+
         #Return a rule with no bad matches and the highest number of good matches found
         return bestStructure
 
