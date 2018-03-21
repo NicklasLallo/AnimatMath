@@ -29,16 +29,16 @@ print(trainingSet)
 for x in range(90):
     trainingSet.append("{}={}".format(x,x))
 
-exploreRate = 1
+exploreRate = 0.5
 
-equalsTrainingProb = 0.11
+equalsTrainingProb = 0.1
 
-depth = 4
+depth = 40
 
 animat = Solver(actionList, 0.5, 0.9)
 
 f = open('validationOutput','w')
-for x in range(20):
+for x in range(100):
     print(len(animat.QTable))
     loading = 100
     for y in range(loading):
@@ -46,9 +46,8 @@ for x in range(20):
             print('', end = '#', flush = True)
 
         expression = str(r.choice(trainingSet))
-        expr = expression
-        if r.random() < equalsTrainingProb:
-            expr = "="
+        i = expression.find("=")
+        expr = expression[0:i+1]
         action = animat.multiStateProgram2(expr, abstractState(expr), depth, exploreRate, None, None, abstractGoal(abstractState(expr)))
         for z in range(10):
             reward = 0
