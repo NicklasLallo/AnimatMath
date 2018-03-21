@@ -1,0 +1,286 @@
+import random as r
+from graph import *
+
+class Solver():
+    
+    #Constructors
+
+    def __init__(self, actionList, learningRate, discountFactor):
+        self.actionList = actionList
+        self.learningRate = learningRate
+        self.discountFactor = discountFactor
+        
+        #Contains information of what states+actions lead to what states
+        self.TransitionTable = {}
+
+        #Contains Q-values for state-action pairs
+        self.QTable = {}
+
+        #Contains average reward for state-action pairs
+        self.ETable = {}
+
+    #Runnable
+
+    def multiStateProgram2(self, stateSequence, abstractSequence = None, depth = 4, exploreProb = 0, prevAction=None, reward=None, additionalGoalStates = {}, goalReward = 0.1, debug = False):
+        if prevAction != None:
+            self.oneStateLearning(stateSequence[:-1], prevAction, stateSequence, reward)
+            self.updateTransitionTable(stateSequence[-2], prevAction, stateSequence[-1])
+            #if abstractSequence != None: #Uncomment to give it confirmaion bias!
+            #    self.oneStateLearning(abstractSequence[:-1], prevAction, abstractSequence, reward)
+            #    self.updateTransitionTable(abstractSequence[-2], prevAction, abstractSequence[-1])
+
+        if abstractSequence == None:
+            abstractSequence = stateSequence
+
+        if r.random() < exploreProb:
+            return r.choice(self.actionList)
+
+        bestGain = -99999
+        stateEnd = len(abstractSequence)
+        possibleStates = []
+        for state, stateTable in self.QTable.items():
+            for action, gain in stateTable.items():
+                if state[0:stateEnd] == abstractSequence:
+                    possibleStates.append((state,action))
+                    if gain > bestGain:
+                        bestGain = gain 
+        goodStates = additionalGoalStates
+        for (state, action) in possibleStates:
+            if self.QTable[state][action] > bestGain-goalReward:
+                if state in goodStates and goodStates[state][1] < self.QTable[state][action]:
+                    goodStates[state] = (action, self.QTable[state][action])
+        
+        #if exploreProb == 0:
+        #    print(goodStates)
+        if debug:
+            #print(possibleStates)
+            print(goodStates)
+
+        (action, expectedReward, storage) = self.improvedTreeSearch(abstractSequence, depth, goodStates, 0.5, debug)
+ 
+        if action == None:
+            return r.choice(self.actionList)
+        if debug:
+            if len(additionalGoalStates[0]) > 0: 
+                print("AbstractState: {}, AbstractGoalStates: {}, ActionTaken: {}".format(stateSequence, additionalGoalStates, action))
+                print(storage[1])
+                gra = GRA()
+                gra.addNodes(storage)
+                gra.plotGraph()
+
+        return action
+
+    #Helpful functions
+    
+    def bestActionAndReward(self, state):
+        bestReward = -99999999999999
+        bestAction = None
+        
+        if state not in self.QTable:
+            return (bestAction, bestReward)
+        stateTable = self.QTable[state]
+
+        for action in stateTable:
+                if stateTable[action] > bestReward:
+                    bestReward = stateTable[action]
+                    bestAction = action
+
+        return (bestAction, bestReward)
+
+    def possibleGoalSequences(self, stateSequence, goals):
+        stateEnd = len(stateSequence)
+        possibleGoals = {}
+        for sequence in goals:
+            if sequence[0:stateEnd] == stateSequence:
+                possibleGoals[sequence] = goals[sequence]
+        return possibleGoals
+       
+    def topQEntries(self, number = 10):
+        topList = [("","",-9999)]*number
+        for state, stateTable in self.QTable.items():
+            for action, reward in stateTable.items():
+                for (anotherState, anotherAction, anotherReward) in topList:
+                    if reward > anotherReward:
+                        topList.append((state, action, reward))
+                        topList.remove((anotherState, anotherAction, anotherReward)) 
+                        state = anotherState
+                        action = anotherAction
+                        reward = anotherReward
+        return topList
+
+    #Given a state and an action finds the dictionary with the most useful transitions and the number of inserts to that dictionary
+    def getTransitions(self, state, action):
+        if (state, action) in self.TransitionTable:
+            return self.TransitionTable[(state,action)]
+        gotAction = (action) in self.TransitionTable
+        gotState = (state in self.TransitionTable)
+        if gotAction and not gotState:
+            return self.TransitionTable[(action)]
+        elif gotState and not gotAction:
+            return self.TransitionTable[(state)]
+        elif gotAction and gotState:
+            (actionInserts, actionTransitions) = self.TransitionTable[(action)]
+            (stateInserts, stateTransitions) = self.TransitionTable[(state)]
+            actionEntropy = sum(map(lambda x: (actionTransitions[x]/actionInserts)**2, actionTransitions))
+            stateEntropy = sum(map(lambda x: (stateTransitions[x]/stateInserts)**2, stateTransitions))
+            if actionEntropy > stateEntropy:
+                return self.TransitionTable[(action)]
+            else:
+                return self.TransitionTable[(state)]
+        return (0,[])
+
+    #Given a sequence and a goal finds the probability that one can successfully navigate from one to the other
+    def reliabilityToGoal(self, sequence, goal):
+        
+        if sequence != goal[0:len(sequence)]:
+            return 0
+
+        position = len(sequence)
+        state = sequence[-1]
+        nextState = goal[position]
+        reliability = 1
+        while True:
+            if position >= len(goal):
+                if positon > len(goal):
+                    reliability = 0
+                break
+            actionReliability  = 0
+            for action in self.actionList:
+                (nrOfInserts, transitions) = self.getTransitions(state, action)
+                if nextState in transtions and transitions[nextState]/nrOfInserts > actionReliability:
+                    actionReliability = transitions[nextState]/nrOfInserts
+            if actionReliability == 0:
+                return 0
+            position += 1
+            reliability *= actionReliability
+            state = nextState
+            nextState = goal[position]
+
+        return reliability
+
+    #Takes the previous state, action, and current state and updates Q and E Tables
+    def oneStateLearning(self, oldState, action, newState, reward):
+        if oldState not in self.QTable:
+            self.QTable[oldState] = {}
+            self.ETable[oldState] = {}
+        oldStateQ = self.QTable[oldState]
+        oldStateE = self.ETable[oldState]
+        (bestAction, bestReward) = self.bestActionAndReward(newState)
+        if bestAction == None:
+            bestReward = 0
+        if action in oldStateQ:
+            q = oldStateQ[action]
+            e = oldStateE[action]
+        else:
+            q = 0
+            e = 0
+        
+        q = (1-self.learningRate)*q + self.learningRate*(reward + self.discountFactor*bestReward)
+        e = (1-self.learningRate)*e + self.learningRate*reward
+
+        oldStateQ[action] = q
+        oldStateE[action] = e
+
+
+
+    #Transition table
+
+    def updateTransitionTable(self, oldState, action, newState):
+        if (oldState, action) in self.TransitionTable:
+            (nrOfInserts, nextStates) = self.TransitionTable[(oldState, action)]
+            if newState in nextStates:
+                nextStates[newState] += 1
+            else:
+                nextStates[newState] = 1
+            self.TransitionTable[(oldState, action)] = (nrOfInserts+1, nextStates)
+        else:
+            self.TransitionTable[(oldState, action)] = (1, {newState : 1})
+
+        if (oldState) in self.TransitionTable:
+            (nrOfInserts, nextStates) = self.TransitionTable[(oldState)]
+            if newState in nextStates:
+                nextStates[newState] += 1
+            else:
+                nextStates[newState] = 1
+            self.TransitionTable[(oldState)] = (nrOfInserts+1, nextStates)
+        else:
+            self.TransitionTable[(oldState)] = (1, {newState : 1})
+
+        if (action) in self.TransitionTable:
+            (nrOfInserts, nextStates) = self.TransitionTable[(action)]
+            if newState in nextStates:
+                nextStates[newState] += 1
+            else:
+                nextStates[newState] = 1
+            self.TransitionTable[(action)] = (nrOfInserts+1, nextStates)
+        else:
+            self.TransitionTable[(action)] = (1, {newState : 1})
+
+    #Next Gen Tree-Search
+    #sequence is a string with each char a state in the history states
+    #depth is the maximum depth of the branch
+    #goals is a dictionary with sequences as keys and (bestAction, reward) as value
+    #distanceToGoalDiscount is a factor of how much of the goal reward is given to an end state depending on the distance to the nearest goal
+    def improvedTreeSearch(self, sequence, depth, goals, distanceToGoalDiscount = 0, debug = False):
+        if sequence in goals:
+            (bestAction, reward) = goals[sequence]
+            return (bestAction, reward, (sequence, reward, reward, None, None))
+
+        if depth == 0:
+            (bestAction, reward) = self.bestActionAndReward(sequence)
+            reward = 0 
+            for goal, (action, aReward) in goals.items():
+                if self.reliabilityToGoal(sequence, goal)*aReward > reward:
+                    reward = self.reliabilityToGoal(sequence, goal)*aReward
+                    bestAction = action
+            return (bestAction, reward, (sequence, reward, reward, None, None))
+
+        nextSequences = set()
+        for action in self.actionList:
+            (_, nextStates) = self.getTransitions(sequence[-1], action)
+            if len(nextStates) > 0:
+                for nextState in nextStates:
+                    nextSequences.add(sequence + nextState)
+
+        returns = {}
+        for nextSequence in nextSequences:
+            possibleGoals = self.possibleGoalSequences(nextSequence, goals)
+            if len(possibleGoals) == 0:
+                (bestAction, reward)  = self.bestActionAndReward(nextSequence)
+                returns[nextSequence] = (bestAction, reward, (nextSequence, reward, reward, None, None))
+            else:
+                returns[nextSequence] = self.improvedTreeSearch(nextSequence, depth-1, possibleGoals, distanceToGoalDiscount, debug)
+
+        bestAction = None
+        bestReward = -999999
+        bestNextSequence = None
+        thisReward = bestReward
+
+
+        for action in self.actionList:
+            thisNextSequence = None
+            reward = -9999999
+            myReward = reward
+            (nrOfInserts, nextStates) = self.getTransitions(sequence[-1], action)
+            if nrOfInserts == 0:
+                if sequence in self.QTable and action in self.QTable[sequence]:
+                    myReward = self.QTable[sequence][action]
+                    reward = myReward
+            else:
+                if sequence in self.ETable and action in self.ETable[sequence]:
+                    myReward = self.ETable[sequence][action]
+                else:
+                    myReward = 0
+                reward = myReward
+                for nextState in nextStates:
+                    nextSequence = sequence + nextState
+                    reward += returns[nextSequence][1]*(nextStates[nextState]/nrOfInserts)
+            if reward > bestReward:
+                bestAction = action
+                bestReward = reward
+                thisReward = myReward
+        if bestAction == None:
+            bestAction = r.choice(self.actionList)
+        if not debug:
+            returns = None
+        return (bestAction, bestReward, (sequence, thisReward, bestReward, returns, None))
