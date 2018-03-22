@@ -107,10 +107,15 @@ class Abstracter():
             if not match: 
                 continue
             (bestAction, reward) = solver.bestActionAndReward(sequence)
+            if bestAction == None:
+                continue
             if bestAction == abstraction[2][0]:
                 goodMatches += 1
             else:
-                badMatches += 1
+                if abstraction[2][0] in solver.QTable[sequence] and solver.QTable[sequence][bestAction] == reward:
+                    goodMatches += 1
+                else:
+                    badMatches += 1
         return (goodMatches, badMatches)
 
     def judgeStructureRule(structure, solver):
@@ -122,7 +127,7 @@ class Abstracter():
                 continue
             
             (bestAction, reward) = solver.bestActionAndReward(sequence)
-            (bestAction2, reward) = solver.bestActionAndReward(newSequence)
+            (bestAction2, reward2) = solver.bestActionAndReward(newSequence)
             
             if bestAction == None or bestAction2 == None:
                 continue
@@ -130,8 +135,61 @@ class Abstracter():
             if bestAction == bestAction2:
                 goodMatches += 1
             else:
-                badMatches += 1
+                if bestAction in solver.QTable[newSequence] and solver.QTable[newSequence][bestAction] == reward2:
+                    goodMatches += 1
+                elif bestAction2 in solver.QTable[sequence] and solver.QTable[sequence][bestAction2] == reward:
+                    goodMatches += 1
+                else:
+                    badMatches += 1
         return (goodMatches, badMatches)
+
+
+    def finiteAutomataPatternFinder(sequenceDict):
+        position = 0
+        graph = {}
+        row = {}
+        while True:
+            if len(sequenceDict) == 0:
+                break
+            nextrow = {}
+            graph[position] = row
+            prevsymbol = 
+            for nr, sequence in sequenceDict.items():
+                symbol = sequence[position]
+                if len(sequence) == position+1:
+                    nextSymbol = 0
+                else:
+                    nextSymbol = sequence[position+1]
+                    del sequenceDict[nr]
+
+                if symbol in row:
+                    row[symbol].add((1,nextSymbol))
+                else:
+                    row[symbol] = set([(1,nextSymbol)])
+    
+            Uncomment to depend on prev symbols as well
+                if nextSymbol in nextRow:
+                    nextRow[symbol].add((0,symbol))
+                else:
+                    nextRow[symbol] = set([(0,symbol)])
+            position += 1
+            row = nextRow
+
+        newGraph = {}
+        for pos, row in graph.items():
+            newRow = {}
+            newGraph[pos] = newRow
+            for symbol, nextSymbols in row.items():
+                key = frozenset(nextSymbols)
+                if key in newRow:
+                    newRow[key].add(symbol)
+                else:
+                    newRow[key] = set([symbol])
+
+        newerGraph = {}
+        for pos, row in newGraph.items():
+            newerRow:
+
 
 
 
