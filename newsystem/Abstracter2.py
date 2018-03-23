@@ -144,54 +144,117 @@ class Abstracter():
         return (goodMatches, badMatches)
 
 
-    def finiteAutomataPatternFinder(sequenceDict):
-        position = 0
+    def finiteAutomataPatternFinder(sequenceList):
         graph = {}
-        row = {}
-        while True:
-            if len(sequenceDict) == 0:
-                break
-            nextrow = {}
-            graph[position] = row
-            prevsymbol = 
-            for nr, sequence in sequenceDict.items():
-                symbol = sequence[position]
-                if len(sequence) == position+1:
-                    nextSymbol = 0
+        for sequence in sequenceList:
+            for position in range(len(sequence)):
+            
+                if position in graph:
+                    row = graph[position]
                 else:
-                    nextSymbol = sequence[position+1]
-                    del sequenceDict[nr]
+                    row = {}
+                    graph[position] = row
 
-                if symbol in row:
-                    row[symbol].add((1,nextSymbol))
+                char = sequence[position]
+                if position == len(sequence)-1:
+                    nextChar = 0
                 else:
-                    row[symbol] = set([(1,nextSymbol)])
-    
-            Uncomment to depend on prev symbols as well
-                if nextSymbol in nextRow:
-                    nextRow[symbol].add((0,symbol))
+                    nextChar = sequence[position+1]
+
+                if char in row:
+                    row[char].add((1,nextChar))
                 else:
-                    nextRow[symbol] = set([(0,symbol)])
-            position += 1
-            row = nextRow
+                    row[char] = set([(1,nextChar)])
+
+                if position == 0:
+                    row[char].add((0,0))
+
+                if position+1 in graph:
+                    nextRow = graph[position+1]
+                else:
+                    nextRow = {}
+                    graph[position+1] = nextRow
+
+                if nextChar in nextRow:
+                    nextRow[nextChar].add((0, char))
+                else:
+                    nextRow[nextChar] = set([(0, char)])
+
+        print(graph)
+        print()
 
         newGraph = {}
         for pos, row in graph.items():
             newRow = {}
             newGraph[pos] = newRow
-            for symbol, nextSymbols in row.items():
-                key = frozenset(nextSymbols)
+            for symbol, keySymbols in row.items():
+                key = frozenset(keySymbols)
                 if key in newRow:
                     newRow[key].add(symbol)
                 else:
                     newRow[key] = set([symbol])
+    
+        print(newGraph)
+        print()
 
-        newerGraph = {}
-        for pos, row in newGraph.items():
-            newerRow:
+        possibleVariables = {}
+        for pos, newRow in newGraph.items():
+            for connections, characters in newRow.items():
+                addVar = True
+                for char in characters:
+                    if (1, char) not in connections:
+                        addVar = False
+                        break
+                if not addVar:
+                    continue
+                possibleStartChars = []
+                possibleEndChars = []
+                print(connections)
+                for (prevOrNext, char) in connections:
+                    if char in characters:
+                        continue
+                    if prevOrNext == 0:
+                        possibleStartChars.append(char)
+                    else:
+                        possibleEndChars.append(char)
+                key = frozenset(characters)
+                if key in possibleVariables:
+                    (start, end) = possibleVariables[key]
+                    start.append(possibleStartChars)
+                    end.append(possibleEndChars)
+                else:
+                    possibleVariables[key] = (possibleStartChars, possibleEndChars)
+        
+        print(possibleVariables)
+        print()
 
+        abstractions = []
+        for sequence in sequenceList:
+            prevChar = 0
+            abstraction = []
+            abstractions.append(abstraction)
+            for position in range(len(sequence)):
+                char = sequence[position]
+                matchFound = False
+                for chars in possibleVariables:
+                    if char not in chars:
+                        continue
+                    startChar, endChar = possibleVariables[chars]
+                    if prevChar not in startChar and prevChar not in chars:
+                        continue
+                    if position != len(sequence)-1 and sequence[position+1] not in endChar and sequence[position+1] not in chars:
+                        continue
+                    if len(abstraction) == 0 or abstraction[-1] != chars:
+                        abstraction.append(chars)
+                    matchFound = True
+                    break
+                if not matchFound:
+                    abstraction.append(char)
+                prevChar = char
+            if sequence == "0=0":
+                print(abstraction)
 
-
+        print(abstractions)
 
 
     def testStructureFormationRule(self, testSequence, solver):
@@ -316,25 +379,32 @@ f = FakeSolver()
 
 a = Abstracter()
 
-print(a.testStructureFormationRule("1+1=2", f))
+strs = [
+    "1=1",
+    "2=2",
+    "3=3",
+    "22=22",
+    "13=13",
+    "23=23",
+    "32=32",
+    "12=12",
+    "11=11",
+    "33=33",
+    "21=21",
+    "31=31",
+    "123=123",
+    "321=321",
+    "232=232",
+    "213=213",
+    "312=312",
+    "111=111",
+    "113=113",
+    "133=133",
+    "222=222",
+    "331=331",
+
+]
+
+Abstracter.finiteAutomataPatternFinder(strs)
 
 print()
-
-print(Abstracter.doesMatch("1+1=2", [0, '1', '+', '1', 1], [([1], True), ([1], True)]))
-print(Abstracter.doesMatch("2*(1+1)=4", [0, '1', '+', '1', 1], [([1], True), ([1], True)]))
-
-print()
-
-
-print(Abstracter.applyStructureChange("1+1=2",[[[0, '1', '+', '1', 1], [0, '2', 1]], [([1], True), ([1], True)], [1], []]))
-
-print()
-
-print(Abstracter.checkAbstractGoal("134=", a.goals[0]))
-print(Abstracter.checkAbstractGoal("13", a.goals[0]))
-print(Abstracter.checkAbstractGoal("=", a.goals[0]))
-print(Abstracter.checkAbstractGoal("13=", a.goals[0]))
-print(Abstracter.checkAbstractGoal("134=2", a.goals[0]))
-print(Abstracter.checkAbstractGoal("134=123", a.goals[0]))
-print(Abstracter.checkAbstractGoal("134=1", a.goals[0]))
-

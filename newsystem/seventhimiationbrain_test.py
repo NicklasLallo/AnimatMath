@@ -33,14 +33,14 @@ exploreRate = 0.5
 
 equalsTrainingProb = 0.1
 
-depth = 40
+depth = 3
 
 animat = Solver(actionList, 0.5, 0.9)
 
 f = open('validationOutput','w')
-for x in range(100):
+for x in range(20):
     print(len(animat.QTable))
-    loading = 100
+    loading = 1000
     for y in range(loading):
         if ((y/loading)*100)%10 == 0:
             print('', end = '#', flush = True)
@@ -49,23 +49,24 @@ for x in range(100):
         i = expression.find("=")
         expr = expression[0:i+1]
         action = animat.multiStateProgram2(expr, abstractState(expr), depth, exploreRate, None, None, abstractGoal(abstractState(expr)))
-        for z in range(10):
+        for z in range(4):
             reward = 0
-            if action == "RETURN":
+            if action == "RETURN" or z == 3:
                 reward = -1
                 if expr in trainingSet:
                     reward = 1
-                a = animat.multiStateProgram2(expr+"D", abstractState(expr+"D"), 0, exploreRate, "RETURN", reward, abstractGoal(abstractState(expr)))
-                if x < 5 or reward != 1:
-                    break
-                a = Abstracter()
-                print(expr)
-                print(a.testStructureFormationRule(expr, animat), flush = True)
+                a = animat.multiStateProgram2(expr+"D", abstractState(expr+"D"), 0, 1, "RETURN", reward, abstractGoal(abstractState(expr)))
                 break
             else:
                 expr += action
             action = animat.multiStateProgram2(expr,abstractState(expr),depth,exploreRate,action,reward,abstractGoal(abstractState(expr)))
-
+    if x > 10:
+        seqList = []
+        for sequence in animat.QTable:
+            (bestAction, bestReward) = animat.bestActionAndReward(sequence)
+            if bestReward >= 0.99:
+                seqList.append(sequence)
+        Abstracter.finiteAutomataPatternFinder(seqList)
             
     correct = 0
     f.write('\nIteration {}\n'.format(x))
