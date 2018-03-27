@@ -209,7 +209,7 @@ class Abstracter():
                     continue
                 possibleStartChars = []
                 possibleEndChars = []
-                print(connections)
+                #print(connections)
                 for (prevOrNext, char) in connections:
                     if char in characters:
                         continue
@@ -220,8 +220,8 @@ class Abstracter():
                 key = frozenset(characters)
                 if key in possibleVariables:
                     (start, end) = possibleVariables[key]
-                    start.append(possibleStartChars)
-                    end.append(possibleEndChars)
+                    start += possibleStartChars
+                    end += possibleEndChars
                 else:
                     possibleVariables[key] = (possibleStartChars, possibleEndChars)
         
@@ -232,7 +232,6 @@ class Abstracter():
         for sequence in sequenceList:
             prevChar = 0
             abstraction = []
-            abstractions.append(abstraction)
             for position in range(len(sequence)):
                 char = sequence[position]
                 matchFound = False
@@ -251,10 +250,56 @@ class Abstracter():
                 if not matchFound:
                     abstraction.append(char)
                 prevChar = char
-            if sequence == "0=0":
-                print(abstraction)
+            if abstraction not in abstractions:
+                abstractions.append(abstraction)
+                if sequence[1] == "=" or sequence[2] == "=":
+                    print(sequence)
+                    print(abstraction)
 
         print(abstractions)
+
+    def probabilityPatternFinder(sequenceList, probLimit):
+        prevProbTable = {}
+        nextProbTable = {}
+        for sequence in sequenceList:
+            for position in range(len(sequence)):
+                
+                char = sequence[position]
+                if position+1 < len(sequence):
+                    nextChar = sequence[position+1]
+                else:
+                    nextChar = 0
+
+                if char in nextProbTable:
+                    (nextCharInserts, nextChars) = nextProbTable[char]
+                else:
+                    nextCharInserts = 0
+                    nextChars = {}
+                if nextChar in prevProbTable:
+                    (prevCharInserts, prevChars) = prevProbTable[nextChar]
+                else:
+                    prevCharInserts = 0
+                    prevChars = {}
+
+                if char in prevChars:
+                    prevChars[char] += 1
+                else:
+                    prevChars[char] = 1
+                if nextChar in nextChars:
+                    nextChars[nextChar] += 1
+                else:
+                    nextChars[nextChar] = 1
+
+                nextProbTable[char] = (nextCharInserts+1, nextChars)
+                prevProbTable[nextChar] = (prevCharInserts+1, prevChars)
+        
+        variables = {}
+        for char, (inserts, prevChars) in prevProbTable.items():
+            if char in prevChars and prevChars[char]/inserts > probLimit:
+                variables[char] = [char]
+            else:
+                continue
+            for char in
 
 
     def testStructureFormationRule(self, testSequence, solver):
@@ -328,6 +373,35 @@ class Abstracter():
 
         #Return a rule with no bad matches and the highest number of good matches found
         return bestStructure
+
+    def structureTreeSearch(self, sequence, depth, visitedNodes = {}):
+        if sequence in visitedNodes:
+            return (None, None)
+        else:
+            visitedNodes[sequence] = 1
+    
+        bestValue = -9999
+        bestGoal = None
+        bestGoalSequence = None
+        for goal in self.goals:
+            goalSequence = checkAbstractGoal(sequence, goal)
+            if goalSequence != None and goal[2][0] > bestValue:
+                bestValue = goal[2][0]
+                bestGoal = goal
+                bestGoalSequence = goalSequence
+
+        if depth == 0:
+            return (bestGoal, bestGoalSequence)
+
+        for structure in self.structures:
+            newSequence = Abstaction.applyStructureChange(sequnence, structure)
+            (goal, goalSequence) = self.structureTreeSearch(newSequence, depth-1, visitedNodes)
+            if goalSequence != None and goal[2][0] > bestValue:
+                bestValue = goal[2][0]
+                bestGoal = goal
+                bestGoalSequence = goalSequence
+
+        return (bestGoal, bestGoalSequence)
 
     def fakeMultiplicationTableAbstracter(sequence):
         #if len(sequence) == 1:

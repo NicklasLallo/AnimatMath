@@ -46,12 +46,15 @@ class Solver():
                         bestGain = gain 
         goodStates = additionalGoalStates
         for (state, action) in possibleStates:
-            if self.QTable[state][action] > bestGain-goalReward:
-                if state in goodStates and goodStates[state][1] < self.QTable[state][action]:
+            if self.QTable[state][action] > bestGain*goalReward:
+                if state in goodStates:
+                    if goodStates[state][1] < self.QTable[state][action]:
+                        goodStates[state] = (action, self.QTable[state][action])
+                else:
                     goodStates[state] = (action, self.QTable[state][action])
         
         #if exploreProb == 0:
-        #    print(goodStates)
+        #   print(goodStates)
         if debug:
             #print(possibleStates)
             print(goodStates)
