@@ -1,6 +1,7 @@
 import random as r
 from Solver2 import *
 import itertools as it
+import copy
 
 class Abstracter():
 
@@ -10,7 +11,7 @@ class Abstracter():
         self.all_chars = (["0","1","2","3","4","5","6","7","8","9","0","+","*","="],True)
 
         self.structures = [
-            [[[0,"*",1],[1,"*",0]],[self.cheat_digits, self.cheat_digits], ["dummy best action"], []],
+            [[[2,0,"*",1,3],[2,1,"*",0,3]],[self.cheat_digits, self.cheat_digits, ([0], True), ([0], True)], ["dummy best action"], []],
             [[[0, "+", 1, "*", 2, "+" ,3],[0, "+", 2, "*",1, "+" ,3]], [self.all_chars, self.cheat_digits, self.cheat_digits, self.all_chars], ["dummy best action"], []],
             [[[0, '1', '+', '1', 1], [0, '2', 1]], [([1], True), ([1], True)], [1], []]
                 
@@ -67,7 +68,107 @@ class Abstracter():
                         break
         return (ret and (position == len(sequence)), variables)
     
+    #Takes:
+    #A sequence as a string
+    #An abstraction as a list of chars and numbers referencing variables
+    #A list of sets of allowed characters for each variable of the form: (repeated, atleastOne, [chars])
+    def doesMatch2(sequence, abstraction, variableChars, allowPartial = False):
+        position = 0
+        variables = [-1]*len(variableChars)
+        ret = True
+        for char in abstraction:
+            pass            
 
+    def matchChar(sequence, abstraction, variableChars, seqPos, absPos, writing, variables, partial):
+        
+        print(seqPos, absPos, writing, variables)
+
+        if absPos == len(abstraction) and seqPos == len(sequence):
+            print("!")
+            return [variables]
+        elif absPos == len(abstraction):
+            return []
+        elif seqPos == len(sequence):
+            if type(abstraction[absPos]) is int:
+                var = variables[abstraction[absPos]]
+                if var != -1 and len(var) > 0 and (writing == -1 or writing == len(var)):
+                    absPos += 1
+
+            print("?")
+            ret = True
+            for pos in range(absPos, len(abstraction)):
+                if type(abstraction[pos]) is str:
+                    print("str")
+                    ret = False
+                    break
+                (repeated, atleastOne, whitelist) = variableChars[abstraction[pos]]
+                if not repeated or atleastOne:
+                    print("{} or {}".format(repeated, atleastOne))
+                    ret = False
+                    break
+                if variables[abstraction[pos]] == -1:
+                    variables[abstraction[pos]] = []
+                elif variables[abstraction[pos]] != []:
+                    print("not empty")
+                    ret = False
+                    break
+                 
+            if ret or partial:
+                print("!")
+                return [variables]
+
+            return []
+    
+        absChar = abstraction[absPos]
+        char = sequence[seqPos]
+        if type(absChar) is str:
+            if char != absChar:
+                return []
+            return Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos+1, 0, variables, partial)
+        
+        (repeated, atleastOne, whitelist) = variableChars[absChar]
+
+        first = False
+        if variables[absChar] == -1:
+            variables[absChar] = []
+            writing = -1
+            first = True
+
+        if writing == -1:
+
+            if first and atleastOne:
+                if char not in whitelist and 1 not in whitelist:
+                    return []
+                variables[absChar].append(sequence[seqPos])
+                ret = []
+                ret += Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos+1, 0, variables, partial)
+                if repeated:
+                    ret += Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos, -1, copy.deepcopy(variables), partial)
+                return ret
+
+            if char not in whitelist and 1 not in whitelist:
+                return Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos+1, 0, variables, partial)
+
+            ret = []
+            var = copy.deepcopy(variables)
+            var[absChar].append(char)
+            ret += Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos+1, 0, variables, partial)
+            ret += Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos, -1, var, partial)
+            return ret
+
+        if writing == len(variables[absChar]):
+            return Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos+1, 0, variables, partial)
+
+        if char != variables[absChar][writing]:
+            return []
+
+        return Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos, writing+1, variables, partial)
+
+
+
+
+    
+    
     #Takes a sequence and a structure and attempts to apply that structure to that sequence.
     #Returns the altered sequence if successful and None otherwise.
     def applyStructureChange(sequence, structure):
@@ -98,6 +199,15 @@ class Abstracter():
             else:
                 retString.append(variables[char])
         return "".join(list(it.chain.from_iterable(retString)))
+
+    #Takes a sequence, an abstract goal, and a solver
+    #Returns the abstract goal sequence and the reliability of reaching it if possible, None otherwise
+    def advancedCheckAbstractGoal(sequence, goal, solver):
+        newSequence = Abstracter.checkAbstractGoal(sequence, goal)
+        if newSequence == None:
+            return None
+        reliability = solver.reliabilityToGoal(sequence, newSequence)
+        return (newSequence, reliability)
 
     def judgeGoalRule(abstraction, solver):
         goodMatches = 0
@@ -258,7 +368,7 @@ class Abstracter():
 
         print(abstractions)
 
-    def probabilityPatternFinder(sequenceList, probLimit):
+    def probabilityPatternFinder(sequenceList):
         prevProbTable = {}
         nextProbTable = {}
         for sequence in sequenceList:
@@ -295,11 +405,16 @@ class Abstracter():
         
         variables = {}
         for char, (inserts, prevChars) in prevProbTable.items():
-            if char in prevChars and prevChars[char]/inserts > probLimit:
-                variables[char] = [char]
+            key = set()
+            for prevChar in prevChars:
+                key.add(prevChar)
+            key = frozenset(key)
+            if key in variables:
+                variables[key].append(char)
             else:
-                continue
-            for char in
+                variables[key] = [char]
+
+        print(variables)
 
 
     def testStructureFormationRule(self, testSequence, solver):
@@ -479,6 +594,14 @@ strs = [
 
 ]
 
-Abstracter.finiteAutomataPatternFinder(strs)
+#Abstracter.finiteAutomataPatternFinder(strs)
 
 print()
+
+#Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos, writing, variables, partial)
+
+sequence = "11+11=22"
+abstraction = [0, 1, "+", 1, "=", 2, 3]
+variableChars = [(True, False, [1]), (True, True, ["1","2","3","4","5"]), (True, True, ["1","2","3","4","5"]), (True, False, [1])]
+
+print(Abstracter.matchChar(sequence, abstraction, variableChars, 0, 0, 0, [-1]*len(variableChars), False))

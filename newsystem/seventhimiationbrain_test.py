@@ -91,7 +91,7 @@ for x in range(20):
             (bestAction, bestReward) = animat.bestActionAndReward(sequence)
             if bestReward >= 0.99:
                 seqList.append(sequence)
-        Abstracter.finiteAutomataPatternFinder(seqList)
+        Abstracter.probabilityPatternFinder(seqList)
             
     correct = 0
     f.write('\nIteration {}\n'.format(x))
