@@ -73,18 +73,23 @@ class Abstracter():
     #An abstraction as a list of chars and numbers referencing variables
     #A list of sets of allowed characters for each variable of the form: (repeated, atleastOne, [chars])
     def doesMatch2(sequence, abstraction, variableChars, allowPartial = False):
-        position = 0
         variables = [-1]*len(variableChars)
-        ret = True
-        for char in abstraction:
-            pass            
+        var = matchChar(sequence, abstraction, variableChars, 0, 0, 0, variables, allowPartial, {})[0]
+        if len(var) > 0:
+            return (True, var)
+        else:
+            return (False, var)
 
-    def matchChar(sequence, abstraction, variableChars, seqPos, absPos, writing, variables, partial):
-        
-        print(seqPos, absPos, writing, variables)
+    def matchChar(sequence, abstraction, variableChars, seqPos, absPos, writing, variables, partial, visited):
+        if (seqPos, absPos, writing) in visited:
+            if repr(variables) in visited[(seqPos, absPos, writing)]:
+                return []
+            else:
+                visited[(seqPos, absPos, writing)][repr(variables)] = 1
+        else:
+            visited[(seqPos, absPos, writing)] = {repr(variables) : 1}
 
         if absPos == len(abstraction) and seqPos == len(sequence):
-            print("!")
             return [variables]
         elif absPos == len(abstraction):
             return []
@@ -94,27 +99,22 @@ class Abstracter():
                 if var != -1 and len(var) > 0 and (writing == -1 or writing == len(var)):
                     absPos += 1
 
-            print("?")
             ret = True
             for pos in range(absPos, len(abstraction)):
                 if type(abstraction[pos]) is str:
-                    print("str")
                     ret = False
                     break
                 (repeated, atleastOne, whitelist) = variableChars[abstraction[pos]]
                 if not repeated or atleastOne:
-                    print("{} or {}".format(repeated, atleastOne))
                     ret = False
                     break
                 if variables[abstraction[pos]] == -1:
                     variables[abstraction[pos]] = []
                 elif variables[abstraction[pos]] != []:
-                    print("not empty")
                     ret = False
                     break
                  
             if ret or partial:
-                print("!")
                 return [variables]
 
             return []
@@ -124,7 +124,7 @@ class Abstracter():
         if type(absChar) is str:
             if char != absChar:
                 return []
-            return Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos+1, 0, variables, partial)
+            return Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos+1, 0, variables, partial, visited)
         
         (repeated, atleastOne, whitelist) = variableChars[absChar]
 
@@ -141,33 +141,30 @@ class Abstracter():
                     return []
                 variables[absChar].append(sequence[seqPos])
                 ret = []
-                ret += Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos+1, 0, variables, partial)
-                if repeated:
-                    ret += Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos, -1, copy.deepcopy(variables), partial)
+                var = copy.deepcopy(variables)
+                ret += Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos+1, 0, variables, partial, visited)
+                if repeated and seqPos+1 < len(sequence) and (sequence[seqPos+1] in whitelist or 1 in whitelist):
+                    ret += Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos, -1, var, partial, visited)
                 return ret
 
             if char not in whitelist and 1 not in whitelist:
-                return Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos+1, 0, variables, partial)
+                return Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos+1, 0, variables, partial, visited)
 
             ret = []
             var = copy.deepcopy(variables)
             var[absChar].append(char)
-            ret += Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos+1, 0, variables, partial)
-            ret += Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos, -1, var, partial)
+            ret += Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos+1, 0, variables, partial, visited)
+            ret += Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos, -1, var, partial, visited)
             return ret
 
         if writing == len(variables[absChar]):
-            return Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos+1, 0, variables, partial)
+            return Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos+1, 0, variables, partial, visited)
 
         if char != variables[absChar][writing]:
             return []
 
-        return Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos, writing+1, variables, partial)
+        return Abstracter.matchChar(sequence, abstraction, variableChars, seqPos+1, absPos, writing+1, variables, partial, visited)
 
-
-
-
-    
     
     #Takes a sequence and a structure and attempts to apply that structure to that sequence.
     #Returns the altered sequence if successful and None otherwise.
@@ -598,10 +595,12 @@ strs = [
 
 print()
 
-#Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos, writing, variables, partial)
+#Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos, writing, variables, partial, visited)
 
 sequence = "11+11=22"
+sequence2 = "111+11=122"
 abstraction = [0, 1, "+", 1, "=", 2, 3]
 variableChars = [(True, False, [1]), (True, True, ["1","2","3","4","5"]), (True, True, ["1","2","3","4","5"]), (True, False, [1])]
 
-print(Abstracter.matchChar(sequence, abstraction, variableChars, 0, 0, 0, [-1]*len(variableChars), False))
+print(Abstracter.matchChar(sequence, abstraction, variableChars, 0, 0, 0, [-1]*len(variableChars), False, {}))
+print(Abstracter.matchChar(sequence2, abstraction, variableChars, 0, 0, 0, [-1]*len(variableChars), False, {}))
