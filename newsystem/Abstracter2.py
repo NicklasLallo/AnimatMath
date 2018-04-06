@@ -232,7 +232,7 @@ class Abstracter():
         badMatches = 0
         good = []
         for sequence in solver.QTable:
-            if len(solver.QTables[sequence]) < 2:
+            if len(solver.QTable[sequence]) < 2:
                 continue
 
             newSequence = Abstracter.applyStructureChange(sequence, structure)
