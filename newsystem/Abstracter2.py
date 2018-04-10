@@ -427,6 +427,102 @@ class Abstracter():
 
         print(variables)
 
+    def findDifferingSubstring(strings):
+        transitions = {}
+        maxlen = 0
+        for string in strings:
+            if len(string) > maxlen:
+                maxlen = len(string)
+            prevSymbol = None
+            symbol = string[0]
+            for position in range(len(string)):
+                if position+1 < len(string):
+                    nextSymbol = string[position+1]
+                else:
+                    nextSymbol = None
+
+                if symbol in transitions:
+                    (pre, preNr, nex, nexNr) = transitions[symbol]
+                    if pre != prevSymbol:
+                        pre = None
+                    else:
+                        preNr += 1
+                    if nex != nextSymbol:
+                        nex = None
+                    else:
+                        nexNr+=1
+                    transitions[symbol] = (pre, preNr, nex, nexNr)
+                else:
+                    transitions[symbol] = (prevSymbol, 1, nextSymbol, 1)
+
+                prevSymbol = symbol
+                symbol = nextSymbol
+    
+        sequences = []
+        maxlen = 0
+        minlen = 9999999999
+        for string in strings:
+            sequence = []
+            prevChar = None
+            for char in string:
+                (pre, preNr, _, _) = transitions[char]
+                if preNr < 2:
+                    pre = None
+                if prevChar != None:
+                    (_, _, nex, nexNr) = transitions[prevChar]
+                    if nexNr < 2:
+                        nex = None
+                else:
+                    nex = None
+                if pre != None or nex != None:
+                    sequence[-1].append(char)
+                else:
+                    sequence.append([char])
+                prevChar = char
+            sequences.append(sequence)
+            maxlen = max(len(sequence),maxlen)
+            minlen = min(len(sequence),minlen)
+
+        breakagain = False
+        for position in range(maxlen):
+            if len(sequences[0]) == position:
+                break
+            symbol = sequences[0][position]
+            for sequence in sequences:
+                if len(sequence) == position or sequence[position] != symbol:
+                    breakagain = True
+                    break
+            if breakagain:
+                break
+
+        startpos = position
+
+        breakagain = False
+        for position in range(maxlen):
+            pos = (-position)-1
+            if len(sequences[0]) == position:
+                break
+            symbol = sequences[0][pos]
+            for sequence in sequences:
+                if len(sequence) == position or sequence[pos] != symbol:
+                    breakagain = True
+                    break
+            if breakagain:
+                break
+        endpos = pos
+
+        if startpos > minlen-endpos:
+            if startpos > abs(endpos)-1:
+                endpos = -1
+            else:
+                startpos = 0
+
+        endpos = abs(endpos)-1
+        equalities = []
+        for sequence in sequences:
+            equalities.append(list(it.chain.from_iterable(sequence[startpos:len(sequence)-endpos])))
+
+        return equalities
 
     def testStructureFormationRule(self, testSequence, solver):
         bestStructure = None
@@ -638,3 +734,12 @@ print(Abstracter.checkAbstractGoal("2=", a.goals[0]))
 print()
 
 print(a.structureTreeSearch("2*1=", 5))
+
+print()
+
+print(Abstracter.findDifferingSubstring(["1+1=2", "2=2"]))
+print(Abstracter.findDifferingSubstring(["1+1+1+1=2", "1+1=2"]))
+print(Abstracter.findDifferingSubstring(["3*2=6", "6=6"]))
+print(Abstracter.findDifferingSubstring(["3*2=6", "2*3=6"]))
+print(Abstracter.findDifferingSubstring(["3*2=6", "2*3=6", "6=6"]))
+print(Abstracter.findDifferingSubstring(["12+1=13", "1+12=13"]))
