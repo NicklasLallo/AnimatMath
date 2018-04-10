@@ -1,6 +1,11 @@
 
 from __future__ import print_function
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning) 
+warnings.filterwarnings("ignore", category=RuntimeWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 import numpy as np
 import tensorflow as tf
 from tensorflow.contrib import rnn
@@ -8,6 +13,10 @@ import random
 import collections
 import time
 import sys
+
+warnings.filterwarnings("ignore", category=DeprecationWarning) 
+warnings.filterwarnings("ignore", category=RuntimeWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 start_time = time.time()
 def elapsed(sec):

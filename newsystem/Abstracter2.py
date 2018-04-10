@@ -170,7 +170,7 @@ class Abstracter():
     
     #Takes a sequence and a structure and attempts to apply that structure to that sequence.
     #Returns the altered sequence if successful and None otherwise.
-    def applyStructureChange(sequence, structure):
+    def applyStructureChange(sequence, structure, returnVariables = False):
         (match, variables) = Abstracter.doesMatch2(sequence, structure[0][0], structure[1])
         if match:
             retString = []
@@ -179,7 +179,11 @@ class Abstracter():
                     retString.append(char)
                 else:
                     retString.append(variables[char])
+            if returnVariables:
+                return ("".join(list(it.chain.from_iterable(retString))), variables)
             return "".join(list(it.chain.from_iterable(retString)))
+        if returnVariables:
+            return (None, None)
         return None
 
     #Takes a sequence and an abstract goal and checks whether the sequence can lead to that goal 
@@ -227,15 +231,20 @@ class Abstracter():
                     badMatches += 1
         return (goodMatches, badMatches)
 
-    def judgeStructureRule(structure, solver):
+    def judgeStructureRule(structure, solver, equalityJudge = False):
         goodMatches = 0
         badMatches = 0
         good = []
+        if equalityJudge:
+            goodPrefix = set()
+            goodSuffix = set()
+            badPrefix = set()
+            badSuffix = set()
         for sequence in solver.QTable:
             if len(solver.QTable[sequence]) < 2:
                 continue
 
-            newSequence = Abstracter.applyStructureChange(sequence, structure)
+            (newSequence, variables) = Abstracter.applyStructureChange(sequence, structure, True)
             if newSequence == None: 
                 continue
 
@@ -245,23 +254,46 @@ class Abstracter():
             if bestAction == None or bestAction2 == None:
                 continue
 
-            if len(solver.QTable[newSequence]) < 2:
+            if len(solver.QTable[newSequence]) < 2 and reward2 < reward:
                 continue
 
             if bestAction == bestAction2:
-                goodMatches += 1
-                good.append(newSequence)
+                goodMatch = True
             else:
                 if bestAction in solver.QTable[newSequence] and solver.QTable[newSequence][bestAction] == reward2:
-                    goodMatches += 1
-                    good.append(newSequence)
+                    goodMatch = True
                 elif bestAction2 in solver.QTable[sequence] and solver.QTable[sequence][bestAction2] == reward:
-                    goodMatches += 1
-                    good.append(newSequence)
+                    goodMatch = True
                 else:
-                    badMatches += 1
+                    goodMatch = False
+            if goodMatch:
+                goodMatches += 1
+                good.append(newSequence)
+                if equalityJudge:
+                    if len(variables[0]) > 0:
+                        goodPrefix.add(variables[0][-1])
+                    else:
+                        goodPrefix.add(0)
+                    if len(variables[1]) > 0:
+                        goodSuffix.add(variables[1][0])
+                    else:
+                        goodSuffix.add(1)
+            else:
+                badMatches +=1
+                if equalityJudge:
+                    if len(variables[0]) > 0:
+                        badPrefix.add(variables[0][-1])
+                    else:
+                        badPrefix.add(0)
+                    if len(variables[1]) > 0:
+                        badSuffix.add(variables[1][0])
+                    else:
+                        badSuffix.add(1)
+
         if goodMatches > 1 and badMatches == 0:
             print(good)
+        if equalityJudge:
+            return (goodMatches, badMatches, goodPrefix, goodSuffix, badPrefix, badSuffix)
         return (goodMatches, badMatches)
 
 
@@ -427,61 +459,66 @@ class Abstracter():
 
         print(variables)
 
-    def findDifferingSubstring(strings):
-        transitions = {}
+    def findDifferingSubstring(sequences):
+#        transitions = {}
+#        for string in strings:
+#            if len(string) > maxlen:
+#                maxlen = len(string)
+#            prevSymbol = None
+#            symbol = string[0]
+#            for position in range(len(string)):
+#                if position+1 < len(string):
+#                    nextSymbol = string[position+1]
+#                else:
+#                    nextSymbol = None
+#
+#                if symbol in transitions:
+#                    (pre, preNr, nex, nexNr) = transitions[symbol]
+#                    if pre != prevSymbol:
+#                        pre = None
+#                    else:
+#                        preNr += 1
+#                    if nex != nextSymbol:
+#                        nex = None
+#                    else:
+#                        nexNr+=1
+#                    transitions[symbol] = (pre, preNr, nex, nexNr)
+#                else:
+#                    transitions[symbol] = (prevSymbol, 1, nextSymbol, 1)
+#
+#                prevSymbol = symbol
+#                symbol = nextSymbol
+#    
+#        sequences = []
+#        maxlen = 0
+#        minlen = 9999999999
+#        for string in strings:
+#            sequence = []
+#            prevChar = None
+#            for char in string:
+#                (pre, preNr, _, _) = transitions[char]
+#                if preNr < 2:
+#                    pre = None
+#                if prevChar != None:
+#                    (_, _, nex, nexNr) = transitions[prevChar]
+#                    if nexNr < 2:
+#                        nex = None
+#                else:
+#                    nex = None
+#                if pre != None or nex != None:
+#                    sequence[-1].append(char)
+#                else:
+#                    sequence.append([char])
+#                prevChar = char
+#            sequences.append(sequence)
+#            maxlen = max(len(sequence),maxlen)
+#            minlen = min(len(sequence),minlen)
+#
         maxlen = 0
-        for string in strings:
-            if len(string) > maxlen:
-                maxlen = len(string)
-            prevSymbol = None
-            symbol = string[0]
-            for position in range(len(string)):
-                if position+1 < len(string):
-                    nextSymbol = string[position+1]
-                else:
-                    nextSymbol = None
-
-                if symbol in transitions:
-                    (pre, preNr, nex, nexNr) = transitions[symbol]
-                    if pre != prevSymbol:
-                        pre = None
-                    else:
-                        preNr += 1
-                    if nex != nextSymbol:
-                        nex = None
-                    else:
-                        nexNr+=1
-                    transitions[symbol] = (pre, preNr, nex, nexNr)
-                else:
-                    transitions[symbol] = (prevSymbol, 1, nextSymbol, 1)
-
-                prevSymbol = symbol
-                symbol = nextSymbol
-    
-        sequences = []
-        maxlen = 0
-        minlen = 9999999999
-        for string in strings:
-            sequence = []
-            prevChar = None
-            for char in string:
-                (pre, preNr, _, _) = transitions[char]
-                if preNr < 2:
-                    pre = None
-                if prevChar != None:
-                    (_, _, nex, nexNr) = transitions[prevChar]
-                    if nexNr < 2:
-                        nex = None
-                else:
-                    nex = None
-                if pre != None or nex != None:
-                    sequence[-1].append(char)
-                else:
-                    sequence.append([char])
-                prevChar = char
-            sequences.append(sequence)
-            maxlen = max(len(sequence),maxlen)
-            minlen = min(len(sequence),minlen)
+        minlen = 99999999
+        for sequence in sequences:
+            maxlen = max(maxlen, len(sequence))
+            minlen = min(minlen, len(sequence))
 
         breakagain = False
         for position in range(maxlen):
@@ -504,18 +541,18 @@ class Abstracter():
                 break
             symbol = sequences[0][pos]
             for sequence in sequences:
-                if len(sequence) == position or sequence[pos] != symbol:
+                if len(sequence) == position+startpos or sequence[pos] != symbol:
                     breakagain = True
                     break
             if breakagain:
                 break
         endpos = pos
 
-        if startpos > minlen-endpos:
-            if startpos > abs(endpos)-1:
-                endpos = -1
-            else:
-                startpos = 0
+        #if startpos > minlen-endpos:
+        #    if startpos > abs(endpos)-1:
+        #        endpos = -1
+        #    else:
+        #        startpos = 0
 
         endpos = abs(endpos)-1
         equalities = []
@@ -542,36 +579,20 @@ class Abstracter():
                 continue
 
             #Find the parts of the sequences that differ
-            startpos = 0
-            endpos = -1
-            breakagain = False
-
-            while testSequence[startpos] == sequence[startpos]:
-                startpos += 1
-                if startpos == len(testSequence) or startpos == len(sequence):
-                    breakagain = True
-                    break
-
-            while testSequence[endpos] == sequence[endpos]:
-                endpos -= 1
-                if -endpos > len(testSequence) or -endpos > len(sequence):
-                    breakagain = True
-                    break
-
-            # if the sequences are completely different go to the next sequence
-            if breakagain or (startpos == 0 and endpos == -1):
+            equalities = Abstracter.findDifferingSubstring([testSequence, sequence])
+            if len(equalities[0]) == 0 or len(equalities[1]) == 0 or len(equalities[0]) == len(testSequence) or len(equalities[1]) == len(sequence):
                 continue
-
-            # if the part that differ is empty in one of the sequences go to the next sequence
-            seqLen = len(sequence)+endpos+1
-            tesLen = len(testSequence)+endpos+1
-            if sequence[startpos:seqLen] == "" or testSequence[startpos:tesLen] == "":
-                continue
+            first = equalities[0]
+            first.insert(0,0)
+            first.append(1)
+            second = equalities[1]
+            second.insert(0,0)
+            second.append(1)
 
             #Form the new rule
             newStructure = [
-                [list(it.chain.from_iterable([[0],testSequence[startpos:tesLen],[1]])), list(it.chain.from_iterable([[0],sequence[startpos:seqLen],[1]]))],
-                [(True, True, [1]),(True, True, [1])],#[(list(set(testSequence[0:startPos])),True),(list(set(testSequence[endPos:-1])),True)],
+                [first, second],
+                [(True, False, [1]),(True, False, [1])],#[(list(set(testSequence[0:startPos])),True),(list(set(testSequence[endPos:-1])),True)],
                 [action], [reward]
             ]
 
@@ -579,10 +600,11 @@ class Abstracter():
                 continue
 
             #Find how good the rule is by how often it would provide a good/bad match on current dataset
-            (goodMatches, badMatches) = Abstracter.judgeStructureRule(newStructure, solver)
+            (goodMatches, badMatches, goodPrefix, goodSuffix, badPrefix, badSuffix) = Abstracter.judgeStructureRule(newStructure, solver, True)
 
             #If the rule has no bad matches and the highest number of good matches so far, keep it
             if badMatches == 0 and goodMatches > bestStructureMatches:
+                print((goodPrefix, goodSuffix, badPrefix, badSuffix))
                 self.structures.append(newStructure)
                 bestStructure = newStructure
                 bestStructureMatches = goodMatches

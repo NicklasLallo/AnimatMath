@@ -18,8 +18,8 @@ print(trainingSet)
 for x in range(10):
     for y in range(10):
         trainingSet.append("{}*{}={}".format(x,y,x*y))
-        for z in range(10):
-            trainingSet.append("{}*{}*{}={}".format(x,y,z,x*y*z))
+        #for z in range(10):
+        #    trainingSet.append("{}*{}*{}={}".format(x,y,z,x*y*z))
 
 #print(trainingSet)
 
@@ -82,7 +82,7 @@ for x in range(20):
                 newStructure = False
                 if expr in trainingSet:
                     reward = 1
-                    if x > 4: #and (expr not in animat.QTable or "RETURN" not in animat.QTable[expr]):
+                    if x >0: #and (expr not in animat.QTable or "RETURN" not in animat.QTable[expr]):
                         newStructure = True
                 (absExpr, absGoal) = abstractSequenceAndGoal(expr)
                 a = animat.multiStateProgram2(expr+"D", absExpr+"D", 0, 1, "RETURN", reward, {})
