@@ -4,9 +4,10 @@ from Abstracter2 import *
 abstracter = Abstracter()
 
 def abstractSequenceAndGoal(sequence):
-    (goalRule, goal, newSequence) = abstracter.structureTreeSearch(sequence, 3)
+    (goalRule, goal, newSequence, structs) = abstracter.structureTreeSearch(sequence, 3)
     if goalRule == None:
         return (sequence, {})
+    print(newSequence)
     return (newSequence, {goal: (goalRule[2][0], goalRule[3][0]) })
 
 actionList = ["RETURN", "1", "0", "2","3","4","5","6","7","8","9"]
@@ -18,8 +19,8 @@ print(trainingSet)
 for x in range(10):
     for y in range(10):
         trainingSet.append("{}*{}={}".format(x,y,x*y))
-        #for z in range(10):
-        #    trainingSet.append("{}*{}*{}={}".format(x,y,z,x*y*z))
+        for z in range(10):
+            trainingSet.append("{}*{}*{}={}".format(x,y,z,x*y*z))
 
 #print(trainingSet)
 
@@ -51,7 +52,7 @@ for x in range(200):
 
 exploreRate = 0.9
 
-equalsTrainingProb = 0.05
+equalsTrainingProb =0.255
 
 depth = 3
 
@@ -67,7 +68,8 @@ for x in range(20):
 
         expression = trainingSet[y]#str(r.choice(trainingSet))
         i = expression.find("=")
-        if r.random() < equalsTrainingProb:
+        imitationlearning = r.random() > equalsTrainingProb
+        if not imitationlearning:
             expr = expression[0:i+1]
         else:
             expr = expression
@@ -76,8 +78,9 @@ for x in range(20):
 
         action = animat.multiStateProgram2(expr, absExpr, depth, exploreRate, None, None, absGoal)
         for z in range(4):
+
             reward = 0
-            if action == "RETURN" or z == 3:
+            if action == "RETURN" or z == 3 or imitationlearning:
                 reward = -1
                 newStructure = False
                 if expr in trainingSet:
@@ -87,17 +90,15 @@ for x in range(20):
                 (absExpr, absGoal) = abstractSequenceAndGoal(expr)
                 a = animat.multiStateProgram2(expr+"D", absExpr+"D", 0, 1, "RETURN", reward, {})
                 if newStructure:
-                    print("2")
                     d = abstracter.testStructureFormationRule(expr, animat)
-                    print(d)
-                    print(expr)
+                    if d != None:
+                        print(d)
                 break
             else:
                 expr += action
                 (absExpr, absGoal) = abstractSequenceAndGoal(expr)
             action = animat.multiStateProgram2(expr,absExpr,depth,exploreRate,action,reward,absGoal)
     
-    print(abstracter.testStructureFormationRule("3*2=6",animat,True))
     correct = 0
     f.write('\nIteration {}\n'.format(x))
     for expression in trainingSet:

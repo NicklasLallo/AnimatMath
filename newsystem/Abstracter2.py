@@ -250,10 +250,10 @@ class Abstracter():
                 print()
                 print(sequence)
             
-            if len(solver.QTable[sequence]) < 2:
+            #if len(solver.QTable[sequence]) < 2:
                 #if debug:
                 #    print("Not enough data in Q-table")
-                continue
+                #continue
 
             (newSequence, variables) = Abstracter.applyStructureChange(sequence, structure, True)
             if newSequence == None: 
@@ -315,7 +315,7 @@ class Abstracter():
                     else:
                         badSuffix.add(1)
 
-        if goodMatches > 1 and badMatches == 0:
+        if goodMatches > 1 and badMatches == 0 and debug:
             print(good)
         if equalityJudge:
             return (goodMatches, badMatches, goodPrefix, goodSuffix, badPrefix, badSuffix)
@@ -590,23 +590,43 @@ class Abstracter():
         bestStructure = None
         bestStructureMatches = 1
         action, r = solver.bestActionAndReward(testSequence)
-        
+       
+        if debug:
+            total = len(solver.QTable)
+            #morethan1entry=0
+            correctaction=0
+            goodequalities=0
+
         #For each encountered sequence we shall compare it to the sequence to be tested
         for sequence in solver.QTable:
             
             # if the current sequence has only one point of data go to the next sequence
-            if len(solver.QTable[sequence]) < 2:
-                continue
+            #if len(solver.QTable[sequence]) < 2:
+            #    continue
+
+            #if debug:
+            #    morethan1entry+=1
 
             # if the current sequence does not have the same best action as the one we're testing go to the next sequence
             (bestAction, reward) = solver.bestActionAndReward(sequence)
-            if bestAction != action and action in solver.QTable[sequence] and solver.QTable[sequence][action] < reward:
+            if bestAction != action and (action not in solver.QTable[sequence] or solver.QTable[sequence][action] < reward):
                 continue
+
+            if len(solver.QTable[sequence]) < 2 and reward < r:
+                continue
+
+
+            if debug:
+                correctaction+=1
 
             #Find the parts of the sequences that differ
             equalities = Abstracter.findDifferingSubstring([testSequence, sequence])
             if len(equalities[0]) == 0 or len(equalities[1]) == 0 or len(equalities[0]) == len(testSequence) or len(equalities[1]) == len(sequence):
                 continue
+
+            if debug:
+                goodequalities+=1
+
             first = equalities[0]
             first.insert(0,0)
             first.append(1)
@@ -629,7 +649,8 @@ class Abstracter():
 
             #If the rule has no bad matches and the highest number of good matches so far, keep it
             if badMatches == 0 and goodMatches > bestStructureMatches:
-                print((goodPrefix, goodSuffix, badPrefix, badSuffix))
+                if debug:
+                    print((goodPrefix, goodSuffix, badPrefix, badSuffix))
                 self.structures.append(newStructure)
                 bestStructure = newStructure
                 bestStructureMatches = goodMatches
@@ -643,6 +664,13 @@ class Abstracter():
         #    f.write(str(solver.QTable.keys()))
         #    f.write("\n\n")
 
+        if debug:
+            print(total)
+            #print(morethan1entry)
+            print(correctaction)
+            print(goodequalities)
+
+
         #Return a rule with no bad matches and the highest number of good matches found
         if bestStructure != None:
             self.structures.append(bestStructure)
@@ -651,7 +679,7 @@ class Abstracter():
 
     def structureTreeSearch(self, sequence, depth, visitedNodes = {}):
         if sequence in visitedNodes:
-            return (None, None, None)
+            return (None, None, None, None)
         else:
             visitedNodes[sequence] = 1
     
@@ -659,28 +687,31 @@ class Abstracter():
         bestGoal = None
         bestGoalSequence = None
         bestSequence = sequence
+        bestStructures = None
         for goal in self.goals:
             goalSequence = Abstracter.checkAbstractGoal(sequence, goal)
             if goalSequence != None and goal[3][0] > bestValue:
                 bestValue = goal[3][0]
                 bestGoal = goal
                 bestGoalSequence = goalSequence
+                bestStructures = []
 
         if depth == 0:
-            return (bestGoal, bestGoalSequence, bestSequence)
+            return (bestGoal, bestGoalSequence, bestSequence, bestStructures)
 
         for structure in self.structures:
             newSequence = Abstracter.applyStructureChange(sequence, structure)
             if newSequence == None:
                 continue
-            (goal, goalSequence, seq) = self.structureTreeSearch(newSequence, depth-1, visitedNodes)
+            (goal, goalSequence, seq, structs) = self.structureTreeSearch(newSequence, depth-1, visitedNodes)
             if goalSequence != None and goal[3][0] > bestValue:
                 bestValue = goal[3][0]
                 bestGoal = goal
                 bestGoalSequence = goalSequence
                 bestSequence = seq
+                bestStructures = structs.insert(0, structure)
 
-        return (bestGoal, bestGoalSequence, bestSequence)
+        return (bestGoal, bestGoalSequence, bestSequence, bestStructures)
 
     def fakeMultiplicationTableAbstracter(sequence):
         #if len(sequence) == 1:
