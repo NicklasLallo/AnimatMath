@@ -96,7 +96,8 @@ for x in range(20):
                 expr += action
                 (absExpr, absGoal) = abstractSequenceAndGoal(expr)
             action = animat.multiStateProgram2(expr,absExpr,depth,exploreRate,action,reward,absGoal)
-            
+    
+    print(abstracter.testStructureFormationRule("3*2=6",animat,True))
     correct = 0
     f.write('\nIteration {}\n'.format(x))
     for expression in trainingSet:

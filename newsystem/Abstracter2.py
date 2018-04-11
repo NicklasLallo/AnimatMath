@@ -231,7 +231,12 @@ class Abstracter():
                     badMatches += 1
         return (goodMatches, badMatches)
 
-    def judgeStructureRule(structure, solver, equalityJudge = False):
+    def judgeStructureRule(structure, solver, equalityJudge = False, debug = False):
+        if debug:
+            print()
+            print()
+            print(structure)
+        
         goodMatches = 0
         badMatches = 0
         good = []
@@ -241,31 +246,51 @@ class Abstracter():
             badPrefix = set()
             badSuffix = set()
         for sequence in solver.QTable:
+            if debug:
+                print()
+                print(sequence)
+            
             if len(solver.QTable[sequence]) < 2:
+                #if debug:
+                #    print("Not enough data in Q-table")
                 continue
 
             (newSequence, variables) = Abstracter.applyStructureChange(sequence, structure, True)
             if newSequence == None: 
+                #if debug:
+                #    print("Unable to apply structure")
                 continue
 
             (bestAction, reward) = solver.bestActionAndReward(sequence)
             (bestAction2, reward2) = solver.bestActionAndReward(newSequence)
             
             if bestAction == None or bestAction2 == None:
+                if debug:
+                    print("No best action: {} {}".format(bestAction, bestAction2))
                 continue
 
             if len(solver.QTable[newSequence]) < 2 and reward2 < reward:
+                if debug:
+                    print("Too small Q-table or reward: {} {}".format(len(solver.QTable[newSequence]), reward2 < reward))
                 continue
 
             if bestAction == bestAction2:
                 goodMatch = True
+                if debug:
+                    print("Same best action!")
             else:
                 if bestAction in solver.QTable[newSequence] and solver.QTable[newSequence][bestAction] == reward2:
                     goodMatch = True
+                    if debug:
+                        print("newSequence reward of action the same as its bestReward!")
                 elif bestAction2 in solver.QTable[sequence] and solver.QTable[sequence][bestAction2] == reward:
                     goodMatch = True
+                    if debug:
+                        print("sequence reward of newaction the same as its bestReward!")
                 else:
                     goodMatch = False
+                    if debug:
+                        print("Bad match")
             if goodMatch:
                 goodMatches += 1
                 good.append(newSequence)
@@ -561,7 +586,7 @@ class Abstracter():
 
         return equalities
 
-    def testStructureFormationRule(self, testSequence, solver):
+    def testStructureFormationRule(self, testSequence, solver, debug = False):
         bestStructure = None
         bestStructureMatches = 1
         action, r = solver.bestActionAndReward(testSequence)
@@ -575,7 +600,7 @@ class Abstracter():
 
             # if the current sequence does not have the same best action as the one we're testing go to the next sequence
             (bestAction, reward) = solver.bestActionAndReward(sequence)
-            if bestAction != action:
+            if bestAction != action and action in solver.QTable[sequence] and solver.QTable[sequence][action] < reward:
                 continue
 
             #Find the parts of the sequences that differ
@@ -600,7 +625,7 @@ class Abstracter():
                 continue
 
             #Find how good the rule is by how often it would provide a good/bad match on current dataset
-            (goodMatches, badMatches, goodPrefix, goodSuffix, badPrefix, badSuffix) = Abstracter.judgeStructureRule(newStructure, solver, True)
+            (goodMatches, badMatches, goodPrefix, goodSuffix, badPrefix, badSuffix) = Abstracter.judgeStructureRule(newStructure, solver, True, debug)
 
             #If the rule has no bad matches and the highest number of good matches so far, keep it
             if badMatches == 0 and goodMatches > bestStructureMatches:
@@ -765,3 +790,6 @@ print(Abstracter.findDifferingSubstring(["3*2=6", "6=6"]))
 print(Abstracter.findDifferingSubstring(["3*2=6", "2*3=6"]))
 print(Abstracter.findDifferingSubstring(["3*2=6", "2*3=6", "6=6"]))
 print(Abstracter.findDifferingSubstring(["12+1=13", "1+12=13"]))
+print()
+
+print(Abstracter.applyStructureChange("10=1", [[[0, '1', '0', '=', '1', 1], [0, '0', '=', 1]], [(True, False, [1]), (True, False, [1])], ['RETURN'], [0.5]]))
