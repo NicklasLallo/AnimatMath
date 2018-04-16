@@ -703,13 +703,14 @@ class Abstracter():
             newSequence = Abstracter.applyStructureChange(sequence, structure)
             if newSequence == None:
                 continue
-            (goal, goalSequence, seq, structs) = self.structureTreeSearch(newSequence, depth-1, visitedNodes)
-            if goalSequence != None and goal[3][0] > bestValue:
+            (goal, goalSeq, seq, structs) = self.structureTreeSearch(newSequence, depth-1, visitedNodes)
+            if goalSeq != None and goal[3][0] > bestValue:
                 bestValue = goal[3][0]
                 bestGoal = goal
-                bestGoalSequence = goalSequence
+                bestGoalSequence = goalSeq
                 bestSequence = seq
-                bestStructures = structs.insert(0, structure)
+                bestStructures = structs
+                bestStructures.insert(0, structure)
 
         return (bestGoal, bestGoalSequence, bestSequence, bestStructures)
 
