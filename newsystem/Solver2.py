@@ -63,7 +63,7 @@ class Solver():
  
         if action == None:
             return r.choice(self.actionList)
-        if debug:
+        if debug and False:
             if len(additionalGoalStates[0]) > 0: 
                 print("AbstractState: {}, AbstractGoalStates: {}, ActionTaken: {}".format(stateSequence, additionalGoalStates, action))
                 print(storage[1])
@@ -73,8 +73,58 @@ class Solver():
 
         return action
 
+    def improvedProgram(self, stateSequence, depth = 4, abstractSequence = None, exploreProb = 0, prevAction = None, reward = None, potentialGoals = {}, minGoal = 0.9, debug = False):
+        if abstractSequence == None:
+            abstractSequence = stateSequence
+        
+        if prevAction != None:
+            self.updateTransitionTable(stateSequence[-2], prevAction, stateSequence[-1])
+            if reward != None:
+                self.oneStateLearning(stateSequence[:-1], prevAction, stateSequence, reward) 
+
+        if reward != None:
+            totalReliability = 1
+            fromString = stateSequence
+            for end in range(1, len(stateSequence)):
+                toString = fromString
+                fromString = stateSequence[0:len(stateSequence)-end]
+                (reliability, action) = self.reliabilityToGoal(fromString, toString, True)
+                if reliability == 0:
+                    break
+                totalReliability *= reliability*self.discountFactor
+                action = action[0]
+                if debug:
+                    print("{} goes from {} to {} with prob {}".format(action, fromString, toString, reliability))
+                thisReward = 0
+                if fromString in self.ETable and action in self.ETable[fromString]:
+                    thisReward = self.ETable[fromString][action]
+
+                self.oneStateLearning(fromString, action, toString, thisReward, totalReliability)
+
+        if r.random() < exploreProb:
+            return r.choice(self.actionList)
+        
+        stateEnd = len(abstractSequence)
+        for state, stateTable in self.QTable.items():
+            if state[0:stateEnd] != abstractSequence:
+                continue
+            for action, thisReward in stateTable.items():
+                if state in potentialGoals and potentialGoals[state][1] > thisReward:
+                    continue
+                if thisReward > minGoal:
+                    potentialGoals[state] = (action,thisReward)
+
+        if debug:
+            print(potentialGoals)
+
+        (action, expectedReward, storage) = self.improvedTreeSearch(abstractSequence, depth, potentialGoals, 0.5, debug)
+        if action == None:
+            return r.choice(self.actionList)
+
+        return action
+
+
     #Helpful functions
-    
     def bestActionAndReward(self, state):
         bestReward = -99999999999999
         bestAction = None
@@ -116,7 +166,7 @@ class Solver():
         if (state, action) in self.TransitionTable:
             return self.TransitionTable[(state,action)]
         gotAction = (action) in self.TransitionTable
-        gotState = (state in self.TransitionTable)
+        gotState = (state) in self.TransitionTable
         if gotAction and not gotState:
             return self.TransitionTable[(action)]
         elif gotState and not gotAction:
@@ -133,36 +183,47 @@ class Solver():
         return (0,[])
 
     #Given a sequence and a goal finds the probability that one can successfully navigate from one to the other
-    def reliabilityToGoal(self, sequence, goal):
+    def reliabilityToGoal(self, sequence, goal, returnBestPath = False):
         
         if sequence != goal[0:len(sequence)]:
+            if returnBestPath:
+                return (0, None)
             return 0
 
         position = len(sequence)
         state = sequence[-1]
-        nextState = goal[position]
         reliability = 1
+        actions = []
         while True:
             if position >= len(goal):
-                if positon > len(goal):
+                if position > len(goal):
                     reliability = 0
-                break
+                break  
+            nextState = goal[position]
             actionReliability  = 0
+            bestAction = None
             for action in self.actionList:
                 (nrOfInserts, transitions) = self.getTransitions(state, action)
-                if nextState in transtions and transitions[nextState]/nrOfInserts > actionReliability:
+                if nextState in transitions and transitions[nextState]/nrOfInserts > actionReliability:
                     actionReliability = transitions[nextState]/nrOfInserts
+                    bestAction = action
             if actionReliability == 0:
+                if returnBestPath:
+                    return (0, None)
                 return 0
             position += 1
             reliability *= actionReliability
             state = nextState
-            nextState = goal[position]
+            actions.append(bestAction)
 
+        if returnBestPath:
+            return(reliability, actions)
         return reliability
 
     #Takes the previous state, action, and current state and updates Q and E Tables
-    def oneStateLearning(self, oldState, action, newState, reward):
+    def oneStateLearning(self, oldState, action, newState, reward, discount = None):
+        if discount == None:
+            discount = self.discountFactor
         if oldState not in self.QTable:
             self.QTable[oldState] = {}
             self.ETable[oldState] = {}
@@ -178,7 +239,7 @@ class Solver():
             q = 0
             e = 0
         
-        q = (1-self.learningRate)*q + self.learningRate*(reward + self.discountFactor*bestReward)
+        q = (1-self.learningRate)*q + self.learningRate*(reward + discount*bestReward)
         e = (1-self.learningRate)*e + self.learningRate*reward
 
         oldStateQ[action] = q

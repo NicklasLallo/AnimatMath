@@ -589,7 +589,7 @@ class Abstracter():
     def testStructureFormationRule(self, testSequence, solver, debug = False):
         bestStructure = None
         bestStructureMatches = 1
-        action, r = solver.bestActionAndReward(testSequence)
+        action, rew = solver.bestActionAndReward(testSequence)
        
         if debug:
             total = len(solver.QTable)
@@ -597,8 +597,16 @@ class Abstracter():
             correctaction=0
             goodequalities=0
 
+        seqs = [] 
+        while True:
+            seq = r.choice(list(solver.QTable))
+            (bestAction, reward) = solver.bestActionAndReward(seq)
+            if bestAction == action:
+                seqs = [seq]
+                break
+
         #For each encountered sequence we shall compare it to the sequence to be tested
-        for sequence in solver.QTable:
+        for sequence in seqs:#solver.QTable:
             
             # if the current sequence has only one point of data go to the next sequence
             #if len(solver.QTable[sequence]) < 2:
@@ -612,7 +620,7 @@ class Abstracter():
             if bestAction != action and (action not in solver.QTable[sequence] or solver.QTable[sequence][action] < reward):
                 continue
 
-            if len(solver.QTable[sequence]) < 2 and reward < r:
+            if len(solver.QTable[sequence]) < 2 and reward < rew:
                 continue
 
 
