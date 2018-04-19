@@ -53,7 +53,8 @@ char_to_id = {
     "D":0,
     "*":11,
     "=":12,
-    "R":13
+    "R":13,
+    "+":14
 }
 
 for x in range(10):
@@ -69,26 +70,94 @@ print(vocab_size)
 
 data = []
 
-for x in range(10):
-    for y in range(10):
-        data.append(list(map(lambda x: char_to_id[x], "{}*{}={}R".format(x,y,x*y))))
-    for y in range(10):
-        for z in range(10):
-            data.append(list(map(lambda x: char_to_id[x], "{}*{}*{}={}R".format(x,y,z,x*y*z))))
+
+# Dataset for multiplication with two and three numbers
+
+#for x in range(10):
+#    for y in range(10):
+#        data.append(list(map(lambda x: char_to_id[x], "{}*{}={}R".format(x,y,x*y))))
+#    for y in range(10):
+#        for z in range(10):
+#            data.append(list(map(lambda x: char_to_id[x], "{}*{}*{}={}R".format(x,y,z,x*y*z))))
+
+
+
+# Dataset for multiplication and addition with three numbers, randomly selected
+
+#oprL = ['*', '+']
+#for x in range(1000):
+#    a = random.randint(0,9)
+#    b = random.randint(0,9)
+#    c = random.randint(0,9)
+#    o1 = random.randint(0,1)
+#    o2 = random.randint(0,1)
+#    
+#    if o1 == 0:
+#        if o2 == 0:
+#            result = a*b*c
+#        else:
+#            result = a*b+c
+#    else:
+#        if o2 == 0:
+#            result = a+b*c
+#        else:
+#            result = a+b+c
+#    
+#    data.append(list(map(lambda x: char_to_id[x], "{}{}{}{}{}={}R".format(a,oprL[o1],b,oprL[o2],c,result))))
+
+
+# Dataset for boolean logic algebra
+
+oprL = ['+', '*'] # * = AND + = OR
+for x in range(2):
+    for y in range(2):
+        for z in range(2):
+            for v in range(2):
+                for w in range(2):
+                    for h in range(2):
+                        for g in range(2):
+                            if y:
+                                result = x==z
+                            else:
+                                result = x or z
+                            if v:
+                                result = result==w
+                            else:
+                                result = result or w
+                            if h:
+                                result = result==g
+                            else:
+                                result = result or g
+                            data.append(list(map(lambda x: char_to_id[x], "{}{}{}{}{}{}{}={}R".format(x,oprL[y],z,oprL[v],w,oprL[h],g,result*1))))
+
 
 testData = [
-    list(map(lambda x: char_to_id[x], "7*7=49R")),
-    list(map(lambda x: char_to_id[x], "3*0=0R")),
-    list(map(lambda x: char_to_id[x], "5*4=20R")),
-    list(map(lambda x: char_to_id[x], "5*4*0=0R")),
-    list(map(lambda x: char_to_id[x], "1*2*3=6R"))
+  #  list(map(lambda x: char_to_id[x], "7*7=49R")),
+  #  list(map(lambda x: char_to_id[x], "3*0=0R")),
+  #  list(map(lambda x: char_to_id[x], "5*4=20R")),
+  #  list(map(lambda x: char_to_id[x], "5*4*0=0R")),
+  #  list(map(lambda x: char_to_id[x], "1*2*3=6R")),
+  #  list(map(lambda x: char_to_id[x], "3*2+4=10R"))
+    list(map(lambda x: char_to_id[x], "1+0+0+0=1R")),
+    list(map(lambda x: char_to_id[x], "1*1+0+0=1R")),
+    list(map(lambda x: char_to_id[x], "1*0*1+0=0R"))
 ]
 
-data.remove(list(map(lambda x: char_to_id[x], "7*7=49R")))
-data.remove(list(map(lambda x: char_to_id[x], "3*0=0R")))
-data.remove(list(map(lambda x: char_to_id[x], "5*4=20R")))
-data.remove(list(map(lambda x: char_to_id[x], "5*4*0=0R")))
-data.remove(list(map(lambda x: char_to_id[x], "1*2*3=6R")))
+#try:
+    #data.remove(list(map(lambda x: char_to_id[x], "7*7=49R")))
+    #data.remove(list(map(lambda x: char_to_id[x], "3*0=0R")))
+    #data.remove(list(map(lambda x: char_to_id[x], "5*4=20R")))
+    #data.remove(list(map(lambda x: char_to_id[x], "5*4*0=0R")))
+    #data.remove(list(map(lambda x: char_to_id[x], "1*2*3=6R")))
+    #data.remove(list(map(lambda x: char_to_id[x], "3*2+4=10R")))
+
+print(data)
+print(list(map(lambda x: char_to_id[x], "1+0+0+0=1R")))
+data.remove(list(map(lambda x: char_to_id[x], "1+0+0+0=1R")))
+data.remove(list(map(lambda x: char_to_id[x], "1*1+0+0=1R")))
+data.remove(list(map(lambda x: char_to_id[x], "1*0*1+0=0R")))
+#except ValueError:
+#    print("who cares")
 
 def build_dataset(words):
     count = collections.Counter(words).most_common()
@@ -104,12 +173,12 @@ vocab_size = len(char_to_id)
 
 # Parameters
 learning_rate = 0.001
-training_iters = 180000
+training_iters = 100000
 display_step = 1000
 n_input = 10
 
 # number of units in RNN cell
-n_hidden = 512
+n_hidden = 1024
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_input, 1])
@@ -137,7 +206,7 @@ def plot_accuracy(xs, ys):
     plt.xticks(range(int(training_iters/display_step)+1),xTLabels)
     plt.ylabel('Accuracy')
     plt.xlabel('Training Iterations')
-    plt.title('2 Layers, 512 hidden units, 0.001 learning rate')
+    plt.title('3 Layers, 1024 hidden units, 0.001 learning rate')
     plt.grid(True)
     plt.savefig('accuracy')
 
