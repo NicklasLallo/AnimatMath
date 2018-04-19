@@ -11,14 +11,14 @@ class Abstracter():
         self.all_chars = (True, True, ["0","1","2","3","4","5","6","7","8","9","0","+","*","="])
 
         self.structures = [
-            [[[2,0,"*",1,3],[2,1,"*",0,3]],[self.cheat_digits, self.cheat_digits, (True, False, [1]), (True, False, [1])], ["dummy best action"], []],
+            [[[2,0,"+",1,3],[2,1,"+",0,3]],[self.cheat_digits, self.cheat_digits, (True, False, [1]), (True, False, [1])], ["dummy best action"], []],
             [[[0, "+", 1, "*", 2, "+" ,3],[0, "+", 2, "*",1, "+" ,3]], [self.all_chars, self.cheat_digits, self.cheat_digits, self.all_chars], ["dummy best action"], []],
             [[[0, '1', '+', '1', 1], [0, '2', 1]], [(True, False, [1]), (True, False, [1])], [1], []],
-            [[[0, '1', '*', '2', 1], [0, '2', 1]], [(True, False, [1]), (True, False, [1])], [1], []],
+            [[[0, '1', '+', '2', 1], [0, '2', 1]], [(True, False, [1]), (True, False, [1])], [1], []],
         ]
         
         self.goals = [
-            [[[0, "=", 0]], [self.cheat_digits], ["RETURN"], [1], []]
+            #[[[0, "=", 0]], [self.cheat_digits], ["RETURN"], [1], []]
         ]
 
         self.alreadyFound = {}
@@ -314,6 +314,8 @@ class Abstracter():
                         badSuffix.add(variables[1][0])
                     else:
                         badSuffix.add(1)
+                else:
+                    break
 
         if goodMatches > 1 and badMatches == 0 and debug:
             print(good)
@@ -586,6 +588,90 @@ class Abstracter():
 
         return equalities
 
+    def equalityJudge(structure, solver):
+        goodMatches = 0
+        badMatches = 0
+        for sequence in solver.inputSet:
+            continueagain = False
+            branch = solver.rewardedSequencesForward
+            for char in sequence:
+                if char not in branch.connections:
+                    continueagain = True
+                    break
+                branch = branch.connections[char]
+            if continueagain:
+                continue
+
+            newSequence = Abstracter.applyStructureChange(sequence, structure)
+            if newSequence == None:
+                continue
+
+            twig = solver.rewardedSequencesForward
+            for char in newSequence:
+                if char not in twig.connections:
+                    continueagain = True
+                    break
+                twig = twig.connections[char]
+            if continueagain:
+                continue
+
+            queue = [(branch, twig)]
+            while len(queue) > 0:
+                (branch, twig) = queue.pop()
+                if branch.node != twig.node:
+                    badMatches += 1
+                    return (goodMatches, badMatches)
+                for char in branch.connections:
+                    if char not in twig.connections:
+                        badMatches += 1
+                        return (goodMatches, badMatches)
+                    queue.append((branch.connections[char], twig.connections[char]))
+            goodMatches += 1
+        return (goodMatches, badMatches)
+
+
+
+    def equalityFinder(self, sequence, solver, leastGoodMatches = 4, debug = False):
+        (sequences, split) = solver.findClosestRewardedSequences(sequence)
+        equality = sequence[:-split]
+        equalities = map(lambda x: x[:-split], sequences)
+        structs = []
+        if debug:
+            print(sequence)
+            print(sequences)
+            print(equalities)
+
+        for equal in equalities:
+            first = list(equality)
+            first.insert(0,0)
+            first.append(1)
+            second = list(equal)
+            second.insert(0,0)
+            second.append(1)
+
+            #Form the new rule
+            newStructure = [
+                [first, second],
+                [(True, False, [1]),(True, False, [1])],
+                [], []
+            ]
+
+            if repr(newStructure) in self.alreadyFound:
+                continue
+
+            (goodMatches, badMatches) = Abstracter.equalityJudge(newStructure, solver)
+            if debug:
+                print((goodMatches, badMatches))
+
+            if goodMatches < leastGoodMatches and badMatches != 0:
+                continue
+            if debug:
+                print(newStructure)
+            self.structures.append(newStructure)
+            structs.append(newStructure)
+            self.alreadyFound[repr(newStructure)] = 1
+        return structs
+
     def testStructureFormationRule(self, testSequence, solver, debug = False):
         bestStructure = None
         bestStructureMatches = 1
@@ -685,42 +771,75 @@ class Abstracter():
             self.alreadyFound[repr(bestStructure)] = 1
         return bestStructure
 
-    def structureTreeSearch(self, sequence, depth, visitedNodes = {}):
-        if sequence in visitedNodes:
-            return (None, None, None, None)
+    def structureTreeSearch(self, sequence, depth, visitedNodes = set(), solver = None, returnImmediately = 9999999, debug = False):
+        if sequence == None or sequence in visitedNodes:
+            return (None, None, None, None, None, None)
         else:
-            visitedNodes[sequence] = 1
+            visitedNodes.add(sequence)
     
         bestValue = -9999
         bestGoal = None
         bestGoalSequence = None
-        bestSequence = sequence
+        bestSequence = None
         bestStructures = None
+        bestAction= None
+    
+        if solver != None:
+            (answer, branch) = solver.sequenceInRewarded(sequence)
+            if answer:
+                seq = [sequence]
+                queue = [(branch, seq)]
+                while len(queue) > 0:
+                    (branch, seq) = queue.pop()
+                    if branch.node != None and branch.node[1] != None and branch.node[1] > bestValue:
+                        bestValue = branch.node[1]
+                        bestGoal = None
+                        bestGoalSequence = "".join(seq)
+                        bestSequence = sequence
+                        bestStructures = []
+                        bestAction = branch.node[0]
+                        if bestValue > returnImmediately:
+                            break
+                    for char in branch.connections:
+                        nextSeq = list(seq)
+                        nextSeq.append(char)
+                        queue.append((branch.connections[char], nextSeq))
+        
         for goal in self.goals:
             goalSequence = Abstracter.checkAbstractGoal(sequence, goal)
-            if goalSequence != None and goal[3][0] > bestValue:
+            if goalSequence != None and goal[3][0] != None and goal[3][0] > bestValue:
                 bestValue = goal[3][0]
                 bestGoal = goal
                 bestGoalSequence = goalSequence
                 bestStructures = []
+                bestAction = goal[2][0]
+                if bestValue > returnImmediately:
+                    break
 
-        if depth == 0:
-            return (bestGoal, bestGoalSequence, bestSequence, bestStructures)
+        if depth == 0 or bestValue > returnImmediately:
+            return (bestGoal, bestGoalSequence, bestSequence, bestStructures, bestAction, bestValue)
 
         for structure in self.structures:
             newSequence = Abstracter.applyStructureChange(sequence, structure)
-            if newSequence == None:
+            if newSequence == None or len(newSequence) > len(sequence):
                 continue
-            (goal, goalSeq, seq, structs) = self.structureTreeSearch(newSequence, depth-1, visitedNodes)
-            if goalSeq != None and goal[3][0] > bestValue:
-                bestValue = goal[3][0]
+            #if debug:
+            #    print(newSequence)
+            (goal, goalSeq, seq, structs, action, value) = self.structureTreeSearch(newSequence, depth-1, visitedNodes, solver, returnImmediately, debug)
+            if debug and seq != None:
+                print(seq)
+            if goalSeq != None and value != None and value > bestValue:
+                bestValue = value
                 bestGoal = goal
                 bestGoalSequence = goalSeq
                 bestSequence = seq
+                bestAction = action
                 bestStructures = structs
                 bestStructures.insert(0, structure)
+                if bestValue > returnImmediately:
+                    break
 
-        return (bestGoal, bestGoalSequence, bestSequence, bestStructures)
+        return (bestGoal, bestGoalSequence, bestSequence, bestStructures, bestAction, bestValue) 
 
     def fakeMultiplicationTableAbstracter(sequence):
         #if len(sequence) == 1:
@@ -800,36 +919,36 @@ strs = [
 
 #Abstracter.finiteAutomataPatternFinder(strs)
 
-print()
+#print()
 
 #Abstracter.matchChar(sequence, abstraction, variableChars, seqPos, absPos, writing, variables, partial, visited)
 
-sequence = "11+11=22"
-sequence2 = "111+11=122"
-abstraction = [0, 1, "+", 1, "=", 2, 3]
-variableChars = [(True, False, [1]), (True, True, ["1","2","3","4","5"]), (True, True, ["1","2","3","4","5"]), (True, False, [1])]
+#sequence = "11+11=22"
+#sequence2 = "111+11=122"
+#abstraction = [0, 1, "+", 1, "=", 2, 3]
+#variableChars = [(True, False, [1]), (True, True, ["1","2","3","4","5"]), (True, True, ["1","2","3","4","5"]), (True, False, [1])]
 
-print(Abstracter.matchChar(sequence, abstraction, variableChars, 0, 0, 0, [-1]*len(variableChars), False, {}))
-print(Abstracter.matchChar(sequence2, abstraction, variableChars, 0, 0, 0, [-1]*len(variableChars), False, {}))
-
-print()
-
-print(Abstracter.applyStructureChange("1+1=2", a.structures[2]))
-print(Abstracter.applyStructureChange("1*2=2", a.structures[0]))
-print(Abstracter.checkAbstractGoal("2=", a.goals[0]))
-
-print()
-
-print(a.structureTreeSearch("2*1=", 5))
-
-print()
-
-print(Abstracter.findDifferingSubstring(["1+1=2", "2=2"]))
-print(Abstracter.findDifferingSubstring(["1+1+1+1=2", "1+1=2"]))
-print(Abstracter.findDifferingSubstring(["3*2=6", "6=6"]))
-print(Abstracter.findDifferingSubstring(["3*2=6", "2*3=6"]))
-print(Abstracter.findDifferingSubstring(["3*2=6", "2*3=6", "6=6"]))
-print(Abstracter.findDifferingSubstring(["12+1=13", "1+12=13"]))
-print()
-
-print(Abstracter.applyStructureChange("10=1", [[[0, '1', '0', '=', '1', 1], [0, '0', '=', 1]], [(True, False, [1]), (True, False, [1])], ['RETURN'], [0.5]]))
+#print(Abstracter.matchChar(sequence, abstraction, variableChars, 0, 0, 0, [-1]*len(variableChars), False, {}))
+#print(Abstracter.matchChar(sequence2, abstraction, variableChars, 0, 0, 0, [-1]*len(variableChars), False, {}))
+#
+#print()
+#
+print(Abstracter.applyStructureChange("1+1+2+1=2", a.structures[2]))
+#print(Abstracter.applyStructureChange("1*2=2", a.structures[0]))
+#print(Abstracter.checkAbstractGoal("2=", a.goals[0]))
+#
+#print()
+#
+#print(a.structureTreeSearch("2*1=", 5))
+#
+#print()
+#
+#print(Abstracter.findDifferingSubstring(["1+1=2", "2=2"]))
+#print(Abstracter.findDifferingSubstring(["1+1+1+1=2", "1+1=2"]))
+#print(Abstracter.findDifferingSubstring(["3*2=6", "6=6"]))
+#print(Abstracter.findDifferingSubstring(["3*2=6", "2*3=6"]))
+#print(Abstracter.findDifferingSubstring(["3*2=6", "2*3=6", "6=6"]))
+#print(Abstracter.findDifferingSubstring(["12+1=13", "1+12=13"]))
+#print()
+#
+#print(Abstracter.applyStructureChange("10=1", [[[0, '1', '0', '=', '1', 1], [0, '0', '=', 1]], [(True, False, [1]), (True, False, [1])], ['RETURN'], [0.5]]))

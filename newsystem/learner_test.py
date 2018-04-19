@@ -4,15 +4,15 @@ from Abstracter2 import *
 import random as r
 import math as m
 
-fraction_as_validation = 0.01
-babble_iterations = 10
+fraction_as_validation = 0.1
+babble_iterations = 2
 imitation_iterations = 100
 abstract_after_iteration = 5
-random_order = True
+random_order = False
 
 explore_rate = 0.01
 solver_depth = 4
-abstracter_depth = 4
+abstracter_depth = 2
 answer_maxlen = 4
 learning_rate = 0.9
 discount_rate = 0.9
@@ -39,19 +39,21 @@ for n in range(m.ceil(len(trainingSet)*fraction_as_validation)):
     del trainingSet[i]
 
 
-def abstractSequenceAndGoal(sequence):
-    (goalRule, goal, newSequence, structs) = abstracter.structureTreeSearch(sequence, abstracter_depth)
-    if goalRule == None:
+def abstractSequenceAndGoal(sequence, debug = False):
+    (goalRule, goal, newSequence, structs, action, value) = abstracter.structureTreeSearch(sequence, abstracter_depth, solver = solver, returnImmediately = 0.9, debug = debug, visitedNodes = set())
+    if debug:
+        print((newSequence, goal, action, value))
+    if newSequence == None:
         return (sequence, {})
-    return (newSequence, {goal: (goalRule[2][0], goalRule[3][0]) })
+    return (newSequence, {goal: (action, value) })
 
-def run_model(sequence, maxlen = 4, training = False, imitation = False):
+def run_model(sequence, maxlen = 4, training = False, imitation = False, debug = False):
     expr = sequence
     if not imitation:
         i = sequence.index("=")
         expr = sequence[0:i+1]
     
-    (absExpr, absGoal) = abstractSequenceAndGoal(expr)
+    (absExpr, absGoal) = abstractSequenceAndGoal(expr, debug = debug)
 
     if imitation:
         solver.improvedProgram(expr+"D", 0, absExpr+"D", 1, "RETURN", 1, {})
@@ -91,15 +93,22 @@ for iteration in range(babble_iterations):
 
 for iteration in range(imitation_iterations):
     for expression in trainingSet:
+        if r.random() < 10/len(trainingSet):
+            print("#", flush = True, end = "")
         if random_order:
             expression = r.choice(trainingSet)
         expr = run_model(expression, answer_maxlen, False, True)
         if iteration >= abstract_after_iteration:
-            d = abstracter.testStructureFormationRule(expr, solver)
+            d = abstracter.equalityFinder(expr, solver, debug = False)
+            #print(d, flush = True)
+    print(flush = True)
+    print(abstracter.structures)
     correct = 0
     for expression in validSet:
-        expr = run_model(expression, answer_maxlen)
+        expr = run_model(expression, answer_maxlen, training = False, debug = True)
         if expr in validSet:
             correct += 1
+        print("Given {} found {}".format(expression, expr))
+
     print(correct/len(validSet))
 

@@ -1,5 +1,6 @@
 import random as r
 from graph import *
+from Tree import *
 
 class Solver():
     
@@ -18,6 +19,19 @@ class Solver():
 
         #Contains average reward for state-action pairs
         self.ETable = {}
+
+        #A tree structure of rewarded sequences. Each sequence is stored in reverse to quickly find equivalent sequences
+        self.rewardedSequences = Tree()
+
+        #Same as above but not stored in reverse
+        self.rewardedSequencesForward = Tree()
+        self.rewardedSequencesForward.node = None
+
+        #A set with all rewarded sequences
+        self.rewardedSet = set()
+
+        #A set with all punished sequences
+        self.inputSet = set()
 
     #Runnable
 
@@ -73,16 +87,18 @@ class Solver():
 
         return action
 
-    def improvedProgram(self, stateSequence, depth = 4, abstractSequence = None, exploreProb = 0, prevAction = None, reward = None, potentialGoals = {}, minGoal = 0.9, debug = False):
+    def improvedProgram(self, stateSequence, depth = 4, abstractSequence = None, exploreProb = 0, prevAction = None, reward = None, potentialGoals = {}, minGoal = 0.9, debug = False, training = True):
         if abstractSequence == None:
             abstractSequence = stateSequence
         
-        if prevAction != None:
+        if prevAction != None and training:
             self.updateTransitionTable(stateSequence[-2], prevAction, stateSequence[-1])
             if reward != None:
                 self.oneStateLearning(stateSequence[:-1], prevAction, stateSequence, reward) 
+                if reward >= minGoal:
+                    self.addRewardedSequence(stateSequence[:-1], reward, prevAction)
 
-        if reward != None:
+        if reward != None and training:
             totalReliability = 1
             fromString = stateSequence
             for end in range(1, len(stateSequence)):
@@ -100,6 +116,9 @@ class Solver():
                     thisReward = self.ETable[fromString][action]
 
                 self.oneStateLearning(fromString, action, toString, thisReward, totalReliability)
+
+        if training and reward == None and prevAction == None:
+            self.addInputSequence(stateSequence)
 
         if r.random() < exploreProb:
             return r.choice(self.actionList)
@@ -279,6 +298,118 @@ class Solver():
             self.TransitionTable[(action)] = (nrOfInserts+1, nextStates)
         else:
             self.TransitionTable[(action)] = (1, {newState : 1})
+    
+    def addInputSequence(self, sequence):
+        self.inputSet.add(sequence)
+
+    #Takes a rewarded sequence and adds it to the tree of rewareded sequences
+    def addRewardedSequence(self, sequence, reward = None, action = None):
+        self.rewardedSet.add(sequence)
+        
+        nextChar = sequence[-1]
+        branch = self.rewardedSequences
+        for x in range(len(sequence)):            
+            char = nextChar
+            if x < len(sequence)-1:
+                nextChar = sequence[-(x+2)]
+            else:
+                nextChar = 1
+            if char not in branch.connections:
+                branch.connections[char] = Tree()
+                branch.connections[char].node = False
+            if nextChar == 1:
+                branch.connections[char].node = True
+            branch = branch.connections[char]
+
+        nextChar = sequence[0]
+        branch = self.rewardedSequencesForward
+        for x in range(len(sequence)):
+            char = nextChar
+            if x < len(sequence)-1:
+                nextChar = sequence[x+1]
+            else:
+                nextChar = 1
+            if char not in branch.connections:
+                branch.connections[char] = Tree()
+                branch.connections[char].node = None
+            if nextChar == 1:
+                branch.connections[char].node = (action, reward)
+            branch = branch.connections[char]
+
+
+    def stepThroughRewardedSequences(self):
+        branch = self.rewardedSequences
+        sequence = []
+        while True:
+            if branch.node:
+                print("This node can be an end node: {}".format("".join(sequence)))
+            else:
+                print("This node cannot be an end node")
+                print(branch.connections.keys())
+            text = input("Select the next char")
+            if text in branch.connections:
+                branch = branch.connections[text]
+                sequence.insert(0,text)
+            else:
+                print("Not correct char. Exiting...")
+                break
+
+    
+    #Takes a rewarded sequence and returns the list of rewarded sequences closest to that one together with the position of the split
+    def findClosestRewardedSequences(self, sequence):
+        split = 0
+        splitNode = None
+        nodeAfterSplit = None
+        branch = self.rewardedSequences
+        for x in range(len(sequence)):
+            char = sequence[-(x+1)]
+
+            if char not in branch.connections:
+                break
+
+            if len(branch.connections) > 1:
+                split = x
+                splitNode = branch
+                nodeAfterSplit = branch.connections[char]
+
+            branch = branch.connections[char]
+
+        if splitNode == None:
+            return ([], None)
+
+        returnSequences = []
+        branch = splitNode
+        queue = []
+        for char, twig in branch.connections.items():
+            if twig != nodeAfterSplit:
+                queue.append((char, twig, list([sequence[-split:len(sequence)]])))
+
+        while len(queue) > 0:
+            (char, branch, seq) = queue.pop()
+            sequence = list(seq)
+            sequence.insert(0,char)
+            
+            if branch.node == True:
+                returnSequences.append("".join(sequence))
+
+            for symbol, twig in branch.connections.items():
+                queue.append((symbol, twig, list(sequence)))
+
+        return (returnSequences, split)
+
+    def sequenceInRewarded(self, sequence, canLeadTo = True, debug = False):
+        branch = self.rewardedSequencesForward
+        for char in sequence:
+            if char not in branch.connections:
+                if debug:
+                    print("char not in connections: {} in {}".format(char, sequence))
+                return (False, None)
+            branch = branch.connections[char]
+        if canLeadTo or branch.node != None:
+            return (True, branch)
+        if debug:
+            print("sequence cannot lead to anything: {}".format(sequence))
+        return (False, None)
 
     #Next Gen Tree-Search
     #sequence is a string with each char a state in the history states

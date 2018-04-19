@@ -4,10 +4,10 @@ from Abstracter2 import *
 abstracter = Abstracter()
 
 def abstractSequenceAndGoal(sequence):
-    (goalRule, goal, newSequence, structs) = abstracter.structureTreeSearch(sequence, 3)
-    if goalRule == None:
+    (goalRule, goal, newSequence, structs, action, value) = abstracter.structureTreeSearch(sequence, 3)
+    if goal == None:
         return (sequence, {})
-    return (newSequence, {goal: (goalRule[2][0], goalRule[3][0]) })
+    return (newSequence, {goal: (action, value) })
 
 actionList = ["RETURN", "1", "0", "2","3","4","5","6","7","8","9"]
 
