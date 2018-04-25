@@ -400,24 +400,24 @@ with tf.Session() as session:
     print("Run on command line.")
     print("\ttensorboard --logdir=%s" % (logs_path))
     print("Point your web browser to: http://localhost:6006/")
-    while True:
-        prompt = "what to multiply"
-        sentence = input(prompt)
-        sentence = sentence.strip()
-        words = list(sentence)
-        if len(words) != 4:
-            continue
-        out_symbol = ""
-        while out_symbol != "R":
-            symbols_in_keys = np.zeros([n_input])#[dictionary[str(words[i])] for i in range(len(words))]
-            symbols_in_keys[n_input-len(words):n_input] = list(map(lambda x: char_to_id[x], words))
-            keys = np.reshape(np.array(symbols_in_keys), [-1, n_input, 1])
-            onehot_pred = session.run(pred, feed_dict={x: keys})
-            onehot_pred_index = int(tf.argmax(onehot_pred, 1).eval())
-            out_symbol = id_to_char[onehot_pred_index]
-            sentence = "%s %s" % (sentence,out_symbol)
-            words.append(out_symbol)
-        print(sentence)
-
+#    while True:
+#        prompt = "what to multiply"
+#        sentence = input(prompt)
+#        sentence = sentence.strip()
+#        words = list(sentence)
+#        if len(words) != 4:
+#            continue
+#        out_symbol = ""
+#        while out_symbol != "R":
+#            symbols_in_keys = np.zeros([n_input])#[dictionary[str(words[i])] for i in range(len(words))]
+#            symbols_in_keys[n_input-len(words):n_input] = list(map(lambda x: char_to_id[x], words))
+#            keys = np.reshape(np.array(symbols_in_keys), [-1, n_input, 1])
+#            onehot_pred = session.run(pred, feed_dict={x: keys})
+#            onehot_pred_index = int(tf.argmax(onehot_pred, 1).eval())
+#            out_symbol = id_to_char[onehot_pred_index]
+#            sentence = "%s %s" % (sentence,out_symbol)
+#            words.append(out_symbol)
+#        print(sentence)
+#
 
 
