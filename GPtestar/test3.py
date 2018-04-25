@@ -15,6 +15,8 @@ import random
 import collections
 import time
 import sys
+import math as m
+import plotter
 
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
@@ -29,36 +31,94 @@ def elapsed(sec):
     else:
         return str(sec/(60*60)) + " hr"
 
+# Data
+training_file_name = "arithmetic2.dat"
+validation_file_name = None #if left as None a fraction of the trainingdata will be used for validation instead
+fraction_as_validation = 0.1
+
+# Parameters
+learning_rate = 0.001
+training_iters = 50000
+save_step = 1000
+display_step = 10000
+n_input = 10
+
+# number of units in RNN cell
+n_hidden = 1024
+
+# number or layers in the network
+nr_of_layers = 2
+
 
 # Target log path
 logs_path = '/tmp/tensorflow/rnn_words'
 writer = tf.summary.FileWriter(logs_path)
 
-# Text file containing words for training
-training_file = 'belling_the_cat.txt'
+def importData(trainingFileName, validFileName = None):
+    trainingFile = open(trainingFileName, "r")
+    trainingSet = []
+    splitChar = " "
+    lines = trainingFile.readlines()
+    lines = list(map(lambda x: x[:-1], lines))
+    trainingFile.close()
+    header = lines.pop(0)
 
-def read_data(fname):
-    with open(fname) as f:
-        content = f.readlines()
-    content = [x.strip() for x in content]
-    content = [content[i].split() for i in range(len(content))]
-    content = np.array(content)
-    content = np.reshape(content, [-1, ])
-    return content
+    splitCharPos = header.find("splitChar:")
+    if splitCharPos != -1 and splitCharPos+10 < len(header):
+        splitChar = header[splitCharPos+10]
+    
+    actionListPos = header.find("actionList:")
+    if actionListPos != -1:
+        actionList = ["RETURN"]
+        pos = 11+actionListPos
+        while pos < len(header) and header[pos] != splitChar:
+            actionList.append(header[pos])
+            pos += 1
 
-training_data = read_data(training_file)
-print("Loaded training data...")
+    chars = []
+    charsPos = header.find("chars:")
+    if charsPos != -1:
+        pos = charsPos+6
+        while pos < len(header) and header[pos] != splitChar:
+            chars.append(header[pos])
+            pos += 1
 
-char_to_id = {
-    "D":0,
-    "*":11,
-    "=":12,
-    "R":13,
-    "+":14
-}
+    for line in lines:
+        i = line.index(splitChar)
+        trainingSet.append((line[:i], line[i+1:]))
+    
+    validSet = []
+    if validFileName != None:
+        validFile = open(validFileName, "r")
+        for line in validFile:
+            i = line.index(splitChar)
+            validSet.append((line[:i], line[i+1:]))
+        validFile.close()
+    else:
+        for n in range(m.ceil(len(trainingSet)*fraction_as_validation)):
+            i = random.randrange(0, len(trainingSet))
+            validSet.append(trainingSet.pop(i))
 
-for x in range(10):
-    char_to_id[str(x)] = x+1
+    return (trainingSet, validSet, chars)
+
+(dataSet, validSet, chars) = importData(training_file_name, validation_file_name)
+char = 1
+char_to_id = {"R":0}
+for x in chars:
+    char_to_id[x] = char
+    char += 1
+
+
+#char_to_id = {
+#    "D":0,
+#    "*":11,
+#    "=":12,
+#    "R":13,
+#    "+":14
+#}
+
+#for x in range(10):
+#    char_to_id[str(x)] = x+1
 
 id_to_char = {}
 for x in char_to_id:
@@ -68,7 +128,13 @@ vocab_size = len(char_to_id)
 
 print(vocab_size)
 
-data = []
+data = [(list(map(lambda x: char_to_id[x],i)), list(map(lambda x: char_to_id[x],j))) for (i,j) in dataSet]
+valid = [(list(map(lambda x: char_to_id[x],i)), list(map(lambda x: char_to_id[x],j))) for (i,j) in validSet]
+for (inp, out) in data:
+    out.append(0)
+for (inp,out) in valid:
+    out.append(0)
+
 
 
 # Dataset for multiplication with two and three numbers
@@ -108,77 +174,57 @@ data = []
 
 # Dataset for boolean logic algebra
 
-oprL = ['+', '*'] # * = AND + = OR
-for x in range(2):
-    for y in range(2):
-        for z in range(2):
-            for v in range(2):
-                for w in range(2):
-                    for h in range(2):
-                        for g in range(2):
-                            if y:
-                                result = x==z
-                            else:
-                                result = x or z
-                            if v:
-                                result = result==w
-                            else:
-                                result = result or w
-                            if h:
-                                result = result==g
-                            else:
-                                result = result or g
-                            data.append(list(map(lambda x: char_to_id[x], "{}{}{}{}{}{}{}={}R".format(x,oprL[y],z,oprL[v],w,oprL[h],g,result*1))))
-
-
-testData = [
-  #  list(map(lambda x: char_to_id[x], "7*7=49R")),
-  #  list(map(lambda x: char_to_id[x], "3*0=0R")),
-  #  list(map(lambda x: char_to_id[x], "5*4=20R")),
-  #  list(map(lambda x: char_to_id[x], "5*4*0=0R")),
-  #  list(map(lambda x: char_to_id[x], "1*2*3=6R")),
-  #  list(map(lambda x: char_to_id[x], "3*2+4=10R"))
-    list(map(lambda x: char_to_id[x], "1+0+0+0=1R")),
-    list(map(lambda x: char_to_id[x], "1*1+0+0=1R")),
-    list(map(lambda x: char_to_id[x], "1*0*1+0=0R"))
-]
-
-#try:
-    #data.remove(list(map(lambda x: char_to_id[x], "7*7=49R")))
-    #data.remove(list(map(lambda x: char_to_id[x], "3*0=0R")))
-    #data.remove(list(map(lambda x: char_to_id[x], "5*4=20R")))
-    #data.remove(list(map(lambda x: char_to_id[x], "5*4*0=0R")))
-    #data.remove(list(map(lambda x: char_to_id[x], "1*2*3=6R")))
-    #data.remove(list(map(lambda x: char_to_id[x], "3*2+4=10R")))
-
-print(data)
-print(list(map(lambda x: char_to_id[x], "1+0+0+0=1R")))
-data.remove(list(map(lambda x: char_to_id[x], "1+0+0+0=1R")))
-data.remove(list(map(lambda x: char_to_id[x], "1*1+0+0=1R")))
-data.remove(list(map(lambda x: char_to_id[x], "1*0*1+0=0R")))
-#except ValueError:
+#oprL = ['+', '*'] # * = AND + = OR
+#for x in range(2):
+#    for y in range(2):
+#        for z in range(2):
+#            for v in range(2):
+#                for w in range(2):
+#                    for h in range(2):
+#                        for g in range(2):
+#                            if y:
+#                                result = x==z
+#                            else:
+#                                result = x or z
+#                            if v:
+#                                result = result==w
+#                            else:
+#                                result = result or w
+#                            if h:
+#                                result = result==g
+#                            else:
+#                                result = result or g
+#                            data.append(list(map(lambda x: char_to_id[x], "{}{}{}{}{}{}{}={}R".format(x,oprL[y],z,oprL[v],w,oprL[h],g,result*1))))
+#
+#
+#testData = [
+#  #  list(map(lambda x: char_to_id[x], "7*7=49R")),
+#  #  list(map(lambda x: char_to_id[x], "3*0=0R")),
+#  #  list(map(lambda x: char_to_id[x], "5*4=20R")),
+#  #  list(map(lambda x: char_to_id[x], "5*4*0=0R")),
+#  #  list(map(lambda x: char_to_id[x], "1*2*3=6R")),
+#  #  list(map(lambda x: char_to_id[x], "3*2+4=10R"))
+#    list(map(lambda x: char_to_id[x], "1+0+0+0=1R")),
+#    list(map(lambda x: char_to_id[x], "1*1+0+0=1R")),
+#    list(map(lambda x: char_to_id[x], "1*0*1+0=0R"))
+#]
+#
+##try:
+#    #data.remove(list(map(lambda x: char_to_id[x], "7*7=49R")))
+#    #data.remove(list(map(lambda x: char_to_id[x], "3*0=0R")))
+#    #data.remove(list(map(lambda x: char_to_id[x], "5*4=20R")))
+#    #data.remove(list(map(lambda x: char_to_id[x], "5*4*0=0R")))
+#    #data.remove(list(map(lambda x: char_to_id[x], "1*2*3=6R")))
+#    #data.remove(list(map(lambda x: char_to_id[x], "3*2+4=10R")))
+#
+#print(data)
+#print(list(map(lambda x: char_to_id[x], "1+0+0+0=1R")))
+#data.remove(list(map(lambda x: char_to_id[x], "1+0+0+0=1R")))
+#data.remove(list(map(lambda x: char_to_id[x], "1*1+0+0=1R")))
+#data.remove(list(map(lambda x: char_to_id[x], "1*0*1+0=0R")))
+##except ValueError:
 #    print("who cares")
 
-def build_dataset(words):
-    count = collections.Counter(words).most_common()
-    dictionary = dict()
-    for word, _ in count:
-        dictionary[word] = len(dictionary)
-    reverse_dictionary = dict(zip(dictionary.values(), dictionary.keys()))
-    return dictionary, reverse_dictionary
-
-dictionary, reverse_dictionary = build_dataset(training_data)
-vocab_size = len(dictionary)
-vocab_size = len(char_to_id)
-
-# Parameters
-learning_rate = 0.001
-training_iters = 100000
-display_step = 1000
-n_input = 10
-
-# number of units in RNN cell
-n_hidden = 1024
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_input, 1])
@@ -222,8 +268,8 @@ def RNN(x, weights, biases):
     # 2-layer LSTM, each layer has n_hidden units.
     # Average Accuracy= 95.20% at 50k iter
    # rnn_cell = rnn.MultiRNNCell([rnn.BasicLSTMCell(n_hidden),rnn.BasicLSTMCell(n_hidden)])
-
-    rnn_cell = rnn.MultiRNNCell([rnn.BasicLSTMCell(n_hidden),rnn.BasicLSTMCell(n_hidden)])
+    layers = [rnn.BasicLSTMCell(n_hidden) for x in range(nr_of_layers)]
+    rnn_cell = rnn.MultiRNNCell(layers)
    # rnn_cell = rnn.MultiRNNCell([rnn.BasicLSTMCell(n_hidden),rnn.BasicLSTMCell(n_hidden),rnn.BasicLSTMCell(n_hidden)])
     
     # 1-layer LSTM with n_hidden units but with lower accuracy.
@@ -259,25 +305,28 @@ with tf.Session() as session:
     end_offset = n_input + 1
     acc_total = 0
     loss_total = 0
-    accList = []
-    accList.append(0)
+    accList = [0]
+    validCorrectList = [0]
+    iterationList = [0]
 
     writer.add_graph(session.graph)
 
     while step < training_iters:
-        # Generate a minibatch. Add some randomness on selection process.
-        if offset > (len(training_data)-end_offset):
-            offset = random.randint(0, n_input+1)
-
         #symbols_in_keys = [ [dictionary[ str(training_data[i])]] for i in range(offset, offset+n_input) ]
         #symbols_in_keys = np.reshape(np.array(symbols_in_keys), [-1, n_input, 1])
+       
+        (inp, expected_out) = random.choice(data)
+        end = random.randrange(len(expected_out))
         
-        symbols = np.array(random.choice(data))
-        
-        end = random.randint(symbols.tolist().index(char_to_id["="])+1, len(symbols)-1)
+        in_symbols = inp + expected_out[:end]
+        in_length = len(in_symbols)
+        if in_length > n_input:
+            in_symbols = in_symbols[in_length-n_input:]
+            in_length = n_input
+        out_symbol = expected_out[end]
 
         symbols_in_keys = np.zeros([n_input])
-        symbols_in_keys[n_input-end: n_input] = symbols[0:end] 
+        symbols_in_keys[n_input-in_length: n_input] = in_symbols
         symbols_in_keys = np.reshape(symbols_in_keys, [-1, n_input, 1])
 
         #symbols_out_onehot = np.zeros([vocab_size], dtype=float)
@@ -285,7 +334,7 @@ with tf.Session() as session:
         #symbols_out_onehot = np.reshape(symbols_out_onehot,[1,-1])
 
         symbols_out_onehot = np.zeros([vocab_size], dtype=float)
-        symbols_out_onehot[symbols[end]] = 1.0
+        symbols_out_onehot[out_symbol] = 1.0
         symbols_out_onehot = np.reshape(symbols_out_onehot,[1,-1])
 
         _, acc, loss, onehot_pred = session.run([optimizer, accuracy, cost, pred], \
@@ -299,17 +348,42 @@ with tf.Session() as session:
             accList.append(int(100*acc_total/display_step))
             acc_total = 0
             loss_total = 0
-            for symbols in testData:
-                #symbolsT = id_to_char
-                end = random.randint(symbols.index(char_to_id["="])+1, len(symbols)-1)
+
+            correct = 0
+            for (inp, expected_out) in valid:
+                end = random.randrange(len(expected_out))
+                
+                in_symbols = inp + expected_out[:end]
+                in_length = len(in_symbols)
+                if in_length > n_input:
+                    in_symbols = in_symbols[in_length-n_input:]
+                    in_length = n_input
+                expected_out_symbol = expected_out[end]
+                
                 symbols_in_keys = np.zeros([n_input])
-                symbols_in_keys[n_input-len(symbols[0:end]):n_input] = list(symbols[0:end])
-                keys = np.reshape(np.array(symbols_in_keys), [-1, n_input, 1])
-                onehot_pred = session.run(pred, feed_dict = {x: keys})
-                symbols_in = list(map(lambda x: id_to_char[x], symbols[0:end]))#[training_data[i] for i in range(offset, offset + n_input)]
-                symbols_out = id_to_char[symbols[end]]#training_data[offset + n_input]
-                symbols_out_pred = id_to_char[int(tf.argmax(onehot_pred, 1).eval())]
-                print("%s - [%s] vs [%s]" % (symbols_in,symbols_out,symbols_out_pred))
+                symbols_in_keys[n_input-in_length: n_input] = in_symbols
+                symbols_in_keys = np.reshape(symbols_in_keys, [-1, n_input, 1])
+                
+                onehot_red = session.run(pred, feed_dict = {x: symbols_in_keys})
+                out_symbol = tf.argmax(onehot_pred, 1).eval()
+
+                if out_symbol == expected_out_symbol:
+                    correct +=1
+            validCorrectList.append(int(correct*100/len(valid)))
+            iterationList.append(step)
+            
+            print("Percent correct guesses on validation data: {}%".format(correct*100/len(valid)))
+                
+                #symbolsT = id_to_char
+                #end = random.randint(len(expected_out))
+                #symbols_in_keys = np.zeros([n_input])
+                #symbols_in_keys[n_input-len(symbols[0:end]):n_input] = list(symbols[0:end])
+                #keys = np.reshape(np.array(symbols_in_keys), [-1, n_input, 1])
+                #onehot_pred = session.run(pred, feed_dict = {x: keys})
+                #symbols_in = list(map(lambda x: id_to_char[x], symbols[0:end]))#[training_data[i] for i in range(offset, offset + n_input)]
+                #symbols_out = id_to_char[symbols[end]]#training_data[offset + n_input]
+                #symbols_out_pred = id_to_char[int(tf.argmax(onehot_pred, 1).eval())]
+                #print("%s - [%s] vs [%s]" % (symbols_in,symbols_out,symbols_out_pred))
       #  else:
       #      if step == 0:
       #          accList.append(0)
@@ -318,6 +392,8 @@ with tf.Session() as session:
         step += 1
         offset += (n_input+1)
     plot_accuracy(range(int(training_iters/display_step)+1), accList)
+    plotter.improvedPlot(iterationList, accList, title = "Accuracy on training set", xlabel = "Iterations", ylabel = "Accuracy", figname = training_file_name[:-4]+"training.fig")
+    plotter.improvedPlot(iterationList, validCorrectList, title = "Accuracy on validation set", xlabel = "Iterations", ylabel = "Accuracy", figname = training_file_name[:-4]+"validation.fig")
     print("Plot completed")
     print("Optimization Finished!")
     print("Elapsed time: ", elapsed(time.time() - start_time))

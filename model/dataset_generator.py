@@ -19,7 +19,7 @@ for x in range(10):
             dataSet.append(("{}*{}*{}= {}".format(x,y,z, x*y*z)))
 
 f = open("arithmetic1.dat", "w")
-f.write("splitChar: actionList:1234567890\n")
+f.write("splitChar: actionList:1234567890 description:\"Equalities from 0 to 300 and alla single digit multiplications with one and two multiplicants\" chars:1234567890*= \n")
 for data in dataSet:
     f.write(data+"\n")
 f.close()
@@ -46,7 +46,7 @@ for x in range(10):
                     dataSet.append(("{}{}{}{}{}= {}".format(x,op1,y,op2,z, ans)))
 
 f = open("arithmetic2.dat", "w")
-f.write("splitChar: actionList:1234567890\n")
+f.write("splitChar: actionList:1234567890 chars:1234567890*+=\n")
 for data in dataSet:
     f.write(data+"\n")
 f.close()
@@ -81,7 +81,7 @@ for x in range(2):
                             dataSet.append("{}{}{}{}{}{}{}= {}".format(x,operands[y],z,operands[v],w,operands[h],g,result*1))
 
 f = open("logic1.dat", "w")
-f.write("splitChar: actionList:10\n")
+f.write("splitChar: actionList:10 chars:10+*=\n")
 for data in dataSet:
     f.write(data+"\n")
 f.close()
@@ -107,7 +107,7 @@ for x in range(100):
                     dataSet.append(("{}{}{}{}{}= {}".format(x,op1,y,op2,z, ans)))
 
 f = open("arithmetic3.dat", "w")
-f.write("splitChar: actionList:1234567890\n")
+f.write("splitChar: actionList:1234567890\n chars:1234567890*+=")
 for data in dataSet:
     f.write(data+"\n")
 f.close()
