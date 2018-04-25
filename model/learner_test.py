@@ -3,13 +3,14 @@ from Abstracter import *
 
 import random as r
 import math as m
+import plotter
 
 trainingFileName = "arithmetic1.dat"    #The file containing the training data
 validFileName = None                    #The file containing the validation set, if None the validation data will be drawn as a fraction of the training data
 fraction_as_validation = 0.1            #The fraction of the training data that will be taken for validation, only used if validFileName is None
 
 babble_iterations = 1           #How many iterations the system will be trained on what its actions does
-imitation_iterations = 100      #How many iterations the system will be trained on what output is good
+imitation_iterations = 5      #How many iterations the system will be trained on what output is good
 abstract_after_iteration = 1    #After how many imitation iterations will the system begin to make equality abstractions
 random_order = False            #Whether or not the data will be randomly drawn from the dataset
 
@@ -115,11 +116,44 @@ def run_model(sequence, expected_output,  maxlen = 4, training = False, imitatio
 solver = Solver(action_list, learning_rate, discount_rate)
 abstracter = Abstracter()
 
+iterationList = []
+correctList = []
+num = 0
+
+correct = 0
+for (expression, answer) in validSet:
+    expr = run_model(expression, answer, answer_maxlen, training = False, debug = False)
+    if expr == expression + answer:
+        correct += 1
+        print("Correct! Given {} found {}".format(expression, expr))
+    else: 
+        print("Wrong! Given {} found {} instead of {}".format(expression, expr, expression+answer))
+print(correct/len(validSet))
+iterationList.append(num)
+num += 1
+correctList.append(correct/len(validSet))
+
+
 for iteration in range(babble_iterations):
     for (expression, answer) in trainingSet:
         if random_order:
             (expression, answer) = r.choice(trainingSet)
         run_model(expression, answer, answer_maxlen, True)
+
+correct = 0
+for (expression, answer) in validSet:
+    expr = run_model(expression, answer, answer_maxlen, training = False, debug = False)
+    if expr == expression + answer:
+        correct += 1
+        print("Correct! Given {} found {}".format(expression, expr))
+    else:
+        print("Wrong! Given {} found {} instead of {}".format(expression, expr, expression+answer))
+print(correct/len(validSet))
+iterationList.append(num)
+num += 1
+correctList.append(correct/len(validSet))
+
+
 
 for iteration in range(imitation_iterations):
     for (expression, answer) in trainingSet:
@@ -139,6 +173,11 @@ for iteration in range(imitation_iterations):
         if expr == expression + answer:
             correct += 1
             print("Correct! Given {} found {}".format(expression, expr))
-        else: print("Wrong! Given {} found {} instead of {}".format(expression, expr, expression+answer))
+        else:
+            print("Wrong! Given {} found {} instead of {}".format(expression, expr, expression+answer))
     print(correct/len(validSet))
+    iterationList.append(num)
+    num += 1
+    correctList.append(correct/len(validSet))
 
+plotter.improvedPlot(iterationList, correctList, title = "Accuracy on validationset for the model with only", xlabel = "Iteration", ylabel = "Accuracy", figname = trainingFileName[:-4] + "Model.png")

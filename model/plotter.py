@@ -28,8 +28,8 @@ def plot(xs, ys, xaxis = [0, 100], yaxis = [0, 100], title = "", xlabel = "", yl
     plt.savefig(figname)
 
 def improvedPlot(xs, ys, title = "", xlabel = "", ylabel = "", figname = "untitled"):
-    xaxis = [min(xs),max(xs)]
-    yaxis = [min(ys),max(ys)]
+    xaxis = [min(xs)*0.95,max(xs)*1.05]
+    yaxis = [min(ys)*0.95,max(ys)*1.05]
     plot(xs, ys, xaxis, yaxis, title, xlabel, ylabel, figname)
     
 
