@@ -5,7 +5,7 @@ import random as r
 import math as m
 import plotter
 
-trainingFileName = "arithmetic1.dat"    #The file containing the training data
+trainingFileName = "arithmetic2.dat"    #The file containing the training data
 validFileName = None                    #The file containing the validation set, if None the validation data will be drawn as a fraction of the training data
 fraction_as_validation = 0.1            #The fraction of the training data that will be taken for validation, only used if validFileName is None
 
