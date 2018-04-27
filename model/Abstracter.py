@@ -11,10 +11,10 @@ class Abstracter():
         self.all_chars = (True, True, ["0","1","2","3","4","5","6","7","8","9","0","+","*","="])
 
         self.structures = [
-            [[[2,0,"+",1,3],[2,1,"+",0,3]],[self.cheat_digits, self.cheat_digits, (True, False, [1]), (True, False, [1])], ["dummy best action"], []],
-            [[[0, "+", 1, "*", 2, "+" ,3],[0, "+", 2, "*",1, "+" ,3]], [self.all_chars, self.cheat_digits, self.cheat_digits, self.all_chars], ["dummy best action"], []],
-            [[[0, '1', '+', '1', 1], [0, '2', 1]], [(True, False, [1]), (True, False, [1])], [1], []],
-            [[[0, '1', '+', '2', 1], [0, '2', 1]], [(True, False, [1]), (True, False, [1])], [1], []],
+            #[[[2,0,"+",1,3],[2,1,"+",0,3]],[self.cheat_digits, self.cheat_digits, (True, False, [1]), (True, False, [1])], ["dummy best action"], []],
+            #[[[0, "+", 1, "*", 2, "+" ,3],[0, "+", 2, "*",1, "+" ,3]], [self.all_chars, self.cheat_digits, self.cheat_digits, self.all_chars], ["dummy best action"], []],
+            #[[[0, '1', '+', '1', 1], [0, '2', 1]], [(True, False, [1]), (True, False, [1])], [1], []],
+            #[[[0, '1', '+', '2', 1], [0, '2', 1]], [(True, False, [1]), (True, False, [1])], [1], []],
         ]
         
         self.goals = [
@@ -186,7 +186,7 @@ class Abstracter():
         return (goodMatches, badMatches)
 
 
-    def equalityJudge(structure, solver):
+    def equalityJudge(structure, solver, cancelIfBadMatch = True):
         goodMatches = 0
         badMatches = 0
         for sequence in solver.inputSet:
@@ -218,13 +218,20 @@ class Abstracter():
                 (branch, twig) = queue.pop()
                 if branch.node != twig.node:
                     badMatches += 1
-                    return (goodMatches, badMatches)
+                    if cancelIfBadMatch:
+                        return (goodMatches, badMatches)
+                    continue
+                badMatch = False
                 for char in branch.connections:
                     if char not in twig.connections:
                         badMatches += 1
-                        return (goodMatches, badMatches)
+                        if cancelIfBadMatch:
+                            return (goodMatches, badMatches)
+                        badMatch = True
+                        break
                     queue.append((branch.connections[char], twig.connections[char]))
-            goodMatches += 1
+            if not badMatch:
+                goodMatches += 1
         return (goodMatches, badMatches)
 
 
@@ -232,14 +239,20 @@ class Abstracter():
     def equalityFinder(self, sequence, solver, leastGoodMatches = 4, debug = False):
         (sequences, split) = solver.findClosestRewardedSequences(sequence)
         equality = sequence[:-split]
-        equalities = map(lambda x: x[:-split], sequences)
+        equalities = list(map(lambda x: (x[:-split], x, split), sequences))
         structs = []
         if debug:
             print(sequence)
             print(sequences)
             print(equalities)
 
-        for equal in equalities:
+        while len(equalities) > 0:
+            (equal, otherSequence, thisSplit) = equalities.pop()
+            if len(equal) == 0:
+                if len(otherSequence) > thisSplit:
+                    equalities.append((otherSequence[:-thisSplit+1], otherSequece, thisSplit+1))
+                continue
+
             first = list(equality)
             first.insert(0,0)
             first.append(1)
@@ -257,17 +270,21 @@ class Abstracter():
             if repr(newStructure) in self.alreadyFound:
                 continue
 
-            (goodMatches, badMatches) = Abstracter.equalityJudge(newStructure, solver)
+            (goodMatches, badMatches) = Abstracter.equalityJudge(newStructure, solver, cancelIfBadMatch = False)
             if debug:
                 print((goodMatches, badMatches))
 
-            if goodMatches < leastGoodMatches and badMatches != 0:
+            if badMatches != 0 and goodMatches >= leastGoodMatches and thisSplit < len(otherSequence):
+                equalities.insert(0, (otherSequence[:-(thisSplit+1)], otherSequence, thisSplit+1))
+            if badMatches != 0 or thisSplit >= len(otherSequence):
                 continue
+                
             if debug:
                 print(newStructure)
             self.structures.append(newStructure)
             structs.append(newStructure)
             self.alreadyFound[repr(newStructure)] = 1
+        #print("!")
         return structs
 
     def structureTreeSearch(self, sequence, depth, visitedNodes = set(), solver = None, returnImmediately = 9999999, debug = False):

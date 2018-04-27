@@ -16,14 +16,14 @@ random_order = False            #Whether or not the data will be randomly drawn 
 
 explore_rate = 0.01     #When training and not imitating, how often will the system make a random move
 solver_depth = 4        #How deep will the tree-search of the solver go
-abstracter_depth = 2    #How deep will the tree-search of the abstracter go
+abstracter_depth = 1    #How deep will the tree-search of the abstracter go
 answer_maxlen = 4       #How many actions can the system make before being forced to return
 learning_rate = 0.9     #Learning rate of the system
 discount_rate = 0.9     #Discount rate of the system
 action_list = ["1","2","3","4","5","6","7","8","9","0","RETURN"]    #List of actions the system can take, can be changed by importData()
 
-
-
+info = "DataSet: {}\nFraction used for validation: {}\nBabble iterations: {}\nSolver depth: {}\nAbstracter depth: {}".format(trainingFileName[:-4], fraction_as_validation, babble_iterations, solver_depth, abstracter_depth)
+short_info = "{}_{}_{}_{}_{}".format(trainingFileName[:-4], fraction_as_validation, babble_iterations, solver_depth, abstracter_depth)
 def importData(trainingFileName, validFileName = None):
     trainingFile = open(trainingFileName, "r")
     trainingSet = []
@@ -68,8 +68,8 @@ def abstractSequenceAndGoal(sequence, debug = False):
     if debug:
         print((newSequence, goal, action, value))
     if newSequence == None:
-        return (sequence, {})
-    return (newSequence, {goal: (action, value) })
+        return (sequence, {}, structs)
+    return (newSequence, {goal: (action, value)}, structs)
 
 def run_model(sequence, expected_output,  maxlen = 4, training = False, imitation = False, debug = False):
     if imitation:
@@ -77,7 +77,7 @@ def run_model(sequence, expected_output,  maxlen = 4, training = False, imitatio
     else:
         expr = sequence
     
-    (absExpr, absGoal) = abstractSequenceAndGoal(expr, debug = debug)
+    (absExpr, absGoal, structs) = abstractSequenceAndGoal(expr)
 
     if imitation:
         solver.improvedProgram(expr+"D", 0, absExpr+"D", 1, "RETURN", 1, {})
@@ -97,16 +97,18 @@ def run_model(sequence, expected_output,  maxlen = 4, training = False, imitatio
         action = solver.improvedProgram(expr, solver_depth, absExpr, exploreProb, action, reward, absGoal, training = training)
         if action == "RETURN":
             reward = -1
+            if expr == sequence + expected_output:
+                reward = 1
+                if debug and absGoal != {}:
+                    print(structs)
             if not training:
                 action = None
                 reward = None
-            elif expr == sequence + expected_output:
-                reward = 1
             solver.improvedProgram(expr+"D", 0, absExpr+"D", 1, action, reward, {}, training = training)
             return expr
         reward = 0
         expr += action
-        (absExpr, absGoal) = abstractSequenceAndGoal(expr)
+        (absExpr, absGoal, structs) = abstractSequenceAndGoal(expr)
     return expr
 
 
@@ -180,4 +182,4 @@ for iteration in range(imitation_iterations):
     num += 1
     correctList.append(correct/len(validSet))
 
-plotter.improvedPlot(iterationList, correctList, title = "Accuracy on validationset for the model with only", xlabel = "Iteration", ylabel = "Accuracy", figname = trainingFileName[:-4] + "Model.png")
+plotter.improvedPlot(iterationList, correctList, title = info, xlabel = "Iteration", ylabel = "Accuracy", figname = short_info + "Model.png")
