@@ -109,6 +109,8 @@ def run_model(sequence, expected_output,  maxlen = 4, training = False, imitatio
         reward = 0
         expr += action
         (absExpr, absGoal, structs) = abstractSequenceAndGoal(expr)
+    if debug:
+        return (expr, structs)
     return expr
 
 
@@ -171,12 +173,13 @@ for iteration in range(imitation_iterations):
     #print(abstracter.structures)
     correct = 0
     for (expression, answer) in validSet:
-        expr = run_model(expression, answer, answer_maxlen, training = False, debug = False)
+        (expr, structs) = run_model(expression, answer, answer_maxlen, training = False, debug = True)
         if expr == expression + answer:
             correct += 1
             print("Correct! Given {} found {}".format(expression, expr))
         else:
             print("Wrong! Given {} found {} instead of {}".format(expression, expr, expression+answer))
+            print(structs)
     print(correct/len(validSet))
     iterationList.append(num)
     num += 1
