@@ -82,7 +82,7 @@ def run_model(sequence, expected_output,  maxlen = 4, training = False, imitatio
     if imitation:
         solver.improvedProgram(expr+"D", 0, absExpr+"D", 1, "RETURN", 1, {})
         if debug:
-            return expr, structs
+            return (expr, structs)
         return expr
 
     exploreProb = 0
@@ -107,6 +107,8 @@ def run_model(sequence, expected_output,  maxlen = 4, training = False, imitatio
                 action = None
                 reward = None
             solver.improvedProgram(expr+"D", 0, absExpr+"D", 1, action, reward, {}, training = training)
+            if debug:
+                return (expr, structs)
             return expr
         reward = 0
         expr += action
