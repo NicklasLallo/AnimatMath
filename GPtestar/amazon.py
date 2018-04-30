@@ -1,6 +1,5 @@
 import json
 import re
-from pprint import pprint
 
 #Custom splitchar now that blankspace isn't as useful
 splitchar = "$"
@@ -14,9 +13,6 @@ f = open("naturallanguage.dat", "w")
 
 #Manualy writing out the characters. Not optimal
 f.write("splitChar:" + splitchar + "actionList:qwertyuiopasdfghjklzxcvbnm,.1234567890\n chars:qwertyuiopasdfghjklzxcvbnm,.1234567890\n")
-#for data in dataSet:
-#    f.write(data+"\n")
-#f.close()
 
 
 i = 1
