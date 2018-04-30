@@ -81,6 +81,8 @@ def run_model(sequence, expected_output,  maxlen = 4, training = False, imitatio
 
     if imitation:
         solver.improvedProgram(expr+"D", 0, absExpr+"D", 1, "RETURN", 1, {})
+        if debug:
+            return expr, structs
         return expr
 
     exploreProb = 0
