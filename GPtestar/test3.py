@@ -34,21 +34,22 @@ def elapsed(sec):
 # Data
 training_file_name = "arithmetic2.dat"
 validation_file_name = None #if left as None a fraction of the trainingdata will be used for validation instead
-fraction_as_validation = 0.1
+fraction_as_validation = 0.2
 
 # Parameters
 learning_rate = 0.001
-training_iters = 50000
-save_step = 1000
+training_iters = 300000
 display_step = 10000
 n_input = 10
 
 # number of units in RNN cell
-n_hidden = 1024
+n_hidden = 512
 
 # number or layers in the network
-nr_of_layers = 2
+nr_of_layers = 3
 
+info = "Dataset: {}\nFraction used for validation: {}\nNumber of iterations: {}\nHidden units per layer: {}\nNumber of layers: {}\nLearning rate: {}".format(training_file_name[:-4], fraction_as_validation, training_iters, n_hidden, nr_of_layers, learning_rate)
+info_short = "{}_{}_{}_{}_{}_{}".format(training_file_name[:-4], fraction_as_validation, training_iters, n_hidden, nr_of_layers, learning_rate)
 
 # Target log path
 logs_path = '/tmp/tensorflow/rnn_words'
@@ -102,11 +103,11 @@ def importData(trainingFileName, validFileName = None):
     return (trainingSet, validSet, chars)
 
 (dataSet, validSet, chars) = importData(training_file_name, validation_file_name)
-char = 1
-char_to_id = {"R":0}
-for x in chars:
-    char_to_id[x] = char
-    char += 1
+num = 0
+char_to_id = {"R":len(chars)}
+for char in chars:
+    char_to_id[char] = num
+    num += 1
 
 
 #char_to_id = {
@@ -127,13 +128,15 @@ for x in char_to_id:
 vocab_size = len(char_to_id)
 
 print(vocab_size)
+print(id_to_char)
+print(char_to_id)
 
 data = [(list(map(lambda x: char_to_id[x],i)), list(map(lambda x: char_to_id[x],j))) for (i,j) in dataSet]
 valid = [(list(map(lambda x: char_to_id[x],i)), list(map(lambda x: char_to_id[x],j))) for (i,j) in validSet]
 for (inp, out) in data:
-    out.append(0)
+    out.append(char_to_id["R"])
 for (inp,out) in valid:
-    out.append(0)
+    out.append(char_to_id["R"])
 
 
 
@@ -285,6 +288,7 @@ def RNN(x, weights, biases):
     return tf.matmul(outputs[-1], weights['out']) + biases['out']
 
 pred = RNN(x, weights, biases)
+out_symbol_pred = tf.argmax(pred, 1)
 
 # Loss and optimizer
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
@@ -308,67 +312,85 @@ with tf.Session() as session:
     accList = [0]
     validCorrectList = [0]
     iterationList = [0]
+    steps = 0
 
     writer.add_graph(session.graph)
 
     while step < training_iters:
         #symbols_in_keys = [ [dictionary[ str(training_data[i])]] for i in range(offset, offset+n_input) ]
         #symbols_in_keys = np.reshape(np.array(symbols_in_keys), [-1, n_input, 1])
-       
         (inp, expected_out) = random.choice(data)
-        end = random.randrange(len(expected_out))
-        
-        in_symbols = inp + expected_out[:end]
-        in_length = len(in_symbols)
-        if in_length > n_input:
-            in_symbols = in_symbols[in_length-n_input:]
-            in_length = n_input
-        out_symbol = expected_out[end]
+        #print("{}, s: {}".format(step, steps))i
+        for end in range(len(expected_out)):
+            steps += 1
+            in_symbols = inp + expected_out[:end]
+            in_length = len(in_symbols)
+            if in_length > n_input:
+                in_symbols = in_symbols[in_length-n_input:]
+                in_length = n_input
+            out_symbol = expected_out[end]
 
-        symbols_in_keys = np.zeros([n_input])
-        symbols_in_keys[n_input-in_length: n_input] = in_symbols
-        symbols_in_keys = np.reshape(symbols_in_keys, [-1, n_input, 1])
+            symbols_in_keys = np.zeros([n_input])
+            symbols_in_keys[n_input-in_length: n_input] = in_symbols
+            symbols_in_keys = np.reshape(symbols_in_keys, [-1, n_input, 1])
 
-        #symbols_out_onehot = np.zeros([vocab_size], dtype=float)
-        #symbols_out_onehot[dictionary[str(training_data[offset+n_input])]] = 1.0
-        #symbols_out_onehot = np.reshape(symbols_out_onehot,[1,-1])
+            #symbols_out_onehot = np.zeros([vocab_size], dtype=float)
+            #symbols_out_onehot[dictionary[str(training_data[offset+n_input])]] = 1.0
+            #symbols_out_onehot = np.reshape(symbols_out_onehot,[1,-1])
 
-        symbols_out_onehot = np.zeros([vocab_size], dtype=float)
-        symbols_out_onehot[out_symbol] = 1.0
-        symbols_out_onehot = np.reshape(symbols_out_onehot,[1,-1])
+            symbols_out_onehot = np.zeros([vocab_size], dtype=float)
+            symbols_out_onehot[out_symbol] = 1.0
+            symbols_out_onehot = np.reshape(symbols_out_onehot,[1,-1])
 
-        _, acc, loss, onehot_pred = session.run([optimizer, accuracy, cost, pred], \
-                                                feed_dict={x: symbols_in_keys, y: symbols_out_onehot})
-        loss_total += loss
-        acc_total += acc
-        if (step+1) % display_step == 0:
+            _, acc, loss, onehot_pred, prediction = session.run([optimizer, accuracy, cost, pred, out_symbol_pred], \
+                                                    feed_dict={x: symbols_in_keys, y: symbols_out_onehot})
+
+            loss_total += loss
+            acc_total += acc
+       
+            #print([id_to_char[x] for x in in_symbols])
+            #print(id_to_char[prediction.item(0)])
+
+            if prediction.item(0) != out_symbol:
+                break
+        if step % display_step == 0:
             print("Iter= " + str(step+1) + ", Average Loss= " + \
-                  "{:.6f}".format(loss_total/display_step) + ", Average Accuracy= " + \
-                  "{:.2f}%".format(100*acc_total/display_step))
-            accList.append(int(100*acc_total/display_step))
+                  "{:.6f}".format(loss_total/steps) + ", Average Accuracy= " + \
+                  "{:.2f}%".format(100*acc_total/steps))
+            accList.append(int(100*acc_total/steps))
             acc_total = 0
             loss_total = 0
+            steps = 0
 
             correct = 0
             for (inp, expected_out) in valid:
-                end = random.randrange(len(expected_out))
+                for end in range(len(expected_out)):
                 
-                in_symbols = inp + expected_out[:end]
-                in_length = len(in_symbols)
-                if in_length > n_input:
-                    in_symbols = in_symbols[in_length-n_input:]
-                    in_length = n_input
-                expected_out_symbol = expected_out[end]
+                    in_symbols = inp + expected_out[:end]
+                    in_length = len(in_symbols)
+                    if in_length > n_input:
+                        in_symbols = in_symbols[in_length-n_input:]
+                        in_length = n_input
+                    expected_out_symbol = expected_out[end]
                 
-                symbols_in_keys = np.zeros([n_input])
-                symbols_in_keys[n_input-in_length: n_input] = in_symbols
-                symbols_in_keys = np.reshape(symbols_in_keys, [-1, n_input, 1])
+                    symbols_in_keys = np.zeros([n_input])
+                    symbols_in_keys[n_input-in_length: n_input] = in_symbols
+                    symbols_in_keys = np.reshape(symbols_in_keys, [-1, n_input, 1])
                 
-                onehot_red = session.run(pred, feed_dict = {x: symbols_in_keys})
-                out_symbol = tf.argmax(onehot_pred, 1).eval()
+                    out_symbol = session.run(out_symbol_pred, feed_dict = {x: symbols_in_keys})
 
-                if out_symbol == expected_out_symbol:
-                    correct +=1
+                    if out_symbol.item(0) == expected_out_symbol:
+                        if id_to_char[out_symbol.item(0)] == "R":
+                            #print([id_to_char[x] for x in in_symbols])
+                            #print(id_to_char[out_symbol.item(0)])
+                            correct +=1
+                            break
+                    else:
+                        #print(out_symbol.item(0))
+                        #print(expected_out_symbol)
+                        #print([id_to_char[x] for x in in_symbols], end  = "")
+                        #print(id_to_char[out_symbol.item(0)])
+                        break
             validCorrectList.append(int(correct*100/len(valid)))
             iterationList.append(step)
             
@@ -391,15 +413,15 @@ with tf.Session() as session:
       #          accList.append(accList[step-1])
         step += 1
         offset += (n_input+1)
-    plot_accuracy(range(int(training_iters/display_step)+1), accList)
-    plotter.improvedPlot(iterationList, accList, title = "Accuracy on training set", xlabel = "Iterations", ylabel = "Accuracy", figname = training_file_name[:-4]+"training.fig")
-    plotter.improvedPlot(iterationList, validCorrectList, title = "Accuracy on validation set", xlabel = "Iterations", ylabel = "Accuracy", figname = training_file_name[:-4]+"validation.fig")
+    plotter.improvedPlot(iterationList, accList, title = "Accuracy on training set\n"+info, xlabel = "Iterations", ylabel = "Accuracy", figname = info_short+"_training.png")
+    plotter.improvedPlot(iterationList, validCorrectList, title = "Accuracy on validation set\n"+info, xlabel = "Iterations", ylabel = "Accuracy", figname = info_short+"validation.png")
     print("Plot completed")
     print("Optimization Finished!")
     print("Elapsed time: ", elapsed(time.time() - start_time))
     print("Run on command line.")
     print("\ttensorboard --logdir=%s" % (logs_path))
     print("Point your web browser to: http://localhost:6006/")
+    plot_accuracy(range(int(training_iters/display_step)+1), accList)
 #    while True:
 #        prompt = "what to multiply"
 #        sentence = input(prompt)
