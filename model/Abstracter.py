@@ -239,6 +239,9 @@ class Abstracter():
     def equalityFinder(self, sequence, solver, leastGoodMatches = 4, debug = False):
         (sequences, split) = solver.findClosestRewardedSequences(sequence)
         equality = sequence[:-split]
+        if len(equality) == 0:
+            print("Should not happen!!")
+            return []
         equalities = list(map(lambda x: (x[:-split], x, split), sequences))
         structs = []
         if debug:
