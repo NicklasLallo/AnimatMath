@@ -5,7 +5,7 @@ def operator(op, x, y):
     else: 
         return x+y
 
-characters = "12334567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+characters = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
 #arithemetic1.dat - equality, single, and double multiplication tabled with single digit operands
 
 dataSet = []
@@ -132,28 +132,28 @@ bad_sentences += [x + " " + y for x in pronouns for y in doings]
 bad_sentences += [x + " " + y + z for x in doing for y in verbs for z in verb_bends]
 bad_sentences += [x + " " + y for x in doings for y in doing]
 
-words = []
-nr = 0
-wordString = ""
-word_to_id = {}
+words = set(["(Yes)", "(No)"])
+nr = 2
+wordString = "(Yes) (No) "
+word_to_id = {"(Yes)": "1", "(No)": "2"}
 for sentence in good_sentences + bad_sentences:
     splits = sentence.split()
     for word in splits:
         if word not in words:
-            words.append(word)
+            words.add(word)
             wordString += word + " "
             word_to_id[word] = characters[nr]
             nr += 1
 
 f = open("grammar1.dat", "w")
-f.write("splitChar: actionList:YN chars:{} words:\"{}\"\n".format(characters[:len(words)], wordString))
+f.write("splitChar: actionList:12 chars:{} words:\"{}\"\n".format(characters[:len(words)], wordString))
 for sentence in good_sentences:
     splits = sentence.split()
     for word in splits:
         f.write(word_to_id[word])
-    f.write(" Y\n")
+    f.write(" 1\n")
 for sentence in bad_sentences:
     splits = sentence.split()
     for word in splits:
         f.write(word_to_id[word])
-    f.write(" N\n")
+    f.write(" 2\n")

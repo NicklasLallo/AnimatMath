@@ -6,19 +6,19 @@ import math as m
 import plotter
 import importer
 
-trainingFileName = "arithmetic2.dat"    #The file containing the training data
-validFileName = None                    #The file containing the validation set, if None the validation data will be drawn as a fraction of the training data
-fraction_as_validation = 0.1            #The fraction of the training data that will be taken for validation, only used if validFileName is None
+trainingFileName = "grammar1.dat"   #The file containing the training data
+validFileName = None                #The file containing the validation set, if None the validation data will be drawn as a fraction of the training data
+fraction_as_validation = 0.1        #The fraction of the training data that will be taken for validation, only used if validFileName is None
 
 babble_iterations = 1           #How many iterations the system will be trained on what its actions does
-imitation_iterations = 5      #How many iterations the system will be trained on what output is good
+imitation_iterations = 5        #How many iterations the system will be trained on what output is good
 abstract_after_iteration = 1    #After how many imitation iterations will the system begin to make equality abstractions
 random_order = False            #Whether or not the data will be randomly drawn from the dataset
 
 explore_rate = 0.01     #When training and not imitating, how often will the system make a random move
 solver_depth = 4        #How deep will the tree-search of the solver go
 abstracter_depth = 1    #How deep will the tree-search of the abstracter go
-answer_maxlen = 4       #How many actions can the system make before being forced to return
+answer_maxlen = 1       #How many actions can the system make before being forced to return
 learning_rate = 0.9     #Learning rate of the system
 discount_rate = 0.9     #Discount rate of the system
 action_list = ["1","2","3","4","5","6","7","8","9","0","RETURN"]    #List of actions the system can take, can be changed by importData()
@@ -74,6 +74,12 @@ def run_model(sequence, expected_output,  maxlen = 4, training = False, imitatio
         reward = 0
         expr += action
         (absExpr, absGoal, structs) = abstractSequenceAndGoal(expr)
+    solver.improvedProgram(expr, 0, absExpr, 1, action, 0, {}, training = training)
+    reward = -1
+    if expr == sequence + expected_output:
+        reward = 1
+    solver.improvedProgram(expr+"D", 0, absExpr+"D", 1, "RETURN", reward, {}, training = training)
+
     if debug:
         return (expr, structs)
     return expr
@@ -82,18 +88,35 @@ def run_validation(num):
     correct = 0
     for (expression, answer) in validSet:
         expr = run_model(expression, answer, answer_maxlen, training = False, debug = False)
+        
+        if using_words:
+            expr2 = decode_sentence(expr)
+            expression2 = decode_sentence(expression)
+            answer2 = decode_sentence(answer)
+        else:
+            expr2 = expr
+            expression2 = expression
+            answer2 = answer
+        
         if expr == expression + answer:
             correct += 1
-            print("Correct! Given {} found {}".format(expression, expr))
+            print("Correct! Given \"{}\" found \"{}\"".format(expression2, expr2))
         else: 
-            print("Wrong! Given {} found {} instead of {}".format(expression, expr, expression+answer))
+            print("Wrong! Given \"{}\" found \"{}\" instead of \"{}\"".format(expression2, expr2, expression2+answer2))
     print(correct/len(validSet))
     iterationList.append(num)
-    num += 1
     correctList.append(correct/len(validSet))
 
+def decode_sentence(expr):
+    sentence = ""
+    for char in expr:
+        sentence += id_to_word[char] + " "
+    return sentence[:-1]
 
-(trainingSet, validSet, chars, actionList, id_to_word) = importer.importData(trainingFileName, validFileName)
+
+(trainingSet, validSet, chars, action_list, id_to_word) = importer.importData(trainingFileName, validFileName)
+
+print(id_to_word)
 
 if len(id_to_word) > 0:
     using_words = True
@@ -108,6 +131,7 @@ correctList = []
 num = 0
 
 run_validation(num)
+num+=1
 
 for iteration in range(babble_iterations):
     for (expression, answer) in trainingSet:
@@ -116,7 +140,7 @@ for iteration in range(babble_iterations):
         run_model(expression, answer, answer_maxlen, True)
 
 run_validation(num)
-
+num+=1
 
 for iteration in range(imitation_iterations):
     for (expression, answer) in trainingSet:
@@ -131,5 +155,6 @@ for iteration in range(imitation_iterations):
     print(flush = True)
     #print(abstracter.structures)
     run_validation(num)
+    num+=1
 
 plotter.improvedPlot(iterationList, correctList, title = info, xlabel = "Iteration", ylabel = "Accuracy", figname = short_info + "Model.png")

@@ -32,7 +32,7 @@ def importData(trainingFileName, validFileName = None, fraction_as_validation = 
     id_to_word = {}
     wordsPos = header.find("words:\"")
     if wordsPos != -1:
-        pos = 7+wordPos
+        pos = 7+wordsPos
         while pos < len(header) and header[pos] != "\"":
             if header[pos] == splitChar:
                 pos += 1
