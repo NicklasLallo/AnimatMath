@@ -5,6 +5,7 @@ def operator(op, x, y):
     else: 
         return x+y
 
+characters = "12334567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
 #arithemetic1.dat - equality, single, and double multiplication tabled with single digit operands
 
 dataSet = []
@@ -107,8 +108,52 @@ for x in range(100):
                     dataSet.append(("{}{}{}{}{}= {}".format(x,op1,y,op2,z, ans)))
 
 f = open("arithmetic3.dat", "w")
-f.write("splitChar: actionList:1234567890\n chars:1234567890*+=")
+f.write("splitChar: actionList:1234567890 chars:1234567890*+=\n")
 for data in dataSet:
     f.write(data+"\n")
 f.close()
 
+
+#grammar1.dat - simple english grammar
+
+pronouns = ["he", "she", "it", "they", "we", "I", "you"]
+verbs = ["talk", "walk", "remember", "dream", "pay", "call", "play"]
+verb_bends = ["ed", "s"]
+doing = ["he is", "she is", "it is", "they are", "we are", "I am", "you are", "he's", "she's", "it's", "they're", "we're", "I'm", "you're"]
+doings = ["fun", "unpleasant", "delightful", "free", "old", "young", "active", "correct", "wrong"]
+
+good_sentences = []
+good_sentences += [x + " " + y + z for x in pronouns for y in verbs for z in verb_bends]
+good_sentences += [x + " " + y for x in doing for y in doings]
+good_sentences += [x + " " + y + "ing" for x in doing for y in verbs]
+
+bad_sentences = []
+bad_sentences += [x + " " + y for x in pronouns for y in doings]
+bad_sentences += [x + " " + y + z for x in doing for y in verbs for z in verb_bends]
+bad_sentences += [x + " " + y for x in doings for y in doing]
+
+words = []
+nr = 0
+wordString = ""
+word_to_id = {}
+for sentence in good_sentences + bad_sentences:
+    splits = sentence.split()
+    for word in splits:
+        if word not in words:
+            words.append(word)
+            wordString += word + " "
+            word_to_id[word] = characters[nr]
+            nr += 1
+
+f = open("grammar1.dat", "w")
+f.write("splitChar: actionList:YN chars:{} words:\"{}\"\n".format(characters[:len(words)], wordString))
+for sentence in good_sentences:
+    splits = sentence.split()
+    for word in splits:
+        f.write(word_to_id[word])
+    f.write(" Y\n")
+for sentence in bad_sentences:
+    splits = sentence.split()
+    for word in splits:
+        f.write(word_to_id[word])
+    f.write(" N\n")

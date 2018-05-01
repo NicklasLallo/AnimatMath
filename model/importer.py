@@ -1,5 +1,7 @@
+import math as m
+import random as r
 
-def importData(trainingFileName, validFileName = None):
+def importData(trainingFileName, validFileName = None, fraction_as_validation = 0.1):
     trainingFile = open(trainingFileName, "r")
     lines = trainingFile.readlines()
     lines = list(map(lambda x: x[:-1], lines))
@@ -17,7 +19,7 @@ def importData(trainingFileName, validFileName = None):
         pos = 11+actionListPos
         while pos < len(header) and header[pos] != splitChar:
             actionList.append(header[pos])
-            pos += 1i
+            pos += 1
 
     chars = []
     charsPos = header.find("chars:")
@@ -29,14 +31,14 @@ def importData(trainingFileName, validFileName = None):
 
     id_to_word = {}
     wordsPos = header.find("words:\"")
-    if wordPos != -1:
+    if wordsPos != -1:
         pos = 7+wordPos
         while pos < len(header) and header[pos] != "\"":
             if header[pos] == splitChar:
                 pos += 1
                 continue
             nextWord = ""
-            while pos < len(header) and header[pos] != splitChar and header[pos] != "\""
+            while pos < len(header) and header[pos] != splitChar and header[pos] != "\"":
                 nextWord += header[pos]
                 pos +=1
             char = chars[len(id_to_word)]

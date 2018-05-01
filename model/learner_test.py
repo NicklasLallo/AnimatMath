@@ -4,6 +4,7 @@ from Abstracter import *
 import random as r
 import math as m
 import plotter
+import importer
 
 trainingFileName = "arithmetic2.dat"    #The file containing the training data
 validFileName = None                    #The file containing the validation set, if None the validation data will be drawn as a fraction of the training data
@@ -24,44 +25,6 @@ action_list = ["1","2","3","4","5","6","7","8","9","0","RETURN"]    #List of act
 
 info = "DataSet: {}\nFraction used for validation: {}\nBabble iterations: {}\nSolver depth: {}\nAbstracter depth: {}".format(trainingFileName[:-4], fraction_as_validation, babble_iterations, solver_depth, abstracter_depth)
 short_info = "{}_{}_{}_{}_{}".format(trainingFileName[:-4], fraction_as_validation, babble_iterations, solver_depth, abstracter_depth)
-def importData(trainingFileName, validFileName = None):
-    trainingFile = open(trainingFileName, "r")
-    trainingSet = []
-    splitChar = " "
-    lines = trainingFile.readlines()
-    lines = list(map(lambda x: x[:-1], lines))
-    trainingFile.close()
-    header = lines.pop(0)
-
-    splitCharPos = header.find("splitChar:")
-    if splitCharPos != -1 and splitCharPos+10 < len(header):
-        splitChar = header[splitCharPos+10]
-    
-    actionListPos = header.find("actionList:")
-    if actionListPos != -1:
-        actionList = ["RETURN"]
-        pos = 11+actionListPos
-        while pos < len(header) and header[pos] != splitChar:
-            actionList.append(header[pos])
-            pos += 1
-
-    for line in lines:
-        i = line.index(splitChar)
-        trainingSet.append((line[:i], line[i+1:]))
-    
-    validSet = []
-    if validFileName != None:
-        validFile = open(validFileName, "r")
-        for line in validFile:
-            i = line.index(splitChar)
-            validSet.append((line[:i], line[i+1:]))
-        validFile.close()
-    else:
-        for n in range(m.ceil(len(trainingSet)*fraction_as_validation)):
-            i = r.randrange(0, len(trainingSet))
-            validSet.append(trainingSet.pop(i))
-
-    return (trainingSet, validSet)
 
 def abstractSequenceAndGoal(sequence, debug = False):
     (goalRule, goal, newSequence, structs, action, value) = abstracter.structureTreeSearch(sequence, abstracter_depth, solver = solver, returnImmediately = 0.9, debug = debug, visitedNodes = set())
@@ -101,8 +64,6 @@ def run_model(sequence, expected_output,  maxlen = 4, training = False, imitatio
             reward = -1
             if expr == sequence + expected_output:
                 reward = 1
-                if debug and absGoal != {}:
-                    print(structs)
             if not training:
                 action = None
                 reward = None
@@ -117,9 +78,27 @@ def run_model(sequence, expected_output,  maxlen = 4, training = False, imitatio
         return (expr, structs)
     return expr
 
+def run_validation(num):
+    correct = 0
+    for (expression, answer) in validSet:
+        expr = run_model(expression, answer, answer_maxlen, training = False, debug = False)
+        if expr == expression + answer:
+            correct += 1
+            print("Correct! Given {} found {}".format(expression, expr))
+        else: 
+            print("Wrong! Given {} found {} instead of {}".format(expression, expr, expression+answer))
+    print(correct/len(validSet))
+    iterationList.append(num)
+    num += 1
+    correctList.append(correct/len(validSet))
 
 
-(trainingSet, validSet) = importData(trainingFileName, validFileName)
+(trainingSet, validSet, chars, actionList, id_to_word) = importer.importData(trainingFileName, validFileName)
+
+if len(id_to_word) > 0:
+    using_words = True
+else:
+    using_words = False
 
 solver = Solver(action_list, learning_rate, discount_rate)
 abstracter = Abstracter()
@@ -128,19 +107,7 @@ iterationList = []
 correctList = []
 num = 0
 
-correct = 0
-for (expression, answer) in validSet:
-    expr = run_model(expression, answer, answer_maxlen, training = False, debug = False)
-    if expr == expression + answer:
-        correct += 1
-        print("Correct! Given {} found {}".format(expression, expr))
-    else: 
-        print("Wrong! Given {} found {} instead of {}".format(expression, expr, expression+answer))
-print(correct/len(validSet))
-iterationList.append(num)
-num += 1
-correctList.append(correct/len(validSet))
-
+run_validation(num)
 
 for iteration in range(babble_iterations):
     for (expression, answer) in trainingSet:
@@ -148,19 +115,7 @@ for iteration in range(babble_iterations):
             (expression, answer) = r.choice(trainingSet)
         run_model(expression, answer, answer_maxlen, True)
 
-correct = 0
-for (expression, answer) in validSet:
-    expr = run_model(expression, answer, answer_maxlen, training = False, debug = False)
-    if expr == expression + answer:
-        correct += 1
-        print("Correct! Given {} found {}".format(expression, expr))
-    else:
-        print("Wrong! Given {} found {} instead of {}".format(expression, expr, expression+answer))
-print(correct/len(validSet))
-iterationList.append(num)
-num += 1
-correctList.append(correct/len(validSet))
-
+run_validation(num)
 
 
 for iteration in range(imitation_iterations):
@@ -175,18 +130,6 @@ for iteration in range(imitation_iterations):
             #print(d, flush = True)
     print(flush = True)
     #print(abstracter.structures)
-    correct = 0
-    for (expression, answer) in validSet:
-        (expr, structs) = run_model(expression, answer, answer_maxlen, training = False, debug = True)
-        if expr == expression + answer:
-            correct += 1
-            print("Correct! Given {} found {}".format(expression, expr))
-        else:
-            print("Wrong! Given {} found {} instead of {}".format(expression, expr, expression+answer))
-            print(structs)
-    print(correct/len(validSet))
-    iterationList.append(num)
-    num += 1
-    correctList.append(correct/len(validSet))
+    run_validation(num)
 
 plotter.improvedPlot(iterationList, correctList, title = info, xlabel = "Iteration", ylabel = "Accuracy", figname = short_info + "Model.png")

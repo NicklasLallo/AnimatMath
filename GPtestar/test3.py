@@ -6,6 +6,8 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
+import plotter
+import importer
 import matplotlib.pyplot as plt
 import os
 import numpy as np
@@ -16,7 +18,6 @@ import collections
 import time
 import sys
 import math as m
-import plotter
 
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
@@ -55,54 +56,8 @@ info_short = "{}_{}_{}_{}_{}_{}".format(training_file_name[:-4], fraction_as_val
 logs_path = '/tmp/tensorflow/rnn_words'
 writer = tf.summary.FileWriter(logs_path)
 
-def importData(trainingFileName, validFileName = None):
-    trainingFile = open(trainingFileName, "r")
-    trainingSet = []
-    splitChar = " "
-    lines = trainingFile.readlines()
-    lines = list(map(lambda x: x[:-1], lines))
-    trainingFile.close()
-    header = lines.pop(0)
+(trainingSet, validSet, chars, actionList, id_to_word) = importer.importData(training_file_name, validation_file_name, fraction_as_validation)
 
-    splitCharPos = header.find("splitChar:")
-    if splitCharPos != -1 and splitCharPos+10 < len(header):
-        splitChar = header[splitCharPos+10]
-    
-    actionListPos = header.find("actionList:")
-    if actionListPos != -1:
-        actionList = ["RETURN"]
-        pos = 11+actionListPos
-        while pos < len(header) and header[pos] != splitChar:
-            actionList.append(header[pos])
-            pos += 1
-
-    chars = []
-    charsPos = header.find("chars:")
-    if charsPos != -1:
-        pos = charsPos+6
-        while pos < len(header) and header[pos] != splitChar:
-            chars.append(header[pos])
-            pos += 1
-
-    for line in lines:
-        i = line.index(splitChar)
-        trainingSet.append((line[:i], line[i+1:]))
-    
-    validSet = []
-    if validFileName != None:
-        validFile = open(validFileName, "r")
-        for line in validFile:
-            i = line.index(splitChar)
-            validSet.append((line[:i], line[i+1:]))
-        validFile.close()
-    else:
-        for n in range(m.ceil(len(trainingSet)*fraction_as_validation)):
-            i = random.randrange(0, len(trainingSet))
-            validSet.append(trainingSet.pop(i))
-
-    return (trainingSet, validSet, chars)
-
-(dataSet, validSet, chars) = importData(training_file_name, validation_file_name)
 num = 0
 char_to_id = {"R":len(chars)}
 for char in chars:
