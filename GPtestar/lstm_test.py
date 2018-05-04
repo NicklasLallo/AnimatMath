@@ -80,7 +80,7 @@ def run_lstm_test(training_file_name, fraction_as_validation = 0.1,  training_it
     logs_path = '/tmp/tensorflow/rnn_words'
     writer = tf.summary.FileWriter(logs_path)
     
-    (trainingSet, validSet, chars, actionList, id_to_word) = importer.importData(training_file_name, validation_file_name, fraction_as_validation)
+    (dataSet, validSet, chars, actionList, id_to_word) = importer.importData(training_file_name, validation_file_name, fraction_as_validation)
     
     num = 0
     char_to_id = {"R":len(chars)}
