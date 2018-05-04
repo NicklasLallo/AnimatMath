@@ -24,6 +24,24 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 start_time = time.time()
+        
+    # Data
+    #training_file_name = "arithmetic2.dat"
+validation_file_name = None #if left as None a fraction of the trainingdata will be used for validation instead
+    #fraction_as_validation = 0.2
+    
+    # Parameters
+learning_rate = 0.001
+    #training_iters = 300000
+    #display_step = 10000
+display_step = m.ceil(training_iters/30)
+n_input = 10
+    
+    # number of units in RNN cell
+    #n_hidden = 512
+    
+    # number or layers in the network
+    #nr_of_layers = 3
 def elapsed(sec):
     if sec<60:
         return str(sec) + " sec"
@@ -32,7 +50,7 @@ def elapsed(sec):
     else:
         return str(sec/(60*60)) + " hr"
 
-def RNN(x, weights, biases, n_input):
+def RNN(x, weights, biases, nr_of_layers, n_hidden):
 
     # reshape to [1, n_input]
     x = tf.reshape(x, [-1, n_input])
@@ -114,7 +132,7 @@ def run_lstm_test(training_file_name, fraction_as_validation = 0.1,  training_it
     }
     
     
-    pred = RNN(x, weights, biases, n_input)
+    pred = RNN(x, weights, biases, nr_of_layers, n_hidden)
     out_symbol_pred = tf.argmax(pred, 1)
     
     # Loss and optimizer
