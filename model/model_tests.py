@@ -29,11 +29,11 @@ for x in range(len(favs)):
     averageYs = None
     minYs = None
     maxYs = None
-    if (favs[x], answer_maxlens[x], abstracter_depths[x]) not in data:
-        data[(favs[x], answer_maxlens[x], abstracter_depths[x])] = []
+    if (favs[x], answer_maxlens[x], abstracter_depths[x], trainingFileNames[x]) not in data:
+        data[(favs[x], answer_maxlens[x], abstracter_depths[x], trainingFileNames[x])] = []
     for y in range(repetitions):
         (xs, ys, info) = run_learner_test(fraction_as_validation = favs[x], trainingFileName = trainingFileNames[x], answer_maxlen = answer_maxlens[x], abstracter_depth = abstracter_depths[x])
-        data[(favs[x], answer_maxlens[x], abstracter_depths[x])].append((xs, ys, info)) 
+        data[(favs[x], answer_maxlens[x], abstracter_depths[x], trainingFileNames[x])].append((xs, ys, info)) 
         save_obj(data, "model_data")
 
         if averageYs == None:
