@@ -1,4 +1,5 @@
-from learner_test import *
+
+from lstm_test import *
 import pickle
 import os.path
 
@@ -7,8 +8,9 @@ repetitions = 20
 
 favs = [0.1, 0.5, 0.9]
 trainingFileNames = ["arithmetic1.dat", "arithmetic1.dat", "arithmetic1.dat"]
-answer_maxlens = [3,3,3]
-abstracter_depths = [2,2,2]
+nr_of_layers = 3
+neurons_per_layer = 512
+training_iterations = 300000
 
 def save_obj(obj, name ):
     with open(name + '.pkl', 'wb') as f:
