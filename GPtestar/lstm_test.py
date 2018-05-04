@@ -32,7 +32,7 @@ def elapsed(sec):
     else:
         return str(sec/(60*60)) + " hr"
 
-def RNN(x, weights, biases):
+def RNN(x, weights, biases, n_input):
 
     # reshape to [1, n_input]
     x = tf.reshape(x, [-1, n_input])
@@ -68,10 +68,10 @@ def run_lstm_test(training_file_name, fraction_as_validation = 0.1,  training_it
     n_input = 10
     
     # number of units in RNN cell
-    n_hidden = 512
+    #n_hidden = 512
     
     # number or layers in the network
-    nr_of_layers = 3
+    #nr_of_layers = 3
     
     info = "Dataset: {}\nFraction used for validation: {}\nNumber of iterations: {}\nHidden units per layer: {}\nNumber of layers: {}\nLearning rate: {}".format(training_file_name[:-4], fraction_as_validation, training_iters, n_hidden, nr_of_layers, learning_rate)
     info_short = "{}_{}_{}_{}_{}_{}".format(training_file_name[:-4], fraction_as_validation, training_iters, n_hidden, nr_of_layers, learning_rate)
@@ -114,7 +114,7 @@ def run_lstm_test(training_file_name, fraction_as_validation = 0.1,  training_it
     }
     
     
-    pred = RNN(x, weights, biases)
+    pred = RNN(x, weights, biases, n_input)
     out_symbol_pred = tf.argmax(pred, 1)
     
     # Loss and optimizer
