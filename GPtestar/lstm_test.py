@@ -34,7 +34,6 @@ validation_file_name = None #if left as None a fraction of the trainingdata will
 learning_rate = 0.001
     #training_iters = 300000
     #display_step = 10000
-display_step = m.ceil(training_iters/30)
 n_input = 10
     
     # number of units in RNN cell
@@ -72,7 +71,9 @@ def RNN(x, weights, biases, nr_of_layers, n_hidden):
 
 
 def run_lstm_test(training_file_name, fraction_as_validation = 0.1,  training_iters = 300000, nr_of_layers = 3, n_hidden = 512):
-        
+       
+
+    tf.reset_default_graph() # Resets the graph in between multiple runs
     # Data
     #training_file_name = "arithmetic2.dat"
     validation_file_name = None #if left as None a fraction of the trainingdata will be used for validation instead

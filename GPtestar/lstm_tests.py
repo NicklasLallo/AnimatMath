@@ -10,7 +10,7 @@ favs = [0.1, 0.5, 0.9]
 trainingFileNames = ["arithmetic1.dat", "arithmetic1.dat", "arithmetic1.dat"]
 nr_of_layers = 3
 neurons_per_layer = 512
-training_iterations = 300000
+training_iterations = 10
 
 def save_obj(obj, name ):
     with open(name + '.pkl', 'wb') as f:
