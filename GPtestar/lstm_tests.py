@@ -34,9 +34,10 @@ for x in range(len(favs)):
     if (favs[x], trainingFileNames[x], nr_of_layers, neurons_per_layer, training_iterations) not in data:
         data[(favs[x], trainingFileNames[x], nr_of_layers, neurons_per_layer, training_iterations)] = []
     for y in range(repetitions):
-        (xs, ys, info) = run_lstm_test(training_file_name = trainingFileNames[x], fraction_as_validation = favs[x],  training_iters = training_iterations, nr_of_layers = nr_of_layers, n_hidden = neurons_per_layer)
+        (xs, ys, zs, info) = run_lstm_test(training_file_name = trainingFileNames[x], fraction_as_validation = favs[x],  training_iters = training_iterations, nr_of_layers = nr_of_layers, n_hidden = neurons_per_layer)
         #(xs, ys, info) = run_learner_test(fraction_as_validation = favs[x], trainingFileName = trainingFileNames[x], answer_maxlen = answer_maxlens[x], abstracter_depth = abstracter_depths[x])
         data[(favs[x], trainingFileNames[x], nr_of_layers, neurons_per_layer, training_iterations)].append((xs, ys, info)) 
+        data[("Acc",favs[x], trainingFileNames[x], nr_of_layers, neurons_per_layer, training_iterations)].append((zs, ys, info)) 
         save_obj(data, "lstm_data")
 
         if averageYs == None:

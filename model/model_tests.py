@@ -6,7 +6,7 @@ import os.path
 repetitions = 20
 
 favs = [0.1, 0.5, 0.9]
-trainingFileNames = ["arithmetic1.dat", "arithmetic1.dat", "arithmetic1.dat"]
+trainingFileNames = ["arithmetic2.dat", "arithmetic2.dat", "arithmetic2.dat"]
 answer_maxlens = [3,3,3]
 abstracter_depths = [2,2,2]
 

@@ -226,6 +226,24 @@ def run_lstm_test(training_file_name, fraction_as_validation = 0.1,  training_it
                 
                 print("Percent correct guesses on validation data: {}%".format(correct*100/len(valid)))
             step += 1
+        
+    # Data
+    #training_file_name = "arithmetic2.dat"
+    validation_file_name = None #if left as None a fraction of the trainingdata will be used for validation instead
+    #fraction_as_validation = 0.2
+    
+    # Parameters
+    learning_rate = 0.001
+    #training_iters = 300000
+    #display_step = 10000
+    display_step = m.ceil(training_iters/30)
+    n_input = 10
+    
+    # number of units in RNN cell
+    #n_hidden = 512
+    
+    # number or layers in the network
+    #nr_of_layers = 3
             offset += (n_input+1)
         plotter.improvedPlot(iterationList, accList, title = "Accuracy on training set\n"+info, xlabel = "Iterations", ylabel = "Accuracy", figname = info_short+"_training.png")
         plotter.improvedPlot(iterationList, validCorrectList, title = "Accuracy on validation set\n"+info, xlabel = "Iterations", ylabel = "Accuracy", figname = info_short+"validation.png")
@@ -235,5 +253,5 @@ def run_lstm_test(training_file_name, fraction_as_validation = 0.1,  training_it
         print("Run on command line.")
         print("\ttensorboard --logdir=%s" % (logs_path))
         print("Point your web browser to: http://localhost:6006/")
-        return (iterationList, validCorrectList, info_short) 
+        return (iterationList, validCorrectList, accList, info_short) 
     
