@@ -12,7 +12,7 @@ data = json.load(open('data.json'))
 f = open("naturallanguage.dat", "w")
 
 #Manualy writing out the characters. Not optimal
-f.write("splitChar:" + splitchar + "actionList:qwertyuiopasdfghjklzxcvbnm,.1234567890\n chars:qwertyuiopasdfghjklzxcvbnm,.1234567890\n")
+f.write("splitChar:" + splitchar + "actionList:QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm,.1234567890 chars:QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm,.1234567890\n")
 
 
 i = 1

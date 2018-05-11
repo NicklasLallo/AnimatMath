@@ -33,14 +33,14 @@ def elapsed(sec):
         return str(sec/(60*60)) + " hr"
 
 # Data
-training_file_name = "arithmetic2.dat"
+training_file_name = "grammar1.dat"
 validation_file_name = None #if left as None a fraction of the trainingdata will be used for validation instead
-fraction_as_validation = 0.2
+fraction_as_validation = 0.1
 
 # Parameters
 learning_rate = 0.001
 training_iters = 300000
-display_step = 10000
+display_step = 5000
 n_input = 10
 
 # number of units in RNN cell
@@ -86,7 +86,7 @@ print(vocab_size)
 print(id_to_char)
 print(char_to_id)
 
-data = [(list(map(lambda x: char_to_id[x],i)), list(map(lambda x: char_to_id[x],j))) for (i,j) in dataSet]
+data = [(list(map(lambda x: char_to_id[x],i)), list(map(lambda x: char_to_id[x],j))) for (i,j) in trainingSet]
 valid = [(list(map(lambda x: char_to_id[x],i)), list(map(lambda x: char_to_id[x],j))) for (i,j) in validSet]
 for (inp, out) in data:
     out.append(char_to_id["R"])
