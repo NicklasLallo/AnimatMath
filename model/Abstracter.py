@@ -251,9 +251,10 @@ class Abstracter():
 
         while len(equalities) > 0:
             (equal, otherSequence, thisSplit) = equalities.pop()
+            equality = sequence[:-thisSplit]
             if len(equal) == 0:
                 if len(otherSequence) > thisSplit:
-                    equalities.append((otherSequence[:-thisSplit+1], otherSequece, thisSplit+1))
+                    equalities.append((otherSequence[:-thisSplit+1], otherSequece, thisSplit-1))
                 continue
 
             first = list(equality)
