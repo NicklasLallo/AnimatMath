@@ -4,13 +4,13 @@ import pickle
 import os.path
 
 
-repetitions = 10
+repetitions = 8
 
 favs = [0.1, 0.5, 0.9]
 trainingFileNames = ["arithmetic1.dat", "arithmetic1.dat", "arithmetic1.dat"]
 nr_of_layers = 3
 neurons_per_layer = 512
-training_iterations = 10
+training_iterations = 300000
 
 def save_obj(obj, name ):
     with open(name + '.pkl', 'wb') as f:
@@ -33,6 +33,8 @@ for x in range(len(favs)):
     maxYs = None
     if (favs[x], trainingFileNames[x], nr_of_layers, neurons_per_layer, training_iterations) not in data:
         data[(favs[x], trainingFileNames[x], nr_of_layers, neurons_per_layer, training_iterations)] = []
+    if ("Acc",favs[x], trainingFileNames[x], nr_of_layers, neurons_per_layer, training_iterations) not in data:
+        data[("Acc",favs[x], trainingFileNames[x], nr_of_layers, neurons_per_layer, training_iterations)] = []
     for y in range(repetitions):
         (xs, ys, zs, info) = run_lstm_test(training_file_name = trainingFileNames[x], fraction_as_validation = favs[x],  training_iters = training_iterations, nr_of_layers = nr_of_layers, n_hidden = neurons_per_layer)
         #(xs, ys, info) = run_learner_test(fraction_as_validation = favs[x], trainingFileName = trainingFileNames[x], answer_maxlen = answer_maxlens[x], abstracter_depth = abstracter_depths[x])

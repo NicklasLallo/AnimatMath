@@ -244,14 +244,14 @@ def run_lstm_test(training_file_name, fraction_as_validation = 0.1,  training_it
     
     # number or layers in the network
     #nr_of_layers = 3
-            offset += (n_input+1)
-        plotter.improvedPlot(iterationList, accList, title = "Accuracy on training set\n"+info, xlabel = "Iterations", ylabel = "Accuracy", figname = info_short+"_training.png")
-        plotter.improvedPlot(iterationList, validCorrectList, title = "Accuracy on validation set\n"+info, xlabel = "Iterations", ylabel = "Accuracy", figname = info_short+"validation.png")
-        print("Plot completed")
-        print("Optimization Finished!")
-        print("Elapsed time: ", elapsed(time.time() - start_time))
-        print("Run on command line.")
-        print("\ttensorboard --logdir=%s" % (logs_path))
-        print("Point your web browser to: http://localhost:6006/")
-        return (iterationList, validCorrectList, accList, info_short) 
+    offset += (n_input+1)
+    plotter.improvedPlot(iterationList, accList, title = "Accuracy on training set\n"+info, xlabel = "Iterations", ylabel = "Accuracy", figname = info_short+"_training.png")
+    plotter.improvedPlot(iterationList, validCorrectList, title = "Accuracy on validation set\n"+info, xlabel = "Iterations", ylabel = "Accuracy", figname = info_short+"validation.png")
+    print("Plot completed")
+    print("Optimization Finished!")
+    print("Elapsed time: ", elapsed(time.time() - start_time))
+    print("Run on command line.")
+    print("\ttensorboard --logdir=%s" % (logs_path))
+    print("Point your web browser to: http://localhost:6006/")
+    return (iterationList, validCorrectList, accList, info_short) 
     
