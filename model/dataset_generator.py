@@ -115,20 +115,24 @@ f.close()
 
 
 #grammar1.dat - simple english grammar
-
+hesheit = ["he", "she", "it"]
+rest = ["they", "we", "I", "you"]
 pronouns = ["he", "she", "it", "they", "we", "I", "you"]
 verbs = ["talk", "walk", "remember", "dream", "pay", "call", "play"]
-verb_bends = ["ed", "s"]
+verb_bends = ["ed"]
 doing = ["he is", "she is", "it is", "they are", "we are", "I am", "you are", "he's", "she's", "it's", "they're", "we're", "I'm", "you're"]
 doings = ["fun", "unpleasant", "delightful", "free", "old", "young", "active", "correct", "wrong"]
 
 good_sentences = []
 good_sentences += [x + " " + y + z for x in pronouns for y in verbs for z in verb_bends]
+good_sentences += [x + " " + y + "s" for x in hesheit for y in verbs]
+good_sentences += [x + " " + y  for x in rest for y in verbs]
 good_sentences += [x + " " + y for x in doing for y in doings]
 good_sentences += [x + " " + y + "ing" for x in doing for y in verbs]
 
 bad_sentences = []
 bad_sentences += [x + " " + y for x in pronouns for y in doings]
+bad_sentences += [x + " " + y for x in doing for y in verbs]
 bad_sentences += [x + " " + y + z for x in doing for y in verbs for z in verb_bends]
 bad_sentences += [x + " " + y for x in doings for y in doing]
 
@@ -157,3 +161,9 @@ for sentence in bad_sentences:
     for word in splits:
         f.write(word_to_id[word])
     f.write(" 2\n")
+f.close()
+
+f = open("grammar1.txt", "w")
+for sentence in good_sentences + bad_sentences:
+    f.write(sentence + "\\\\\n")
+f.close()
