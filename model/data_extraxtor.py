@@ -14,7 +14,7 @@ print("What .plk file should be read? (Do not need to specify .plk as ending)")
 f = input()
 data = load_obj(f)
 
-for collection in data.values():
+for (keys, collection) in data.items():
     (xs, ys, info) = collection[0]
     avgYs = [0]*len(ys)
     minYs = [9999]*len(ys)
@@ -24,6 +24,8 @@ for collection in data.values():
         minYs = [min(minYs[num], ys[num]) for num in range(len(ys))]
         maxYs = [max(maxYs[num], ys[num]) for num in range(len(ys))]
     avgYs = [y/len(collection) for y in avgYs]
+    if keys[0] == "Acc":
+        info = "Acc_" + info
     plotter.improvedErrplot(xs, avgYs, xerrs = [0]*len(xs), yerrs = [maxYs, minYs], title = info+"_"+str(len(collection)), xlabel = "Iteration", ylabel = "Average accuracy", figname = "Avg" + f + "_" + info + "_" + str(len(collection)) + ".png")
     
 
