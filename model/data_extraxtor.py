@@ -26,6 +26,8 @@ for (keys, collection) in data.items():
     avgYs = [y/len(collection) for y in avgYs]
     if keys[0] == "Acc":
         info = "Acc_" + info
+    else:
+        print (keys, max(avgYs))
     plotter.improvedErrplot(xs, avgYs, xerrs = [0]*len(xs), yerrs = [maxYs, minYs], title = info+"_"+str(len(collection)), xlabel = "Iteration", ylabel = "Average accuracy", figname = "Avg" + f + "_" + info + "_" + str(len(collection)) + ".png")
     
 
